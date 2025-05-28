@@ -59,10 +59,10 @@ function Header() {
 
   return (
     <AppBar
-      position="static"
+      position="fixed"
       color="default"
       elevation={1}
-      sx={{ display: "flex", flexWrap: "wrap", overflow: "hidden" }}
+      sx={{ display: "flex", flexWrap: "wrap", overflow: "hidden", backgroundColor: "background.paper" }}
     >
       <Toolbar sx={{ justifyContent: "space-between" }}>
         <Typography variant="h6" component="div" fontWeight="bold">
