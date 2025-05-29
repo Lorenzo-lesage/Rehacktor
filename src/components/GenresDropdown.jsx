@@ -1,4 +1,3 @@
-import { useEffect, useState } from "react";
 import {
   Accordion,
   AccordionSummary,
@@ -7,9 +6,13 @@ import {
   List,
   ListItem,
   Alert,
+  CircularProgress,
+  Box,
 } from "@mui/material";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import CategoryIcon from "@mui/icons-material/Category";
+import apiConfig from "../config/apiConfig";
+import useFetch from "../hooks/useFetch.js";
 
 function GenresDropdown() {
   /*
@@ -17,40 +20,7 @@ function GenresDropdown() {
   | Data
   |-----------------------------------------------------
   */
-  const [genres, setGenres] = useState([]);
-  const [error, setError] = useState(null);
-  const api_key = "169792d0d9d043a69b438aadb36ad49e";
-  const initialUrl = `https://api.rawg.io/api/genres?key=${api_key}`;
-
-  /*
-  |-----------------------------------------------------
-  | Methods
-  |-----------------------------------------------------
-  */
-
-  const load = async () => {
-    try {
-      const response = await fetch(initialUrl);
-      if (!response.ok) {
-        throw new Error(response.statusText);
-      }
-      const json = await response.json();
-      setGenres(json.results);
-    } catch (error) {
-      setError(error.message); // ✅ salva anche l'errore
-      console.log(error);
-    }
-  };
-
-  /*
-  |-----------------------------------------------------
-  | Hook
-  |-----------------------------------------------------
-  */
-
-  useEffect(() => {
-    load();
-  }, []);
+  const { data, error, loading } = useFetch(apiConfig.endpoints.genres);
 
   /*
   |-----------------------------------------------------
@@ -58,20 +28,45 @@ function GenresDropdown() {
   |-----------------------------------------------------
   */
 
+  if (loading) {
+    return (
+      <Box
+        sx={{
+          display: "flex",
+          justifyContent: "center",
+          height: "70vh",
+          alignItems: "center",
+        }}
+      >
+        {/* <CircularProgress /> */}
+      </Box>
+    );
+  }
+  if (error) return <p>Error: {error}</p>;
+
   return (
     <>
-      <Accordion sx={{ border: 0, boxShadow: 0, backgroundColor: "background.paper" }}>
-        <AccordionSummary expandIcon={<ExpandMoreIcon />} >
-          <Typography variant="h6" sx={{ display: "flex", alignItems: "center", gap: 1 }}>
+      <Accordion
+        sx={{ border: 0, boxShadow: 0, backgroundColor: "background.paper" }}
+        elevation={0}
+      >
+        <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+          <Typography
+            variant="h6"
+            sx={{ display: "flex", alignItems: "center", gap: 1 }}
+          >
             <CategoryIcon />
             Genres
           </Typography>
         </AccordionSummary>
-        <AccordionDetails >
+        <AccordionDetails>
           {error && <Alert severity="error">{error}</Alert>}
           <List>
-            {genres.map((genre) => (
-              <ListItem key={genre.id} sx={{ paddingBottom: '0.5px', paddingTop: '0' }}>
+            {data.results.map((genre) => (
+              <ListItem
+                key={genre.id}
+                sx={{ paddingBottom: "0.5px", paddingTop: "0" }}
+              >
                 <Typography>{genre.name}</Typography>
               </ListItem>
             ))}

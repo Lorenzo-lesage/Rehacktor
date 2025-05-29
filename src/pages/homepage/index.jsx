@@ -1,6 +1,7 @@
-import { useState, useEffect } from "react";
-import { Box, Typography, Grid } from "@mui/material";
+import { Box, Typography, Grid, CircularProgress } from "@mui/material";
 import CardGame from "../../components/CardGame";
+import useFetch from "../../hooks/useFetch.js";
+import apiConfig from "../../config/apiConfig";
 
 function HomePage() {
   /*
@@ -9,40 +10,9 @@ function HomePage() {
   |-----------------------------------------------------
   */
 
-  const [data, setData] = useState(null);
-  const [error, setError] = useState(null);
-  const api_key = "169792d0d9d043a69b438aadb36ad49e";
-  const initialUrl = `https://api.rawg.io/api/games?key=${api_key}&dates=2024-01-01,2024-12-31&page=1`;
-
-  /*
-  |-----------------------------------------------------
-  | Methods
-  |-----------------------------------------------------
-  */
-
-  const load = async () => {
-    try {
-      const response = await fetch(initialUrl);
-      if (!response.ok) {
-        throw new Error(response.statusText);
-      }
-      const json = await response.json();
-      setData(json);
-    } catch (error) {
-      setError(error.message);
-      setData(null);
-    }
-  };
-
-  /*
-  |-----------------------------------------------------
-  | Hook
-  |-----------------------------------------------------
-  */
-
-  useEffect(() => {
-    load();
-  }, []);
+  const { data, error, loading } = useFetch(
+    apiConfig.endpoints.gamesByDate("2024-01-01", "2024-12-31", 1)
+  );
 
   /*
   |-----------------------------------------------------
@@ -50,38 +20,54 @@ function HomePage() {
   |-----------------------------------------------------
   */
 
+  if (loading) {
+    return (
+      <Box
+        sx={{
+          height: "100%",
+          width: "100%",
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+        }}
+      >
+        <CircularProgress />
+      </Box>
+    );
+  }
+
   if (error) {
     return (
       <Box
         sx={{
-          height: "70vh",
+          height: "100%",
+          width: "100%",
           display: "flex",
           justifyContent: "center",
           alignItems: "center",
         }}
       >
         <Typography variant="h6" color="error">
-          {error}
+          Error: {error}
         </Typography>
       </Box>
     );
   }
 
   return (
-    <Box sx={{ p: 3 }}>
-      <Typography variant="h4" gutterBottom>
-        Home
-      </Typography>
-
-      {data && (
-        <Grid container spacing={2}>
-          {data.results.map((game) => (
-            <Grid item xs={12} sm={6} md={4} lg={3} key={game.id}>
-              <CardGame key={game.id} game={game} />
-            </Grid>
-          ))}
+    <Box sx={{ paddingTop: 3 }}>
+      <Grid container spacing={2} justifyContent="center">
+        <Grid size={11}>
+          <Typography variant="h4" gutterBottom>
+            Home
+          </Typography>
         </Grid>
-      )}
+        {data?.results.map((game) => (
+          <Grid key={game.id}>
+            <CardGame game={game} />
+          </Grid>
+        ))}
+      </Grid>
     </Box>
   );
 }

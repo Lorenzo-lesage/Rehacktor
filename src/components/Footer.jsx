@@ -1,7 +1,7 @@
 import { Box, Typography, Link, Stack } from "@mui/material";
 
-function Footer() {
-    /*
+function Footer({ footerRef }) {
+  /*
     |-----------------------------------------------------
     | Return
     |-----------------------------------------------------
@@ -10,10 +10,12 @@ function Footer() {
   return (
     <Box
       component="footer"
+      ref={footerRef}
       sx={{
         py: 3,
         px: 2,
         mt: "auto",
+        height: 120,
         backgroundColor: "background.paper",
         borderTop: "1px solid",
         borderColor: "divider",

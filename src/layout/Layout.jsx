@@ -3,8 +3,35 @@ import Header from "../components/Header";
 import Footer from "../components/Footer";
 import SideBar from "../components/SideBar";
 import { Outlet } from "react-router";
+import { useEffect, useRef, useState } from "react";
+import useScrollTrigger from "@mui/material/useScrollTrigger";
 
 function Layout() {
+  /*
+  |-----------------------------------------------------
+  | Data
+  |-----------------------------------------------------
+  */
+
+  const trigger = useScrollTrigger();
+  const footerRef = useRef(null);
+  const [footerVisible, setFooterVisible] = useState(false);
+
+  /*
+  |-----------------------------------------------------
+  | Hooks
+  |-----------------------------------------------------
+  */
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      ([entry]) => setFooterVisible(entry.isIntersecting),
+      { threshold: 0.1 }
+    );
+    if (footerRef.current) observer.observe(footerRef.current);
+    return () => observer.disconnect();
+  }, []);
+
   /*
   |-----------------------------------------------------
   | Return
@@ -19,35 +46,24 @@ function Layout() {
       {/* Main layout: Sidebar + Content */}
       <Box display="flex" flex={1}>
         {/* Sidebar */}
-        <Box
-          component="aside"
-          sx={{
-            width: 240,
-            backgroundColor: "background.paper",
-            position: "sticky",
-            top: 64,
-            p: 1,
-            height: "calc(100vh - 64px)", // es. "calc(100vh - 64px)"
-            flexShrink: 0,
-            display: { xs: "none", sm: "block" },
-            overflowY: "auto",
-            scrollbarWidth: "none", // Firefox
-            "&::-webkit-scrollbar": {
-              display: "none", // Chrome/Safari
-            },
-          }}
-        >
-          <SideBar />
-        </Box>
+        <SideBar footerVisible={footerVisible} navbarHidden={trigger} />
 
         {/* Page content */}
-        <Box component="main" sx={{ flex: 1, p: 3, mt: 4 }}>
+        <Box
+          component="main"
+          sx={{
+            flexGrow: 1,
+            marginLeft: { sm: "240px" },
+            padding: 2,
+            mt: 4,
+          }}
+        >
           <Outlet />
         </Box>
       </Box>
 
       {/* Footer */}
-      <Footer />
+      <Footer footerRef={footerRef} />
     </Box>
   );
 }
