@@ -15,8 +15,9 @@ function LazyLoadGameImage({ image }) {
       wrapperProps={{
         style: { transitionDelay: "0.5s" },
       }}
-      style={{ height: "250px" }}
+      style={{ height: "15rem", objectFit: "cover" }}
       src={image}
+      width={"100%"}
     />
   );
 }

@@ -1,6 +1,6 @@
 import Slide from "@mui/material/Slide";
 import PropTypes from "prop-types";
-import useHeaderVisible from "../../hooks/useHeaderVisible";
+import useHeaderVisible from "../../hooks/useHeaderVisible.js";
 
 function HideOnScroll({ children, window }) {
   const visible = useHeaderVisible(window);

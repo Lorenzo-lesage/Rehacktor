@@ -1,5 +1,6 @@
 import { Card, CardContent, Typography, Button, Box } from "@mui/material";
-import LazyLoadGameImage from "./LazyLoadGameImage";
+import LazyLoadGameImage from "../animationComponent/LazyLoadGameImage";
+import { Link } from "react-router";
 
 function CardGame({ game }) {
   /*
@@ -26,7 +27,7 @@ function CardGame({ game }) {
           display: "flex",
           flexDirection: "column",
           justifyContent: "space-between",
-          minHeight: "200px",
+          minHeight: "12rem",
         }}
       >
         <Typography gutterBottom variant="h6" component="div">
@@ -46,7 +47,13 @@ function CardGame({ game }) {
             Release date: {game.released}
           </Typography>
         </Box>
-        <Button variant="outlined" size="small" sx={{ mt: 1, width: "50%" }}>
+        <Button
+          variant="outlined"
+          size="small"
+          sx={{ mt: 1, width: "50%" }}
+          component={Link}
+          to={`/games/${game.slug}/${game.id}`}
+        >
           Dettagli
         </Button>
       </CardContent>

@@ -15,9 +15,7 @@ function Footer({ footerRef }) {
         py: 3,
         px: 2,
         mt: "auto",
-        height: 120,
-        backgroundColor: "background.paper",
-        borderTop: "1px solid",
+        backgroundColor: "transparent",
         borderColor: "divider",
       }}
     >

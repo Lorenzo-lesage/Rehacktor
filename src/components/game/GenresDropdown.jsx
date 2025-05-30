@@ -11,8 +11,9 @@ import {
 } from "@mui/material";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import CategoryIcon from "@mui/icons-material/Category";
-import apiConfig from "../config/apiConfig";
-import useFetch from "../hooks/useFetch.js";
+import apiConfig from "../../config/apiConfig.js";
+import useFetch from "../../hooks/useFetch.js";
+import { Link } from 'react-router';
 
 function GenresDropdown() {
   /*
@@ -20,6 +21,7 @@ function GenresDropdown() {
   | Data
   |-----------------------------------------------------
   */
+
   const { data, error, loading } = useFetch(apiConfig.endpoints.genres);
 
   /*
@@ -32,10 +34,7 @@ function GenresDropdown() {
     return (
       <Box
         sx={{
-          display: "flex",
-          justifyContent: "center",
-          height: "70vh",
-          alignItems: "center",
+          mt: 5,
         }}
       >
         {/* <CircularProgress /> */}
@@ -47,7 +46,7 @@ function GenresDropdown() {
   return (
     <>
       <Accordion
-        sx={{ border: 0, boxShadow: 0, backgroundColor: "background.paper" }}
+        sx={{ border: 0, boxShadow: 0, backgroundColor: "transparent" }}
         elevation={0}
       >
         <AccordionSummary expandIcon={<ExpandMoreIcon />}>
@@ -65,9 +64,9 @@ function GenresDropdown() {
             {data.results.map((genre) => (
               <ListItem
                 key={genre.id}
-                sx={{ paddingBottom: "0.5px", paddingTop: "0" }}
+                sx={{ paddingBottom: "0.1rem", paddingTop: "0" }}
               >
-                <Typography>{genre.name}</Typography>
+                <Link to={`/games/${genre.slug}`}>{genre.name}</Link>
               </ListItem>
             ))}
           </List>

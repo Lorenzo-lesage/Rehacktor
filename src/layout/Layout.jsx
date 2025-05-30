@@ -1,9 +1,9 @@
 import { Box } from "@mui/material";
-import Header from "../components/Header";
-import Footer from "../components/Footer";
-import SideBar from "../components/SideBar";
+import Header from "../components/generalLayout/Header";
+import Footer from "../components/generalLayout/Footer";
+import SideBar from "../components/generalLayout/SideBar";
 import { Outlet } from "react-router";
-import { useEffect, useRef, useState } from "react";
+import { useRef } from "react";
 import useScrollTrigger from "@mui/material/useScrollTrigger";
 
 function Layout() {
@@ -15,22 +15,6 @@ function Layout() {
 
   const trigger = useScrollTrigger();
   const footerRef = useRef(null);
-  const [footerVisible, setFooterVisible] = useState(false);
-
-  /*
-  |-----------------------------------------------------
-  | Hooks
-  |-----------------------------------------------------
-  */
-
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      ([entry]) => setFooterVisible(entry.isIntersecting),
-      { threshold: 0.1 }
-    );
-    if (footerRef.current) observer.observe(footerRef.current);
-    return () => observer.disconnect();
-  }, []);
 
   /*
   |-----------------------------------------------------
@@ -46,14 +30,13 @@ function Layout() {
       {/* Main layout: Sidebar + Content */}
       <Box display="flex" flex={1}>
         {/* Sidebar */}
-        <SideBar footerVisible={footerVisible} navbarHidden={trigger} />
+        <SideBar navbarHidden={trigger} />
 
         {/* Page content */}
         <Box
           component="main"
           sx={{
             flexGrow: 1,
-            marginLeft: { sm: "240px" },
             padding: 2,
             mt: 4,
           }}

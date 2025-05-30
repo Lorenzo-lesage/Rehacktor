@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import ThemeToggle from "./animationComponent/ThemeToggle";
+import ThemeToggle from "../animationComponent/ThemeToggle";
 import {
   AppBar,
   Toolbar,
@@ -12,7 +12,7 @@ import {
 import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
 import ArrowDropUpIcon from "@mui/icons-material/ArrowDropUp";
 import { CssBaseline } from "@mui/material";
-import HideOnScroll from "./animationComponent/HideOnScroll";
+import HideOnScroll from "../animationComponent/HideOnScroll";
 
 function Header(props) {
   /*
@@ -66,12 +66,12 @@ function Header(props) {
         <AppBar
           position="fixed"
           color="default"
-          elevation={1}
+          elevation={0}
           sx={{
             display: "flex",
             flexWrap: "wrap",
-            overflow: "hidden",
-            backgroundColor: "background.paper",
+            backgroundColor: "transparent",
+            backdropFilter: "blur(0.5rem)",
           }}
         >
           <Toolbar sx={{ justifyContent: "space-between" }}>

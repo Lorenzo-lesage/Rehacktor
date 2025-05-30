@@ -8,6 +8,9 @@ const apiConfig = {
     genres: `${BASE_URL}/genres?key=${API_KEY}`,
     gamesByDate: (startDate, endDate, page = 1) =>
       `${BASE_URL}/games?key=${API_KEY}&dates=${startDate},${endDate}&page=${page}`,
+    gamesByGenre: (genre, page = 1) =>
+      `${BASE_URL}/games?key=${API_KEY}&genres=${genre}&page=${page}`,
+    gameDetails: (id) => `${BASE_URL}/games/${id}?key=${API_KEY}`,
   },
 };
 
