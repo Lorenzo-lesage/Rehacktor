@@ -13,6 +13,7 @@ import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
 import ArrowDropUpIcon from "@mui/icons-material/ArrowDropUp";
 import { CssBaseline } from "@mui/material";
 import HideOnScroll from "../animationComponent/HideOnScroll";
+import { Link } from "react-router";
 
 function Header(props) {
   /*
@@ -76,7 +77,9 @@ function Header(props) {
         >
           <Toolbar sx={{ justifyContent: "space-between" }}>
             <Typography variant="h6" component="div" fontWeight="bold">
-              Rehacktor
+              <Link to="/">
+                Rehacktor
+              </Link>
             </Typography>
 
             <Box display="flex" alignItems="center" gap={2}>

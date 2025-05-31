@@ -19,7 +19,7 @@ function CardGame({ game }) {
   */
 
   return (
-    <Card sx={{ maxWidth: 345, m: 2 }} key={game.id} elevation={16}>
+    <Card sx={{ width: 300, m: 2 }} key={game.id} elevation={16}>
       <LazyLoadGameImage image={image} />
 
       <CardContent
@@ -40,7 +40,16 @@ function CardGame({ game }) {
             flexDirection: "column",
           }}
         >
-          <Typography variant="body2" color="text.secondary">
+          <Typography
+            variant="body2"
+            color="text.secondary"
+            sx={{
+              overflow: "hidden",
+              whiteSpace: "nowrap",
+              textOverflow: "ellipsis",
+              display: "block",
+            }}
+          >
             {genres}
           </Typography>
           <Typography variant="caption" display="block" gutterBottom>

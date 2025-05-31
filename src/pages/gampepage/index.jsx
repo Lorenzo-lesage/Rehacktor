@@ -1,8 +1,15 @@
 import { useParams } from "react-router";
 import apiConfig from "../../config/apiConfig";
 import useFetch from "../../hooks/useFetch";
-import { Box, Typography } from "@mui/material";
-import { CircularProgress } from "@mui/material";
+import {
+  Box,
+  Typography,
+  CircularProgress,
+  Container,
+  Paper,
+  Stack,
+} from "@mui/material";
+import { Link } from "react-router";
 
 function GamePage() {
   /*
@@ -12,7 +19,10 @@ function GamePage() {
   */
 
   const { id } = useParams();
-  const { data, error, loading } = useFetch(apiConfig.endpoints.gameDetails(id));
+  const { data, error, loading } = useFetch(
+    apiConfig.endpoints.gameDetails(id)
+  );
+  console.log(data);
 
   /*
   |-----------------------------------------------------
@@ -24,7 +34,7 @@ function GamePage() {
     return (
       <Box
         sx={{
-          height: "100%",
+          height: "100vh",
           width: "100%",
           display: "flex",
           justifyContent: "center",
@@ -40,7 +50,7 @@ function GamePage() {
     return (
       <Box
         sx={{
-          height: "100%",
+          height: "100vh",
           width: "100%",
           display: "flex",
           justifyContent: "center",
@@ -55,28 +65,168 @@ function GamePage() {
   }
 
   return (
-    <Box sx={{ paddingTop: "3rem" }}>
-        <Box>
-            <Typography variant="body2" color="text.secondary">
-                {data && data.realeased}
+    <Container sx={{ paddingTop: "4rem", paddingBottom: "4rem" }}>
+      <Paper
+        elevation={4}
+        sx={{ padding: "2rem", backgroundColor: "background.default" }}
+      >
+        <Stack spacing={3}>
+          {/* Release date */}
+          <Typography variant="body2" color="text.secondary">
+            {data && data.released}
+          </Typography>
+          {/* Title */}
+          <Typography variant="h3" component="h1" color="text.primary">
+            {data && data.name}
+          </Typography>
+          {/* Rating */}
+          <Typography variant="body1">
+            Rating: {data && data.rating?.toFixed(1)}
+          </Typography>
+          {/* About */}
+          <Box>
+            <Typography variant="h6" gutterBottom>
+              About:
             </Typography>
-            <Typography variant="h1" color="text.primary">
-                {data && data.name}
-            </Typography>
-            <Typography variant="body1">
-                Rating: {data && data.rating}
-            </Typography>
-            <Typography variant="body1">
-                About:
-            </Typography>
+
+            {/* Description */}
             <Typography variant="body1" color="text.secondary">
-                {data && data.description_raw}
+              {data && data.description_raw}
             </Typography>
+          </Box>
+          {/* Image */}
+          {data && data.background_image && (
+            <Box
+              component="img"
+              src={data.background_image}
+              alt={`Image of the game ${data.name}`}
+              sx={{
+                width: "100%",
+                maxHeight: "500px",
+                objectFit: "cover",
+                borderRadius: 2,
+                marginTop: 2,
+              }}
+            />
+          )}
+          {/* Genres/Platforms */}
+          <Box sx={{ mt: 4, display: "flex", justifyContent: "space-between" }}>
+            {/* Genres */}
             <Box>
-                <img src={data && data.background_image} alt={`image of the game {data && data.name}`} />
+              <Typography variant="h6" gutterBottom>
+                Genres:
+              </Typography>
+              <Box sx={{ display: "flex", flexWrap: "wrap"}}>
+                {data &&
+                  data.genres.map((genre, index) => (
+                    <Box
+                      key={genre.id}
+                      sx={{
+                        textDecoration: "none",
+                        color: "text.secondary",
+                        fontSize: "1rem",
+                        fontWeight: 500,
+                        "&:hover": {
+                          textDecoration: "underline",
+                        },
+                      }}
+                    >
+                      <Link to={`/games/${genre.slug}`}>{genre.name}</Link>
+                      {index < data.genres.length - 1 && ","}&nbsp;
+                    </Box>
+                  ))}
+              </Box>
             </Box>
-        </Box>
-    </Box>
+            {/* Platforms */}
+            <Box sx={{ textAlign: "end" }}>
+              <Typography variant="h6" gutterBottom>
+                Platforms:
+              </Typography>
+              <Box sx={{ display: "flex", flexWrap: "wrap", gap: 1, color: "text.secondary" }}>
+                {data &&
+                  data.parent_platforms
+                    .map((platform) => platform.platform.name)
+                    .join(", ")}
+              </Box>
+            </Box>
+          </Box>
+          {/* Stores/Metacritic */}
+          <Box sx={{ display: "flex", justifyContent: "space-between" }}>
+            {/* Stores */}
+            <Box>
+              <Typography variant="h6" gutterBottom>
+                Stores:
+              </Typography>
+              <Box sx={{ display: "flex", flexWrap: "wrap", gap: 1, color: "text.secondary" }}>
+                {data &&
+                  data.stores.map((store) => store.store.name).join(", ")}
+              </Box>
+            </Box>
+            {/* Metacritic */}
+            <Box sx={{ textAlign: "end" }}>
+              <Typography variant="h6" gutterBottom>
+                Metacritic:
+              </Typography>
+              <Typography variant="body1" color="text.secondary">
+                {data && data.metacritic}/100
+              </Typography>
+            </Box>
+          </Box>
+          {/* Publishers/Developers */}
+          <Box sx={{ display: "flex", justifyContent: "space-between" }}>
+            {/* Publishers */}
+            <Box>
+              <Typography variant="h6" gutterBottom>
+                Publishers:
+              </Typography>
+              <Box sx={{ display: "flex", flexWrap: "wrap", gap: 1, color: "text.secondary" }}>
+                {data &&
+                  data.publishers.map((publisher) => publisher.name).join(", ")}
+              </Box>
+            </Box>
+            {/* Developers */}
+            <Box sx={{ textAlign: "end" }}>
+              <Typography variant="h6" gutterBottom>
+                Developers:
+              </Typography>
+              <Box sx={{ display: "flex", flexWrap: "wrap", gap: 1, color: "text.secondary" }}>
+                {data &&
+                  data.developers.map((developer) => developer.name).join(", ")}
+              </Box>
+            </Box>
+          </Box>
+          {/* Tags */}
+          <Box>
+            <Typography variant="h6" gutterBottom>
+              Tags:
+            </Typography>
+            <Box sx={{ display: "flex", flexWrap: "wrap", gap: 1, color: "text.secondary" }}>
+              {data && data.tags.map((tag) => `#${tag.name}`).join(", ")}
+            </Box>
+          </Box>
+
+          {/* Website */}
+          <Box sx={{ textAlign: "center", color: "#1751B7", textDecoration: "underline" }}>
+            {data && data.website ? (
+              <Link
+                href={data.website}
+                target="_blank"
+                rel="noopener noreferrer"
+                variant="body1"
+                color="secondary"
+                underline="hover"
+              >
+                {data.website}
+              </Link>
+            ) : (
+              <Typography variant="body1" color="text.secondary">
+                No website available
+              </Typography>
+            )}
+          </Box>
+        </Stack>
+      </Paper>
+    </Container>
   );
 }
 

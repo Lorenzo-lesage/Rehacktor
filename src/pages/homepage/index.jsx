@@ -12,7 +12,7 @@ function HomePage() {
   const { data, error, loading } = useFetch(
     apiConfig.endpoints.gamesByDate("2024-01-01", "2024-12-31", 1)
   );
-
+  
   /*
   |-----------------------------------------------------
   | Return
