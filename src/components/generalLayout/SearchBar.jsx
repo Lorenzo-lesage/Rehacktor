@@ -1,8 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router";
-import { InputBase, IconButton, Paper } from "@mui/material";
+import { InputBase, IconButton, Paper, Box } from "@mui/material";
 import SearchIcon from "@mui/icons-material/Search";
-
 
 function SearchBar() {
   /*
@@ -33,35 +32,87 @@ function SearchBar() {
 
   return (
     <>
-      <Paper
-        component="form"
-        onSubmit={handleSearch}
+      <Box
         sx={{
-          p: "0 0.5rem",
+          position: "relative",
+          width: { xs: "100%", sm: 200 },
+          height: 35,
           display: "flex",
           alignItems: "center",
-          width: { xs: '100%', sm: 200 },
-          height: 35,
-          borderRadius: 5,
-          backgroundColor: "background.secondary",
         }}
       >
-        <InputBase
-          type="text"
-          name="search"
-          value={search}
-          sx={{ ml: 1, flex: 1 }}
-          placeholder={
-            ariaInvalid ? "Please enter a valid search term" : "Search"
-          }
-          inputProps={{ "aria-label": "search google maps" }}
-          aria-invalid={ariaInvalid}
-          onChange={(e) => setSearch(e.target.value)}
-        />
-        <IconButton type="submit" sx={{ p: "10px" }} aria-label="search">
-          <SearchIcon />
-        </IconButton>
-      </Paper>
+        {/* Fake placeholder scrolling */}
+        {ariaInvalid && !search && (
+          <Box
+            sx={{
+              position: "absolute",
+              top: 0,
+              left: 12,
+              height: "100%",
+              display: "flex",
+              alignItems: "center",
+              whiteSpace: "nowrap",
+              overflow: "hidden",
+              width: "calc(100% - 35px)",
+              pointerEvents: "none",
+              color: "text.disabled",
+              fontSize: "0.875rem",
+            }}
+          >
+            <Box
+              sx={{
+                display: "inline-block",
+                animation: "marqueeBounce 6s ease-in-out infinite",
+              }}
+            >
+              Please enter a valid search term
+            </Box>
+          </Box>
+        )}
+
+        <Paper
+          component="form"
+          onSubmit={handleSearch}
+          elevation={0}
+          sx={{
+            p: "0 0.5rem",
+            display: "flex",
+            alignItems: "center",
+            height: 25,
+            borderRadius: 2,
+            backgroundColor: "background.accent",
+            width: "100%",
+          }}
+        >
+          <InputBase
+            type="text"
+            name="search"
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            sx={{
+              ml: 1,
+              flex: 1,
+              "& input:-webkit-autofill": {
+                boxShadow: "0 0 0px 1000px background.secondary inset",
+                WebkitTextFillColor: (theme) => theme.palette.text.primary,
+                transition: "background-color 5000s ease-in-out 0s",
+                color: "text.primary"
+              },
+            }}
+            placeholder={ariaInvalid ? "" : "Search"}
+            inputProps={{ "aria-label": "search input" }}
+            aria-invalid={ariaInvalid}
+          />
+          <IconButton
+            type="submit"
+            sx={{ p: "10px" }}
+            aria-label="search"
+            disabled={search.trim() === ""}
+          >
+            <SearchIcon />
+          </IconButton>
+        </Paper>
+      </Box>
     </>
   );
 }

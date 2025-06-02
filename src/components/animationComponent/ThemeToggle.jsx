@@ -1,5 +1,6 @@
 import { useColorScheme, FormControlLabel, Switch, Box } from "@mui/material";
 import { styled } from "@mui/material/styles";
+import { m } from "framer-motion";
 
 const MaterialUISwitch = styled(Switch)(({ theme }) => ({
   width: 40,
@@ -76,7 +77,7 @@ function ThemeToggle() {
 
   /**
    * Method to change the theme
-   * @param {*} event 
+   * @param {*} event
    */
   const handleChange = (event) => {
     setMode(event.target.checked ? "dark" : "light");

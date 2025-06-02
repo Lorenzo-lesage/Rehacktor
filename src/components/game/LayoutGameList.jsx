@@ -43,13 +43,17 @@ function GamesList({ data, loading, error, title, titleStyles = {} }) {
   }
 
   return (
-    <Box sx={{ paddingTop: "2rem" }}>
-      <Grid container spacing={2} justifyContent="center">
-        <Grid size={11}>
-          <Typography variant="h4" gutterBottom sx={titleStyles}>
-            {title}
-          </Typography>
-        </Grid>
+    <Box sx={{ paddingTop: "2rem", px: "1rem" }}>
+      <Typography variant="h3" gutterBottom sx={titleStyles}>
+        {title}
+      </Typography>
+
+      <Grid
+        container
+        columns={{ xs: 4, sm: 8, md: 12 }}
+        spacing={1}
+        justifyContent="center"
+      >
         {data?.results?.map((game) => (
           <Grid key={game.id}>
             <CardGame game={game} />

@@ -63,7 +63,7 @@ function CardGame({ game }) {
           component={Link}
           to={`/games/${game.slug}/${game.id}`}
         >
-          Dettagli
+          Details
         </Button>
       </CardContent>
     </Card>

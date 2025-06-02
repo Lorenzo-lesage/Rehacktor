@@ -23,10 +23,11 @@ const theme = createTheme({
         mode: "dark",
         background: {
           default: "#111827",
-          paper: "#1f2937",
+          paper: "#000000",
+          accent: "#1f2937",
         },
         text: {
-          primary: "#c9d1d9",
+          primary: "#58A6FF",
           secondary: "#8b949e",
         },
         primary: {

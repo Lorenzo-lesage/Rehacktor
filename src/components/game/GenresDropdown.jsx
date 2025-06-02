@@ -8,6 +8,7 @@ import {
   Alert,
   CircularProgress,
   Box,
+  Divider,
 } from "@mui/material";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import CategoryIcon from "@mui/icons-material/Category";
@@ -47,28 +48,49 @@ function GenresDropdown() {
   return (
     <>
       <Accordion
-        sx={{ border: 0, boxShadow: 0, backgroundColor: "transparent" }}
+        sx={{
+          border: 0,
+          backgroundColor: "transparent",
+        }}
         elevation={0}
       >
-        <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+        <AccordionSummary
+          sx={{
+            ":hover": { backgroundColor: "background.paper" },
+            borderRadius: 1,
+            transition: "all 0.2s ease-in-out",
+          }}
+          expandIcon={<ExpandMoreIcon sx={{ color: "text.primary" }} fontSize="small" />}
+        >
           <Typography
             variant="h6"
             sx={{ display: "flex", alignItems: "center", gap: 1 }}
           >
-            <CategoryIcon />
+            <CategoryIcon fontSize="small" />
             Genres
           </Typography>
         </AccordionSummary>
         <AccordionDetails>
           {error && <Alert severity="error">{error}</Alert>}
-          <List>
+          <List sx={{ p: 0 }}>
             {data?.results?.map((genre) => (
-              <ListItem
-                key={genre.id}
-                sx={{ paddingBottom: "0.1rem", paddingTop: "0" }}
-              >
-                <Link to={`/games/${genre.slug}`}>{genre.name}</Link>
-              </ListItem>
+              <Box key={genre.id}>
+                <ListItem
+                  component={Link}
+                  to={`/games/${genre.slug}`}
+                  sx={{
+                    ":hover": { backgroundColor: "background.paper" },
+                    borderRadius: 1,
+                    transition: "all 0.2s ease-in-out",
+                    py: 0.5,
+                    color: "text.primary",
+                    textDecoration: "none",
+                  }}
+                >
+                  {genre.name}
+                </ListItem>
+                <Divider component="li" />
+              </Box>
             ))}
           </List>
         </AccordionDetails>
