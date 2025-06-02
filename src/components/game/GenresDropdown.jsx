@@ -12,8 +12,8 @@ import {
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import CategoryIcon from "@mui/icons-material/Category";
 import apiConfig from "../../config/apiConfig.js";
-import useFetch from "../../hooks/useFetch.js";
-import { Link } from 'react-router';
+import useFetchSolution from "../../hooks/useFetchSolution.js";
+import { Link } from "react-router";
 
 function GenresDropdown() {
   /*
@@ -22,7 +22,8 @@ function GenresDropdown() {
   |-----------------------------------------------------
   */
 
-  const { data, error, loading } = useFetch(apiConfig.endpoints.genres);
+  const initialUrl = apiConfig.endpoints.genres;
+  const { data, loading, error, updateUrl } = useFetchSolution(initialUrl);
 
   /*
   |-----------------------------------------------------
@@ -61,7 +62,7 @@ function GenresDropdown() {
         <AccordionDetails>
           {error && <Alert severity="error">{error}</Alert>}
           <List>
-            {data.results.map((genre) => (
+            {data?.results?.map((genre) => (
               <ListItem
                 key={genre.id}
                 sx={{ paddingBottom: "0.1rem", paddingTop: "0" }}

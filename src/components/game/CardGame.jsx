@@ -53,7 +53,7 @@ function CardGame({ game }) {
             {genres}
           </Typography>
           <Typography variant="caption" display="block" gutterBottom>
-            Release date: {game.released}
+            Release date: {game.released || "N/A"}
           </Typography>
         </Box>
         <Button

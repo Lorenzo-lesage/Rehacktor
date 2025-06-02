@@ -11,6 +11,8 @@ const apiConfig = {
     gamesByGenre: (genre, page = 1) =>
       `${BASE_URL}/games?key=${API_KEY}&genres=${genre}&page=${page}`,
     gameDetails: (id) => `${BASE_URL}/games/${id}?key=${API_KEY}`,
+    gameSearch: (gameName) =>
+      `${BASE_URL}/games?key=${API_KEY}&search=${gameName}`,
   },
 };
 

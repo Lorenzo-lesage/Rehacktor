@@ -43,7 +43,7 @@ function GamesList({ data, loading, error, title, titleStyles = {} }) {
   }
 
   return (
-    <Box sx={{ paddingTop: "3rem" }}>
+    <Box sx={{ paddingTop: "2rem" }}>
       <Grid container spacing={2} justifyContent="center">
         <Grid size={11}>
           <Typography variant="h4" gutterBottom sx={titleStyles}>

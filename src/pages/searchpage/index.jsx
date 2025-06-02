@@ -1,36 +1,45 @@
-import useFetchSolution from "../../hooks/useFetchSolution.js";
+import { useEffect } from "react";
+import { useSearchParams } from "react-router";
 import apiConfig from "../../config/apiConfig";
+import useFetchSolution from "../../hooks/useFetchSolution.js";
 import GamesList from "../../components/game/LayoutGameList.jsx";
 
-function HomePage() {
+function SearchPage() {
   /*
   |-----------------------------------------------------
   | Data
   |-----------------------------------------------------
   */
 
-  const initialUrl = apiConfig.endpoints.gamesByDate(
-    "2024-01-01",
-    "2024-12-31",
-    1
-  );
+  let [searchParams] = useSearchParams();
+  const game = searchParams.get("query");
+  const initialUrl = apiConfig.endpoints.gameSearch(game)
   const { data, loading, error, updateUrl } = useFetchSolution(initialUrl);
+
+  /*
+  |-----------------------------------------------------
+  | Hooks
+  |-----------------------------------------------------
+  */
+
+  useEffect(() => {
+    updateUrl(initialUrl);
+  }, [initialUrl, updateUrl]);
 
   /*
   |-----------------------------------------------------
   | Return
   |-----------------------------------------------------
   */
-
   return (
     <GamesList
       data={data}
       loading={loading}
       error={error}
-      title="Home"
+      title={`Results for "${game}"`}
       titleStyles={{ color: "secondary.main", fontWeight: 700 }}
     />
   );
 }
 
-export default HomePage;
+export default SearchPage;

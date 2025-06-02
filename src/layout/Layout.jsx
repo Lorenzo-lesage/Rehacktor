@@ -5,6 +5,7 @@ import SideBar from "../components/generalLayout/SideBar";
 import { Outlet } from "react-router";
 import { useRef } from "react";
 import useScrollTrigger from "@mui/material/useScrollTrigger";
+import SearchBar from "../components/generalLayout/SearchBar";
 
 function Layout() {
   /*
@@ -38,9 +39,12 @@ function Layout() {
           sx={{
             flexGrow: 1,
             padding: 2,
-            mt: 4,
+            mt: 8,
           }}
         >
+          <Box sx={{ display: { xs: "block", md: "none" } }}>
+            <SearchBar />
+          </Box>
           <Outlet />
         </Box>
       </Box>

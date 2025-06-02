@@ -1,7 +1,8 @@
 import { useParams } from "react-router";
 import apiConfig from "../../config/apiConfig";
-import useFetch from "../../hooks/useFetch";
+import useFetchSolution from "../../hooks/useFetchSolution.js";
 import GamesList from "../../components/game/LayoutGameList.jsx";
+import { useEffect } from "react";
 
 function GenrePage() {
   /*
@@ -11,6 +12,8 @@ function GenrePage() {
   */
 
   const { genre } = useParams();
+  const initialUrl = apiConfig.endpoints.gamesByGenre(genre, 1);
+  const genreUrl = apiConfig.endpoints.genres;
   /**
    * Fetch dei giochi di un determinato genere
    */
@@ -18,31 +21,34 @@ function GenrePage() {
     data: gamesData,
     loading: gamesLoading,
     error: gamesError,
-  } = useFetch(apiConfig.endpoints.gamesByGenre(genre, 1));
-  /**
-   * Fetch dei generi di gioco
-   */
+    updateUrl: updateGamesUrl,
+  } = useFetchSolution(initialUrl);
   const {
     data: genresData,
     loading: genresLoading,
     error: genresError,
-  } = useFetch(apiConfig.endpoints.genres);
-  /**
-   * Informazioni sul genere
-   */
-  const genreInfo = genresData?.results?.find((g) => g.slug === genre);
-  /**
-   * Titolo del genere dallo slug
-   */
-  const genreTitle = genreInfo?.name || genre;
-  const isLoading = gamesLoading || genresLoading;
-  const error = gamesError || genresError;
+  } = useFetchSolution(genreUrl);
+
+  /*
+  |-----------------------------------------------------
+  | Hooks
+  |-----------------------------------------------------
+  */
+
+  useEffect(() => {
+    updateGamesUrl(apiConfig.endpoints.gamesByGenre(genre, 1));
+  }, [updateGamesUrl, genre]);
 
   /*
   |-----------------------------------------------------
   | Return
   |-----------------------------------------------------
   */
+
+  const genreInfo = genresData?.results?.find((g) => g.slug === genre);
+  const genreTitle = genreInfo?.name || genre;
+  const isLoading = gamesLoading || genresLoading;
+  const error = gamesError && genresError;
 
   return (
     <GamesList

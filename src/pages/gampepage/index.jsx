@@ -1,6 +1,6 @@
 import { useParams } from "react-router";
 import apiConfig from "../../config/apiConfig";
-import useFetch from "../../hooks/useFetch";
+import useFetchSolution from "../../hooks/useFetchSolution.js";
 import {
   Box,
   Typography,
@@ -19,10 +19,8 @@ function GamePage() {
   */
 
   const { id } = useParams();
-  const { data, error, loading } = useFetch(
-    apiConfig.endpoints.gameDetails(id)
-  );
-  console.log(data);
+  const initialUrl = apiConfig.endpoints.gameDetails(id);
+  const { data, loading, error, updateUrl } = useFetchSolution(initialUrl);
 
   /*
   |-----------------------------------------------------
@@ -65,32 +63,35 @@ function GamePage() {
   }
 
   return (
-    <Container sx={{ paddingTop: "4rem", paddingBottom: "4rem" }}>
+    <Container sx={{ paddingTop: "2rem", paddingBottom: "4rem" }}>
       <Paper
         elevation={4}
         sx={{ padding: "2rem", backgroundColor: "background.default" }}
       >
         <Stack spacing={3}>
-          {/* Release date */}
-          <Typography variant="body2" color="text.secondary">
-            {data && data.released}
-          </Typography>
+          { /* Realase date/rating */}
+          <Box sx={{ display: "flex", justifyContent: "space-between" }}>
+            {/* Release date */}
+            <Typography variant="body2" color="text.secondary">
+              {data && data.released}
+            </Typography>
+            {/* Rating */}
+            <Typography variant="body1" color="text.secondary">
+              {data && data.rating?.toFixed(1)}/5
+            </Typography>
+          </Box>
           {/* Title */}
-          <Typography variant="h3" component="h1" color="text.primary">
+          <Typography variant="h3" component="h1" color="text.primary" sx={{ textAlign: "center" }}>
             {data && data.name}
-          </Typography>
-          {/* Rating */}
-          <Typography variant="body1">
-            Rating: {data && data.rating?.toFixed(1)}
           </Typography>
           {/* About */}
           <Box>
-            <Typography variant="h6" gutterBottom>
-              About:
-            </Typography>
-
             {/* Description */}
-            <Typography variant="body1" color="text.secondary">
+            <Typography
+              variant="body1"
+              color="text.secondary"
+              sx={{ textAlign: "center" }}
+            >
               {data && data.description_raw}
             </Typography>
           </Box>
@@ -116,7 +117,7 @@ function GamePage() {
               <Typography variant="h6" gutterBottom>
                 Genres:
               </Typography>
-              <Box sx={{ display: "flex", flexWrap: "wrap"}}>
+              <Box sx={{ display: "flex", flexWrap: "wrap" }}>
                 {data &&
                   data.genres.map((genre, index) => (
                     <Box
@@ -142,7 +143,14 @@ function GamePage() {
               <Typography variant="h6" gutterBottom>
                 Platforms:
               </Typography>
-              <Box sx={{ display: "flex", flexWrap: "wrap", gap: 1, color: "text.secondary" }}>
+              <Box
+                sx={{
+                  display: "flex",
+                  flexWrap: "wrap",
+                  gap: 1,
+                  color: "text.secondary",
+                }}
+              >
                 {data &&
                   data.parent_platforms
                     .map((platform) => platform.platform.name)
@@ -157,7 +165,14 @@ function GamePage() {
               <Typography variant="h6" gutterBottom>
                 Stores:
               </Typography>
-              <Box sx={{ display: "flex", flexWrap: "wrap", gap: 1, color: "text.secondary" }}>
+              <Box
+                sx={{
+                  display: "flex",
+                  flexWrap: "wrap",
+                  gap: 1,
+                  color: "text.secondary",
+                }}
+              >
                 {data &&
                   data.stores.map((store) => store.store.name).join(", ")}
               </Box>
@@ -179,7 +194,14 @@ function GamePage() {
               <Typography variant="h6" gutterBottom>
                 Publishers:
               </Typography>
-              <Box sx={{ display: "flex", flexWrap: "wrap", gap: 1, color: "text.secondary" }}>
+              <Box
+                sx={{
+                  display: "flex",
+                  flexWrap: "wrap",
+                  gap: 1,
+                  color: "text.secondary",
+                }}
+              >
                 {data &&
                   data.publishers.map((publisher) => publisher.name).join(", ")}
               </Box>
@@ -189,7 +211,14 @@ function GamePage() {
               <Typography variant="h6" gutterBottom>
                 Developers:
               </Typography>
-              <Box sx={{ display: "flex", flexWrap: "wrap", gap: 1, color: "text.secondary" }}>
+              <Box
+                sx={{
+                  display: "flex",
+                  flexWrap: "wrap",
+                  gap: 1,
+                  color: "text.secondary",
+                }}
+              >
                 {data &&
                   data.developers.map((developer) => developer.name).join(", ")}
               </Box>
@@ -200,13 +229,26 @@ function GamePage() {
             <Typography variant="h6" gutterBottom>
               Tags:
             </Typography>
-            <Box sx={{ display: "flex", flexWrap: "wrap", gap: 1, color: "text.secondary" }}>
+            <Box
+              sx={{
+                display: "flex",
+                flexWrap: "wrap",
+                gap: 1,
+                color: "text.secondary",
+              }}
+            >
               {data && data.tags.map((tag) => `#${tag.name}`).join(", ")}
             </Box>
           </Box>
 
           {/* Website */}
-          <Box sx={{ textAlign: "center", color: "#1751B7", textDecoration: "underline" }}>
+          <Box
+            sx={{
+              textAlign: "center",
+              color: "#1751B7",
+              textDecoration: "underline",
+            }}
+          >
             {data && data.website ? (
               <Link
                 href={data.website}

@@ -14,6 +14,7 @@ import ArrowDropUpIcon from "@mui/icons-material/ArrowDropUp";
 import { CssBaseline } from "@mui/material";
 import HideOnScroll from "../animationComponent/HideOnScroll";
 import { Link } from "react-router";
+import SearchBar from "./SearchBar";
 
 function Header(props) {
   /*
@@ -77,12 +78,13 @@ function Header(props) {
         >
           <Toolbar sx={{ justifyContent: "space-between" }}>
             <Typography variant="h6" component="div" fontWeight="bold">
-              <Link to="/">
-                Rehacktor
-              </Link>
+              <Link to="/">Rehacktor</Link>
             </Typography>
 
             <Box display="flex" alignItems="center" gap={2}>
+              <Box sx={{ display: { xs: "none", md: "flex" } }}>
+                <SearchBar />
+              </Box>
               <Button color="secondary" href="#">
                 Services
               </Button>
