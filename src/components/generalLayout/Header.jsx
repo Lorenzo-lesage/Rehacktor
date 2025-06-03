@@ -39,15 +39,11 @@ function Header(props) {
   const [anchorEl, setAnchorEl] = useState(null);
   const open = Boolean(anchorEl);
   const { session } = useContext(SessionContext);
-  const fullName = session?.user.user_metadata;
-  const initials = `${fullName?.first_name?.[0] || ""}${
-    fullName?.last_name?.[0] || ""
-  }`.toUpperCase();
-  console.log(session);
-  const [first_name, setFirstName] = useState(null);
-  const [last_name, setLastName] = useState(null);
-  const [username, setUsername] = useState(null);
-  const [avatar_url, setAvatarUrl] = useState(null);
+  const { userProfile } = useContext(SessionContext);
+  console.log(
+    "🚀 ~ file: Header.jsx ~ line 30 ~ Header ~ userProfile",
+    userProfile
+  );
 
   /*
   |-----------------------------------------------------
@@ -85,43 +81,6 @@ function Header(props) {
   | Hooks
   |-----------------------------------------------------
   */
-
-  useEffect(() => {
-    if (!session) {
-      setAnchorEl(null);
-    }
-  }, [session]);
-
-  useEffect(() => {
-    let ignore = false;
-
-    const getProfile = async () => {
-      const { user } = session;
-
-      const { data, error } = await supabase
-        .from("profiles")
-        .select("username, first_name, last_name, avatar_url")
-        .eq("id", user.id)
-        .single();
-
-      if (!ignore) {
-        if (error) {
-          console.warn(error);
-        } else if (data) {
-          setUsername(data.username);
-          setFirstName(data.first_name);
-          setLastName(data.last_name);
-          setAvatarUrl(data.avatar_url);
-        }
-      }
-    };
-
-    getProfile();
-
-    return () => {
-      ignore = true;
-    };
-  }, [session]);
 
   /*
   |-----------------------------------------------------
@@ -168,6 +127,9 @@ function Header(props) {
               >
                 Services
               </Button>
+              <Box>
+                Benvenuto, {userProfile?.first_name} {userProfile?.last_name}
+              </Box>
 
               {/* Hover Menu Container */}
               <Box>
@@ -192,7 +154,7 @@ function Header(props) {
                         },
                       }}
                     >
-                      {avatar_url ? (
+                      {/* {avatar_url ? (
                         <Avatar
                           src={avatar_url}
                           sx={{
@@ -216,7 +178,7 @@ function Header(props) {
                           {first_name?.charAt(0).toUpperCase()}
                           {last_name?.charAt(0).toUpperCase()}
                         </Avatar>
-                      )}
+                      )} */}
                       Account
                     </Button>
 

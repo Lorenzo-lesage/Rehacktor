@@ -20,7 +20,7 @@ function AccountPage() {
   |-----------------------------------------------------
   */
 
-  const { session } = useContext(SessionContext);
+  const { session, setUserProfile } = useContext(SessionContext); // <-- aggiunto setUserProfile
   const [loading, setLoading] = useState(true);
   const [username, setUsername] = useState(null);
   const [first_name, setFirstName] = useState(null);
@@ -75,12 +75,8 @@ function AccountPage() {
 
   /**
    * Method to update profile
-   * @param {*} event
-   * @param {*} avatarUrl
    */
-  const updateProfile = async (event, avatarUrl) => {
-    event.preventDefault();
-
+  const updateProfile = async () => {
     setLoading(true);
     const { user } = session;
 
@@ -89,7 +85,7 @@ function AccountPage() {
       username,
       first_name,
       last_name,
-      avatar_url: avatarUrl,
+      avatar_url,
       updated_at: new Date(),
     };
 
@@ -103,10 +99,46 @@ function AccountPage() {
       console.warn(error);
     } else {
       showToast("success", "Profile updated successfully!");
-      setAvatarUrl(avatarUrl);
+
+      // ✅ Aggiorna anche il contesto per propagare i nuovi dati
+      setUserProfile({
+        username,
+        first_name,
+        last_name,
+        avatar_url,
+      });
+
+      navigate("/");
     }
 
     setLoading(false);
+  };
+
+  /**
+   * Method to handle avatar upload
+   * @param {string} filePath
+   */
+  const handleAvatarUpload = async (filePath) => {
+    try {
+      setAvatarUrl(filePath); // aggiorna lo state per far vedere subito l'immagine
+
+      const { error } = await supabase
+        .from("profiles") // assicurati che la tabella sia corretta
+        .update({ avatar_url: filePath })
+        .eq("id", session.user.id);
+
+      if (error) {
+        throw error;
+      }
+
+      // ✅ Aggiorna il contesto anche per l'avatar
+      setUserProfile((prev) => ({
+        ...prev,
+        avatar_url: filePath,
+      }));
+    } catch (error) {
+      console.error("Errore aggiornando l'avatar nel DB:", error.message);
+    }
   };
 
   /*
@@ -118,19 +150,25 @@ function AccountPage() {
   return (
     <Box className="container" maxWidth="sm" mx="auto" mt={4}>
       <Typography variant="h3" gutterBottom align="center">
-        {first_name?.toUpperCase()}{" "}
-        {last_name?.toUpperCase()}
+        {first_name?.toUpperCase()} {last_name?.toUpperCase()}
       </Typography>
 
       <Typography variant="h5" gutterBottom>
         Profile Settings
       </Typography>
 
-      <Box component="form" onSubmit={updateProfile} className="form-widget">
+      <Box
+        component="form"
+        onSubmit={(e) => {
+          e.preventDefault();
+          updateProfile();
+        }}
+        className="form-widget"
+      >
         <AvatarAccount
           url={avatar_url}
           size={150}
-          onUpload={(event, url) => updateProfile(event, url)}
+          onUpload={handleAvatarUpload}
           firstName={first_name}
           lastName={last_name}
         />

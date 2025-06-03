@@ -157,16 +157,6 @@ function RegisterPage() {
     event.preventDefault();
   };
 
-  /**
-   * Handle key press
-   * @param event
-   */
-  const handleKeyPress = (event) => {
-    if (event.key === "Enter") {
-      onSubmit(onSubmit)();
-    }
-  };
-
   /*
   |-----------------------------------------------------
   | Return
@@ -180,7 +170,7 @@ function RegisterPage() {
       </Typography>
 
       {/* Form */}
-      <Box component="form" onSubmit={onSubmit} noValidate onKeyDown={handleKeyPress}>
+      <Box component="form" onSubmit={onSubmit} noValidate>
         <Stack spacing={2}>
           {/* Email field */}
           <TextField

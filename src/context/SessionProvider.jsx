@@ -1,21 +1,11 @@
+// SessionProvider.jsx
 import { useState, useEffect } from "react";
 import SessionContext from "./SessionContext";
 import { supabase } from "../supabase/supabase-client";
 
 function SessionProvider({ children }) {
-  /*
-  |-----------------------------------------------------
-  | Data
-  |-----------------------------------------------------
-  */
-
   const [session, setSession] = useState(null);
-
-  /*
-  |-----------------------------------------------------
-  | Hooks
-  |-----------------------------------------------------
-  */
+  const [userProfile, setUserProfile] = useState(null);
 
   useEffect(() => {
     const {
@@ -23,8 +13,10 @@ function SessionProvider({ children }) {
     } = supabase.auth.onAuthStateChange((event, session) => {
       if (event === "SIGNED_OUT") {
         setSession(null);
+        setUserProfile(null);
       } else if (session) {
         setSession(session);
+        // (opzionale) puoi anche chiamare qui fetchUserProfile(session.user.id)
       }
     });
 
@@ -33,14 +25,14 @@ function SessionProvider({ children }) {
     };
   }, []);
 
-  /*
-  |-----------------------------------------------------
-  | Return
-  |-----------------------------------------------------
-  */
-
   return (
-    <SessionContext.Provider value={{ session }}>
+    <SessionContext.Provider
+      value={{
+        session,
+        userProfile,
+        setUserProfile, // esportiamo questa funzione per usarla in AccountPage
+      }}
+    >
       {children}
     </SessionContext.Provider>
   );

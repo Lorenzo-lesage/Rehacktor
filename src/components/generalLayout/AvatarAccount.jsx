@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import supabase from "../../supabase/supabase-client";
-import { Box, IconButton, Avatar } from "@mui/material";
+import { Box, IconButton, Avatar, CircularProgress } from "@mui/material";
 import PhotoCamera from "@mui/icons-material/PhotoCamera";
 import { showToast } from "../../components/toast/toastHelper.jsx";
 
@@ -13,6 +13,7 @@ function AvatarAccount({ url, size, onUpload, firstName, lastName }) {
 
   const [avatarUrl, setAvatarUrl] = useState(null);
   const [uploading, setUploading] = useState(false);
+  const [loadingImage, setLoadingImage] = useState(true);
 
   /*
   |-----------------------------------------------------
@@ -21,7 +22,13 @@ function AvatarAccount({ url, size, onUpload, firstName, lastName }) {
   */
 
   useEffect(() => {
-    if (url) downloadImage(url);
+    console.log("Avatar URL received:", url);
+    if (typeof url === "string" && url.length > 0) {
+      downloadImage(url);
+    } else {
+      setAvatarUrl(null);
+      setLoadingImage(false);
+    }
   }, [url]);
 
   /*
@@ -30,15 +37,10 @@ function AvatarAccount({ url, size, onUpload, firstName, lastName }) {
   |-----------------------------------------------------
   */
 
-  /**
-   * Method to download image
-   * @param {*} path
-   */
   const downloadImage = async (path) => {
+    setLoadingImage(true);
     try {
-      const { data, error } = await supabase.storage
-        .from("avatars")
-        .download(path);
+      const { data, error } = await supabase.storage.from("avatars").download(path);
       if (error) {
         throw error;
       }
@@ -46,13 +48,11 @@ function AvatarAccount({ url, size, onUpload, firstName, lastName }) {
       setAvatarUrl(url);
     } catch (error) {
       console.log("Error downloading image: ", error.message);
+      setAvatarUrl(null);
     }
+    setLoadingImage(false);
   };
 
-  /**
-   * Method to upload avatar
-   * @param {*} event
-   */
   const uploadAvatar = async (event) => {
     try {
       setUploading(true);
@@ -66,15 +66,13 @@ function AvatarAccount({ url, size, onUpload, firstName, lastName }) {
       const fileName = `${Math.random()}.${fileExt}`;
       const filePath = `${fileName}`;
 
-      const { error: uploadError } = await supabase.storage
-        .from("avatars")
-        .upload(filePath, file);
+      const { error: uploadError } = await supabase.storage.from("avatars").upload(filePath, file);
 
       if (uploadError) {
         throw uploadError;
       }
 
-      onUpload(event,filePath);
+      onUpload(filePath);
     } catch (error) {
       showToast("error", error.message);
     } finally {
@@ -87,31 +85,64 @@ function AvatarAccount({ url, size, onUpload, firstName, lastName }) {
   | Return
   |-----------------------------------------------------
   */
- 
+
   return (
     <Box display="flex" flexDirection="column" alignItems="center">
       {avatarUrl ? (
-        <Avatar
-          alt="Avatar"
-          src={avatarUrl}
-          sx={{
-            width: size,
-            height: size,
-            boxShadow: "3px 3px 8px black",
-          }}
-        />
+        <Box sx={{ position: "relative", width: size, height: size }}>
+          <Avatar
+            alt="Avatar"
+            src={avatarUrl}
+            sx={{
+              width: size,
+              height: size,
+              boxShadow: "3px 3px 8px black",
+            }}
+          />
+          {loadingImage && (
+            <CircularProgress
+              size={size}
+              thickness={1}
+              sx={{
+                position: "absolute",
+                top: "50%",
+                left: "50%",
+                marginTop: `-${size / 2}px`,
+                marginLeft: `-${size / 2}px`,
+                backgroundColor: "rgba(0,0,0,0.7)",
+                borderRadius: "50%",
+              }}
+            />
+          )}
+        </Box>
       ) : (
-        <Avatar
-          sx={{
-            width: size,
-            height: size,
-            bgcolor: "grey.400",
-            fontSize: size / 3,
-          }}
-        >
-          {firstName?.[0]?.toUpperCase()}
-          {lastName?.[0]?.toUpperCase()}
-        </Avatar>
+        <Box sx={{ position: "relative", width: size, height: size }}>
+          <Avatar
+            sx={{
+              width: size,
+              height: size,
+              bgcolor: "grey.400",
+              fontSize: size / 3,
+            }}
+          >
+            {firstName?.[0]?.toUpperCase()}
+            {lastName?.[0]?.toUpperCase()}
+          </Avatar>
+          {loadingImage && (
+            <CircularProgress
+              size={size / 2}
+              sx={{
+                position: "absolute",
+                top: "50%",
+                left: "50%",
+                marginTop: `-${size / 4}px`,
+                marginLeft: `-${size / 4}px`,
+                backgroundColor: "rgba(255,255,255,0.7)",
+                borderRadius: "50%",
+              }}
+            />
+          )}
+        </Box>
       )}
 
       <Box width={size}>
