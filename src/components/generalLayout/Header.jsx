@@ -5,13 +5,12 @@ import {
   Toolbar,
   Typography,
   Button,
-  IconButton,
   Menu,
   MenuItem,
   Box,
   Divider,
-  Chip,
   Tooltip,
+  Avatar,
 } from "@mui/material";
 import { CssBaseline } from "@mui/material";
 import HideOnScroll from "../animationComponent/HideOnScroll";
@@ -20,7 +19,6 @@ import SearchBar from "./SearchBar";
 import supabase from "../../supabase/supabase-client";
 import { showToast } from "../toast/toastHelper";
 import { useNavigate } from "react-router";
-import FaceIcon from "@mui/icons-material/Face";
 import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
 import ArrowDropUpIcon from "@mui/icons-material/ArrowDropUp";
 import LogoutIcon from "@mui/icons-material/Logout";
@@ -41,6 +39,15 @@ function Header(props) {
   const [anchorEl, setAnchorEl] = useState(null);
   const open = Boolean(anchorEl);
   const { session } = useContext(SessionContext);
+  const fullName = session?.user.user_metadata;
+  const initials = `${fullName?.first_name?.[0] || ""}${
+    fullName?.last_name?.[0] || ""
+  }`.toUpperCase();
+  console.log(session);
+  const [first_name, setFirstName] = useState(null);
+  const [last_name, setLastName] = useState(null);
+  const [username, setUsername] = useState(null);
+  const [avatar_url, setAvatarUrl] = useState(null);
 
   /*
   |-----------------------------------------------------
@@ -81,8 +88,39 @@ function Header(props) {
 
   useEffect(() => {
     if (!session) {
-      setAnchorEl(null); // Chiudi il menu al logout
+      setAnchorEl(null);
     }
+  }, [session]);
+
+  useEffect(() => {
+    let ignore = false;
+
+    const getProfile = async () => {
+      const { user } = session;
+
+      const { data, error } = await supabase
+        .from("profiles")
+        .select("username, first_name, last_name, avatar_url")
+        .eq("id", user.id)
+        .single();
+
+      if (!ignore) {
+        if (error) {
+          console.warn(error);
+        } else if (data) {
+          setUsername(data.username);
+          setFirstName(data.first_name);
+          setLastName(data.last_name);
+          setAvatarUrl(data.avatar_url);
+        }
+      }
+    };
+
+    getProfile();
+
+    return () => {
+      ignore = true;
+    };
   }, [session]);
 
   /*
@@ -144,7 +182,6 @@ function Header(props) {
                       endIcon={
                         anchorEl ? <ArrowDropUpIcon /> : <ArrowDropDownIcon />
                       }
-                      startIcon={<FaceIcon sx={{ color: "text.tertiary" }} />}
                       sx={{
                         border: "none",
                         borderRadius: 3,
@@ -155,6 +192,31 @@ function Header(props) {
                         },
                       }}
                     >
+                      {avatar_url ? (
+                        <Avatar
+                          src={avatar_url}
+                          sx={{
+                            width: 27,
+                            height: 27,
+                            border: "2px solid black",
+                            mr: 1,
+                          }}
+                        />
+                      ) : (
+                        <Avatar
+                          sx={{
+                            bgcolor: "text.tertiary",
+                            width: 27,
+                            height: 27,
+                            fontSize: 13,
+                            border: "2px solid black",
+                            mr: 1,
+                          }}
+                        >
+                          {first_name?.charAt(0).toUpperCase()}
+                          {last_name?.charAt(0).toUpperCase()}
+                        </Avatar>
+                      )}
                       Account
                     </Button>
 
@@ -181,7 +243,7 @@ function Header(props) {
                         }}
                       >
                         <Link
-                          to="/profile"
+                          to="/account"
                           style={{
                             display: "flex",
                             alignItems: "center",

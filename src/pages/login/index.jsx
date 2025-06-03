@@ -172,7 +172,7 @@ function LoginPage() {
       </Typography>
 
       {/*Form */}
-      <form onSubmit={onSubmit} noValidate onKeyDown={handleKeyPress}>
+      <Box component="form" onSubmit={onSubmit} noValidate onKeyDown={handleKeyPress}>
         <Stack spacing={2}>
           {/*Email field */}
           <TextField
@@ -261,7 +261,7 @@ function LoginPage() {
             </Button>
           </Stack>
         </Stack>
-      </form>
+      </Box>
 
       {/*Register link */}
       <Box sx={{ mt: 2, textAlign: "center" }}>
