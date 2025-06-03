@@ -27,8 +27,9 @@ const theme = createTheme({
           accent: "#1f2937",
         },
         text: {
-          primary: "#58A6FF",
+          primary: "#c9d1d9",
           secondary: "#8b949e",
+          tertiary: "#58A6FF",
         },
         primary: {
           main: "#58a6ff",

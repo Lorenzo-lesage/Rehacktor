@@ -1,10 +1,11 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import ThemeToggle from "../animationComponent/ThemeToggle";
 import {
   AppBar,
   Toolbar,
   Typography,
   Button,
+  IconButton,
   Menu,
   MenuItem,
   Box,
@@ -12,21 +13,22 @@ import {
   Chip,
   Tooltip,
 } from "@mui/material";
-import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
-import ArrowDropUpIcon from "@mui/icons-material/ArrowDropUp";
 import { CssBaseline } from "@mui/material";
 import HideOnScroll from "../animationComponent/HideOnScroll";
 import { Link } from "react-router";
 import SearchBar from "./SearchBar";
 import supabase from "../../supabase/supabase-client";
+import { showToast } from "../toast/toastHelper";
+import { useNavigate } from "react-router";
 import FaceIcon from "@mui/icons-material/Face";
+import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
+import ArrowDropUpIcon from "@mui/icons-material/ArrowDropUp";
 import LogoutIcon from "@mui/icons-material/Logout";
 import AccountBoxIcon from "@mui/icons-material/AccountBox";
 import LoginIcon from "@mui/icons-material/Login";
 import SettingsOutlinedIcon from "@mui/icons-material/SettingsOutlined";
-import SentimentVeryDissatisfiedIcon from "@mui/icons-material/SentimentVeryDissatisfied";
-import { showToast } from "../toast/toastHelper";
-import { useNavigate } from "react-router";
+import { useContext } from "react";
+import SessionContext from "../../context/SessionContext";
 
 function Header(props) {
   /*
@@ -38,7 +40,7 @@ function Header(props) {
   const navigate = useNavigate();
   const [anchorEl, setAnchorEl] = useState(null);
   const open = Boolean(anchorEl);
-  const [session, setSession] = useState(null);
+  const { session } = useContext(SessionContext);
 
   /*
   |-----------------------------------------------------
@@ -54,21 +56,11 @@ function Header(props) {
   };
 
   /**
-   * Method to open the hover menu Phone mode
+   * Method to open menu
    * @param {*} event
    */
   const handleMenuItemClick = (event) => {
     setAnchorEl(event.currentTarget);
-  };
-
-  /**
-   * Method to get the session
-   */
-  const getSession = async () => {
-    const { data, error } = await supabase.auth.getSession();
-    if (error) setSession(null);
-    console.log(data);
-    setSession(data);
   };
 
   const signOut = async () => {
@@ -77,8 +69,7 @@ function Header(props) {
       console.log(error);
       showToast("error", "Oops! Something went wrong");
     }
-    showToast("success", "Signed out successfully!");
-    setSession(null);
+    showToast("success", "You have been signed out");
     navigate("/");
   };
 
@@ -88,9 +79,11 @@ function Header(props) {
   |-----------------------------------------------------
   */
 
-  React.useEffect(() => {
-    getSession();
-  }, []);
+  useEffect(() => {
+    if (!session) {
+      setAnchorEl(null); // Chiudi il menu al logout
+    }
+  }, [session]);
 
   /*
   |-----------------------------------------------------
@@ -119,86 +112,66 @@ function Header(props) {
             </Typography>
 
             <Box display="flex" alignItems="center" gap={2}>
+              {/* Search Bar */}
               <Box sx={{ display: { xs: "none", md: "flex" } }}>
                 <SearchBar />
               </Box>
-              <Chip
-                sx={{ border: "none" }}
+              {/* Services Button */}
+              <Button
+                sx={{
+                  borderRadius: 3,
+                  border: "none",
+                  color: "text.tertiary",
+                  textTransform: "none",
+                }}
                 label="Servicies"
-                color="primary"
                 variant="outlined"
                 size="small"
-                clickable
               >
                 Services
-              </Chip>
+              </Button>
 
               {/* Hover Menu Container */}
               <Box>
+                {/* Account/Projects Buttons */}
                 {session ? (
-                  <Chip
-                    label="Account"
-                    variant="outlined"
-                    size="small"
-                    clickable
-                    icon={<FaceIcon color="text.primary" />}
-                    deleteIcon={
-                      anchorEl ? (
-                        <ArrowDropUpIcon sx={{ color: "text.primary" }} />
-                      ) : (
-                        <ArrowDropDownIcon sx={{ color: "text.primary" }} />
-                      )
-                    }
-                    onDelete={() => {}}
-                    onClick={handleMenuItemClick}
-                    sx={{
-                      border: "none",
-                      color: "text.primary",
-                      "& .MuiChip-deleteIcon": {
-                        color: "text.primary",
-                      },
-                    }}
-                  />
-                ) : (
-                  <Chip
-                    label="Projects"
-                    variant="outlined"
-                    size="small"
-                    clickable
-                    icon={<FaceIcon color="text.primary" />}
-                    deleteIcon={
-                      anchorEl ? (
-                        <ArrowDropUpIcon sx={{ color: "text.primary" }} />
-                      ) : (
-                        <ArrowDropDownIcon sx={{ color: "text.primary" }} />
-                      )
-                    }
-                    onDelete={() => {}}
-                    onClick={handleMenuItemClick}
-                    sx={{
-                      border: "none",
-                      color: "text.primary",
-                      "& .MuiChip-deleteIcon": {
-                        color: "text.primary",
-                      },
-                    }}
-                  />
-                )}
-                <Menu
-                  anchorEl={anchorEl}
-                  open={open}
-                  elevation={4}
-                  onClose={handleMenuClose}
-                  PaperProps={{
-                    sx: (theme) => ({
-                      width: 150,
-                      backgroundColor: theme.palette.background.paper,
-                      color: theme.palette.text.primary,
-                    }),
-                  }}
-                >
-                  {session ? (
-                    <>
+                  <>
+                    {/* Account Button */}
+                    <Button
+                      variant="outlined"
+                      size="small"
+                      onClick={handleMenuItemClick}
+                      endIcon={
+                        anchorEl ? <ArrowDropUpIcon /> : <ArrowDropDownIcon />
+                      }
+                      startIcon={<FaceIcon sx={{ color: "text.tertiary" }} />}
+                      sx={{
+                        border: "none",
+                        borderRadius: 3,
+                        color: "text.tertiary",
+                        textTransform: "none",
+                        "& .MuiButton-endIcon, & .MuiButton-startIcon": {
+                          color: "text.tertiary",
+                        },
+                      }}
+                    >
+                      Account
+                    </Button>
+
+                    {/* Menu for logged-in user */}
+                    <Menu
+                      anchorEl={anchorEl}
+                      open={open}
+                      elevation={4}
+                      onClose={handleMenuClose}
+                      PaperProps={{
+                        sx: (theme) => ({
+                          width: 150,
+                          backgroundColor: theme.palette.background.paper,
+                          color: theme.palette.text.primary,
+                        }),
+                      }}
+                    >
                       <MenuItem
                         onClick={handleMenuClose}
                         sx={{
@@ -207,7 +180,15 @@ function Header(props) {
                           transition: "background-color 0.2s ease-in-out",
                         }}
                       >
-                        <Link to="/profile">
+                        <Link
+                          to="/profile"
+                          style={{
+                            display: "flex",
+                            alignItems: "center",
+                            color: "inherit",
+                            textDecoration: "none",
+                          }}
+                        >
                           <AccountBoxIcon
                             fontSize="small"
                             sx={{ marginRight: "0.5rem" }}
@@ -215,7 +196,9 @@ function Header(props) {
                           Profile
                         </Link>
                       </MenuItem>
-                      <Divider sx={{ marginTop: "8rem" }} />
+
+                      <Divider sx={{ my: 1 }} />
+
                       <MenuItem
                         onClick={signOut}
                         sx={{
@@ -230,72 +213,87 @@ function Header(props) {
                         />
                         Logout
                       </MenuItem>
-                    </>
-                  ) : (
-                    <MenuItem onClick={handleMenuClose}>
-                      <Link to="/projects">Projects</Link>
-                    </MenuItem>
-                  )}
 
-                  <MenuItem
+                      {/* Theme toggle on small screens */}
+                      <MenuItem
+                        sx={{
+                          display: { xs: "flex", md: "none" },
+                          justifyContent: "start",
+                        }}
+                      >
+                        <ThemeToggle />
+                      </MenuItem>
+                    </Menu>
+                  </>
+                ) : (
+                  <>
+                    {/* Guest Projects Button */}
+                    <Button
+                      sx={{
+                        borderRadius: 3,
+                        border: "none",
+                        color: "text.tertiary",
+                        textTransform: "none",
+                      }}
+                      label="Servicies"
+                      variant="outlined"
+                      size="small"
+                    >
+                      <Link
+                        to="/projects"
+                        style={{ color: "inherit", textDecoration: "none" }}
+                      >
+                        Projects
+                      </Link>
+                    </Button>
+                  </>
+                )}
+              </Box>
+
+              {/* Sign in Button */}
+              {session ? null : (
+                <Box>
+                  <Button
+                    component={Link}
+                    to="/login"
+                    variant="outlined"
+                    size="small"
+                    endIcon={<LoginIcon color="text.tertiary" />}
                     sx={{
-                      display: { xs: "flex", md: "none" },
-                      justifyContent: "start",
+                      border: "none",
+                      borderRadius: 3,
+                      color: "text.tertiary",
+                      textTransform: "none",
                     }}
                   >
-                    <ThemeToggle />
-                  </MenuItem>
-                </Menu>
-              </Box>
-              {session ? null : (
-                <>
-                  <Box>
-                    <Link
-                      to="/register"
-                      style={{ textDecoration: "none", width: "100%" }}
-                    >
-                      <Chip
-                        sx={{ border: "none" }}
-                        label="Sign up"
-                        color="ext.primary"
-                        variant="outlined"
-                        clickable
-                        size="small"
-                        icon={<LoginIcon />}
-                      />
-                    </Link>
-                  </Box>
-                  <Box>
-                    <Link
-                      to="/login"
-                      style={{ textDecoration: "none", width: "100%" }}
-                    >
-                      <Chip
-                        sx={{ border: "none" }}
-                        label="Sign in"
-                        color="text.primary"
-                        variant="outlined"
-                        clickable
-                        size="small"
-                        icon={<LoginIcon />}
-                      />
-                    </Link>
-                  </Box>
-                </>
+                    Sign in
+                  </Button>
+                </Box>
               )}
 
               <Divider orientation="vertical" flexItem />
 
+              {/* Theme Toggle desktop mode */}
               <Box sx={{ display: { xs: "none", md: "flex" } }}>
                 <ThemeToggle />
               </Box>
+
+              {/* Settings Button */}
               <Tooltip title="Settings">
                 <Button
                   size="small"
                   variant="outlined"
-                  sx={{ minWidth: "auto", padding: 0.5, borderRadius: 3 }}
+                  sx={{
+                    minWidth: "auto",
+                    padding: 0.5,
+                    borderRadius: 3,
+                    color: "text.tertiary",
+                  }}
                 >
-                  <SettingsOutlinedIcon fontSize="small" />
+                  <SettingsOutlinedIcon
+                    fontSize="small"
+                    color="text.tertiary"
+                  />
                 </Button>
               </Tooltip>
             </Box>

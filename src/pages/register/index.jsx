@@ -3,12 +3,26 @@ import {
   ConfirmSchema,
   getErrors,
   getFieldError,
+  FormSchema,
 } from "../../lib/validationForm";
-import { useNavigate } from "react-router";
+import { useNavigate, Link } from "react-router";
 import { supabase } from "../../supabase/supabase-client.js";
-import { Box, Button, TextField, Typography, Stack } from "@mui/material";
-import { toast } from "react-toastify";
-import { useTheme } from "@mui/material/styles";
+import {
+  Box,
+  Button,
+  TextField,
+  Typography,
+  Stack,
+  FormControl,
+  InputLabel,
+  OutlinedInput,
+  FormHelperText,
+} from "@mui/material";
+import { showToast } from "../../components/toast/toastHelper.jsx";
+import InputAdornment from "@mui/material/InputAdornment";
+import Visibility from "@mui/icons-material/Visibility";
+import VisibilityOff from "@mui/icons-material/VisibilityOff";
+import IconButton from "@mui/material/IconButton";
 
 function RegisterPage() {
   /*
@@ -28,8 +42,7 @@ function RegisterPage() {
     password: "",
   });
   const navigate = useNavigate();
-  const theme = useTheme();
-  const isDark = theme.palette.mode === "dark";
+  const [showPassword, setShowPassword] = useState(false);
 
   /*
   |-----------------------------------------------------
@@ -62,21 +75,9 @@ function RegisterPage() {
         },
       });
       if (error) {
-        toast.error("Something went wrong", {
-          className: isDark ? "toast-dark" : "toast-light",
-          style: {
-            backgroundColor: isDark ? "#1f2937" : "#E0E0E0", // rosso scuro/chiaro
-            color: isDark ? "#8b949e" : "#1a237e",
-          },
-        });
+        showToast("error", "Something went wrong");
       } else {
-        toast.success("Signed up successfully!", {
-          style: {
-            backgroundColor: isDark ? "#1f2937" : "#E0E0E0", // blu scuro/chiaro
-            color: isDark ? "#8b949e" : "#1a237e",
-          },
-        });
-        await new Promise((resolve) => setTimeout(resolve, 1000));
+        showToast("success", "Signed up successfully!");
         navigate("/");
       }
     }
@@ -88,7 +89,7 @@ function RegisterPage() {
    * @returns
    */
   const onBlur = (property) => () => {
-    const message = getFieldError(property, formState[property]);
+    const message = getFieldError(FormSchema, property, formState[property]);
     setFormErrors((prev) => ({ ...prev, [property]: message }));
     setTouchedFields((prev) => ({ ...prev, [property]: true }));
   };
@@ -102,7 +103,7 @@ function RegisterPage() {
     if (formSubmitted || touchedFields[property]) {
       return !!formErrors[property];
     }
-    return false;
+    return undefined;
   };
 
   /**
@@ -134,6 +135,38 @@ function RegisterPage() {
     setFormSubmitted(false);
   };
 
+  /**
+   * Method to show the password
+   * @returns
+   */
+  const handleClickShowPassword = () => setShowPassword((show) => !show);
+
+  /**
+   * Method to handle the mouse down
+   * @param {*} event
+   */
+  const handleMouseDownPassword = (event) => {
+    event.preventDefault();
+  };
+
+  /**
+   * Method to handle the mouse up
+   * @param {*} event
+   */
+  const handleMouseUpPassword = (event) => {
+    event.preventDefault();
+  };
+
+  /**
+   * Handle key press
+   * @param event
+   */
+  const handleKeyPress = (event) => {
+    if (event.key === "Enter") {
+      onSubmit(onSubmit)();
+    }
+  };
+
   /*
   |-----------------------------------------------------
   | Return
@@ -145,8 +178,11 @@ function RegisterPage() {
       <Typography variant="h4" mb={3}>
         Register
       </Typography>
-      <form onSubmit={onSubmit} noValidate>
+
+      {/* Form */}
+      <form onSubmit={onSubmit} noValidate onKeyDown={handleKeyPress}>
         <Stack spacing={2}>
+          {/* Email field */}
           <TextField
             label="Email"
             type="email"
@@ -158,7 +194,15 @@ function RegisterPage() {
             helperText={formErrors.email}
             required
             fullWidth
+            size="small"
+            sx={{
+              "& .MuiOutlinedInput-root": {
+                borderRadius: 3,
+              },
+            }}
           />
+
+          {/* First name field */}
           <TextField
             label="First Name"
             type="text"
@@ -170,7 +214,15 @@ function RegisterPage() {
             helperText={formErrors.firstName}
             required
             fullWidth
+            size="small"
+            sx={{
+              "& .MuiOutlinedInput-root": {
+                borderRadius: 3,
+              },
+            }}
           />
+
+          {/* Last name field */}
           <TextField
             label="Last Name"
             type="text"
@@ -182,7 +234,15 @@ function RegisterPage() {
             helperText={formErrors.lastName}
             required
             fullWidth
+            size="small"
+            sx={{
+              "& .MuiOutlinedInput-root": {
+                borderRadius: 3,
+              },
+            }}
           />
+
+          {/* Username field */}
           <TextField
             label="Username"
             type="text"
@@ -194,34 +254,101 @@ function RegisterPage() {
             helperText={formErrors.username}
             required
             fullWidth
-          />
-          <TextField
-            label="Password"
-            type="password"
-            name="password"
-            value={formState.password}
-            onChange={setField("password")}
-            onBlur={onBlur("password")}
-            error={isInvalid("password")}
-            helperText={formErrors.password}
-            required
-            fullWidth
+            size="small"
+            sx={{
+              "& .MuiOutlinedInput-root": {
+                borderRadius: 3,
+              },
+            }}
           />
 
+          {/* Password field */}
+          <FormControl
+            variant="outlined"
+            fullWidth
+            size="small"
+            required
+            error={isInvalid("password")}
+            sx={{
+              "& .MuiOutlinedInput-root": {
+                borderRadius: 3,
+              },
+            }}
+          >
+            <InputLabel htmlFor="outlined-adornment-password">
+              Password
+            </InputLabel>
+            <OutlinedInput
+              id="outlined-adornment-password"
+              type={showPassword ? "text" : "password"}
+              name="password"
+              value={formState.password}
+              onChange={setField("password")}
+              onBlur={onBlur("password")}
+              endAdornment={
+                <InputAdornment position="end">
+                  <IconButton
+                    aria-label={
+                      showPassword
+                        ? "hide the password"
+                        : "display the password"
+                    }
+                    onClick={handleClickShowPassword}
+                    onMouseDown={handleMouseDownPassword}
+                    onMouseUp={handleMouseUpPassword}
+                    edge="end"
+                  >
+                    {showPassword ? (
+                      <VisibilityOff fontSize="small" />
+                    ) : (
+                      <Visibility fontSize="small" />
+                    )}
+                  </IconButton>
+                </InputAdornment>
+              }
+              label="Password"
+            />
+            {formErrors.password && (
+              <FormHelperText>{formErrors.password}</FormHelperText>
+            )}
+          </FormControl>
+
+          {/* Submit and reset buttons */}
           <Stack direction="row" spacing={2}>
-            <Button variant="contained" type="submit">
-              Submit
+            <Button variant="contained" type="submit" size="small">
+              Register
             </Button>
             <Button
               variant="outlined"
               type="reset"
               onClick={handleReset}
+              size="small"
             >
               Reset
             </Button>
           </Stack>
         </Stack>
       </form>
+
+      {/*Register link */}
+      <Box sx={{ mt: 2, textAlign: "center" }}>
+        <Typography>
+          Already have an account?{" "}
+          <Link
+            to="/login"
+            style={{
+              fontWeight: "bold",
+              textDecoration: "underline",
+              color: "#1976d2",
+              cursor: "pointer",
+            }}
+            onMouseEnter={(e) => (e.target.style.textDecoration = "none")}
+            onMouseLeave={(e) => (e.target.style.textDecoration = "underline")}
+          >
+            Sign in!
+          </Link>
+        </Typography>
+      </Box>
     </Box>
   );
 }

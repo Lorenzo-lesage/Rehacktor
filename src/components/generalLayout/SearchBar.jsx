@@ -78,7 +78,7 @@ function SearchBar() {
             p: "0 0.5rem",
             display: "flex",
             alignItems: "center",
-            height: 25,
+            height: 30,
             borderRadius: 2,
             backgroundColor: "background.accent",
             width: "100%",

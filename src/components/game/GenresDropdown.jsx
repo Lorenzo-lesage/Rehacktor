@@ -53,6 +53,7 @@ function GenresDropdown() {
           backgroundColor: "transparent",
         }}
         elevation={0}
+        
       >
         <AccordionSummary
           sx={{

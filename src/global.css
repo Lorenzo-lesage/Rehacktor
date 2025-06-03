@@ -1,17 +1,12 @@
 @import "tailwindcss";
 
-
-/* Progress bar tast toastify */
-.Toastify__progress-bar {
-  background: #3f51b5 !important; /* colore blu */
+/* effect hover card image */
+.hoverImage {
+  transition: transform 0.2s ease !important;
+  transform: scale(1);
 }
-/* Progress bar Dark Theme*/
-.toast-dark .Toastify__progress-bar {
-  background: #E0E0E0 !important; /* colore blu */
-}
-/* Progress bar Light Theme*/
-.toast-light .Toastify__progress-bar {
-  background: #1f2937 !important; /* colore blu più scuro */
+.hoverImage:hover {
+  transform: scale(1.1);
 }
 
 

@@ -19,8 +19,10 @@ function CardGame({ game }) {
   */
 
   return (
-    <Card sx={{ width: 300, m: 2 }} key={game.id} elevation={16}>
-      <LazyLoadGameImage image={image} />
+    <Card sx={{ width: 260, m: 2 }} key={game.id} elevation={16}>
+      <Box sx={{ height: "15rem", overflow: "hidden" }}>
+        <LazyLoadGameImage image={image} />
+      </Box>
 
       <CardContent
         sx={{
