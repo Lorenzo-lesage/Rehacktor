@@ -1,10 +1,10 @@
-import { useContext, useState } from "react";
-import supabase from "../../supabase/supabase-client";
-import SessionContext from "../../context/SessionContext";
+import { useContext } from "react";
+import FavoritesContext from "../../context/FavoritesContext";
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import FavoriteIcon from "@mui/icons-material/Favorite";
-import { showToast } from "../../components/toast/toastHelper";
-import { Button } from "@mui/material";
+import { Box,IconButton, Tooltip } from "@mui/material";
+import SessionContext from "../../context/SessionContext";
+import { useNavigate } from "react-router";
 
 function ToggleFavorite({ data }) {
   /*
@@ -13,41 +13,23 @@ function ToggleFavorite({ data }) {
   |-----------------------------------------------------
   */
 
+  const { favorites, addFavorites, removeFavorite } =
+    useContext(FavoritesContext);
   const { userProfile } = useContext(SessionContext);
-  const [favorites, setFavorites] = useState([]);
-  const isFavorite = favorites.find((el) => +el.game_id === data.id);
-  console.log("userProfile", userProfile);
-  
+  const isFavorite = () => favorites.find((el) => +el.game_id === data?.id);
+  const navigate = useNavigate();
+
   /*
   |-----------------------------------------------------
   | Methods
   |-----------------------------------------------------
   */
- 
- /**
-  * Method to add game to favorites
-  * @param {*} game 
- */
-const addFavorites = async (game) => {
-    console.log("addFavorites game:", game);
-    const { data, error } = await supabase
-      .from("favorites")
-      .insert([
-        {
-          user_id: userProfile.id,
-          game_id: game.id,
-          game_name: game.name,
-          game_image: game.background_image,
-        },
-      ])
-      .select();
-    if (error) {
-      showToast("error", {
-        message: "Error adding game to favorites",
-        description: error.message,
-      });
+
+  const handleClick = () => {
+    if (!userProfile) {
+      navigate("/login");
     } else {
-      setFavorites(data);
+      isFavorite() ? removeFavorite(data.id) : addFavorites(data);
     }
   };
 
@@ -57,9 +39,35 @@ const addFavorites = async (game) => {
   |-----------------------------------------------------
   */
 
-  return <Button onClick={() => addFavorites(data)}>
-    {isFavorite ? <FavoriteIcon /> : <FavoriteBorderIcon />}
-  </Button>;
+  if (!userProfile)
+    return (
+      <Box>
+        <Tooltip
+          title="Sign in to add to favorites"
+        >
+          <IconButton onClick={handleClick} size="small">
+            <FavoriteBorderIcon />
+          </IconButton>
+        </Tooltip>
+      </Box>
+    );
+  return (
+    <Box>
+      <Tooltip
+        title={isFavorite() ? "Remove from favorites" : "Add to favorites"}
+        placement="top"
+      >
+        <IconButton
+          onClick={() => {
+            isFavorite() ? removeFavorite(data.id) : addFavorites(data);
+          }}
+          size="small"
+        >
+          {isFavorite() ? <FavoriteIcon /> : <FavoriteBorderIcon />}
+        </IconButton>
+      </Tooltip>
+    </Box>
+  );
 }
 
 export default ToggleFavorite;

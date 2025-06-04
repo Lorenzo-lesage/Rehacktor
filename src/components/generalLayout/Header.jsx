@@ -125,6 +125,7 @@ function Header(props) {
                   border: "none",
                   color: "text.tertiary",
                   textTransform: "none",
+                  display: { xs: "none", md: "flex" },
                 }}
                 label="Servicies"
                 variant="outlined"
@@ -305,23 +306,25 @@ function Header(props) {
               </Box>
 
               {/* Settings Button */}
-              <Tooltip title="Settings">
-                <Button
-                  size="small"
-                  variant="outlined"
-                  sx={{
-                    minWidth: "auto",
-                    padding: 0.5,
-                    borderRadius: 3,
-                    color: "text.tertiary",
-                  }}
-                >
-                  <SettingsOutlinedIcon
-                    fontSize="small"
-                    color="text.tertiary"
-                  />
-                </Button>
-              </Tooltip>
+              <Box>
+                <Tooltip title="Settings">
+                  <Button
+                    size="small"
+                    variant="outlined"
+                    sx={{
+                      minWidth: "auto",
+                      padding: 0.5,
+                      borderRadius: 3,
+                      color: "text.tertiary",
+                    }}
+                  >
+                    <SettingsOutlinedIcon
+                      fontSize="small"
+                      color="text.tertiary"
+                    />
+                  </Button>
+                </Tooltip>
+              </Box>
             </Box>
           </Toolbar>
         </AppBar>

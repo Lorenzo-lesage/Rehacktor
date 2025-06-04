@@ -80,6 +80,7 @@ function GamePage() {
             <Typography variant="body1" color="text.secondary">
               {data && data.rating?.toFixed(1)}/5
             </Typography>
+            {/* Favorite button */}
             <ToggleFavorite data={data} />
           </Box>
           {/* Title */}

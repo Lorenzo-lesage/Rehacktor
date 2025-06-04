@@ -51,7 +51,7 @@ function GamesList({ data, loading, error, title, titleStyles = {} }) {
       <Grid
         container
         columns={{ xs: 4, sm: 8, md: 12 }}
-        spacing={0}
+        spacing={2}
         justifyContent="center"
       >
         {data?.results?.map((game) => (
