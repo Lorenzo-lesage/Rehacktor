@@ -10,6 +10,7 @@ import {
   Stack,
 } from "@mui/material";
 import { Link } from "react-router";
+import ToggleFavorite from "../../components/animationComponent/ToggleFavorite.jsx";
 
 function GamePage() {
   /*
@@ -79,6 +80,7 @@ function GamePage() {
             <Typography variant="body1" color="text.secondary">
               {data && data.rating?.toFixed(1)}/5
             </Typography>
+            <ToggleFavorite data={data} />
           </Box>
           {/* Title */}
           <Typography variant="h3" component="h1" color="text.primary" sx={{ textAlign: "center" }}>
