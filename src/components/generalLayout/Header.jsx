@@ -27,6 +27,7 @@ import LoginIcon from "@mui/icons-material/Login";
 import SettingsOutlinedIcon from "@mui/icons-material/SettingsOutlined";
 import { useContext } from "react";
 import SessionContext from "../../context/SessionContext";
+import useAvatarUrl from "../../hooks/useAvatarUrl";
 
 function Header(props) {
   /*
@@ -38,12 +39,8 @@ function Header(props) {
   const navigate = useNavigate();
   const [anchorEl, setAnchorEl] = useState(null);
   const open = Boolean(anchorEl);
-  const { session } = useContext(SessionContext);
   const { userProfile } = useContext(SessionContext);
-  console.log(
-    "🚀 ~ file: Header.jsx ~ line 30 ~ Header ~ userProfile",
-    userProfile
-  );
+  const { avatarUrl } = useAvatarUrl(userProfile?.avatar_url);
 
   /*
   |-----------------------------------------------------
@@ -82,12 +79,20 @@ function Header(props) {
   |-----------------------------------------------------
   */
 
+  useEffect(() => {
+    setAnchorEl(null);
+  }, [userProfile]);
+
   /*
   |-----------------------------------------------------
   | Return
   |-----------------------------------------------------
   */
 
+  // if (loadingSession) return <HeaderSkeleton />;
+  // if (userProfile) {
+  //   if (avatarLoading) return null;
+  // }
   return (
     <>
       <CssBaseline />
@@ -127,14 +132,11 @@ function Header(props) {
               >
                 Services
               </Button>
-              <Box>
-                Benvenuto, {userProfile?.first_name} {userProfile?.last_name}
-              </Box>
 
               {/* Hover Menu Container */}
               <Box>
                 {/* Account/Projects Buttons */}
-                {session ? (
+                {userProfile ? (
                   <>
                     {/* Account Button */}
                     <Button
@@ -154,9 +156,9 @@ function Header(props) {
                         },
                       }}
                     >
-                      {/* {avatar_url ? (
+                      {avatarUrl ? (
                         <Avatar
-                          src={avatar_url}
+                          src={avatarUrl}
                           sx={{
                             width: 27,
                             height: 27,
@@ -175,10 +177,10 @@ function Header(props) {
                             mr: 1,
                           }}
                         >
-                          {first_name?.charAt(0).toUpperCase()}
-                          {last_name?.charAt(0).toUpperCase()}
+                          {userProfile.first_name?.charAt(0).toUpperCase()}
+                          {userProfile.last_name?.charAt(0).toUpperCase()}
                         </Avatar>
-                      )} */}
+                      )}
                       Account
                     </Button>
 
@@ -275,7 +277,7 @@ function Header(props) {
               </Box>
 
               {/* Sign in Button */}
-              {session ? null : (
+              {userProfile ? null : (
                 <Box>
                   <Button
                     component={Link}

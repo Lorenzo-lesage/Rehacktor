@@ -20,7 +20,7 @@ function AccountPage() {
   |-----------------------------------------------------
   */
 
-  const { session, setUserProfile } = useContext(SessionContext); // <-- aggiunto setUserProfile
+  const { session, setUserProfile } = useContext(SessionContext);
   const [loading, setLoading] = useState(true);
   const [username, setUsername] = useState(null);
   const [first_name, setFirstName] = useState(null);
@@ -75,6 +75,7 @@ function AccountPage() {
 
   /**
    * Method to update profile
+   * @param {*} event
    */
   const updateProfile = async () => {
     setLoading(true);
@@ -100,13 +101,8 @@ function AccountPage() {
     } else {
       showToast("success", "Profile updated successfully!");
 
-      // ✅ Aggiorna anche il contesto per propagare i nuovi dati
-      setUserProfile({
-        username,
-        first_name,
-        last_name,
-        avatar_url,
-      });
+      // ✅ aggiorna il contesto globale
+      setUserProfile(updates);
 
       navigate("/");
     }
@@ -118,27 +114,10 @@ function AccountPage() {
    * Method to handle avatar upload
    * @param {string} filePath
    */
-  const handleAvatarUpload = async (filePath) => {
-    try {
-      setAvatarUrl(filePath); // aggiorna lo state per far vedere subito l'immagine
-
-      const { error } = await supabase
-        .from("profiles") // assicurati che la tabella sia corretta
-        .update({ avatar_url: filePath })
-        .eq("id", session.user.id);
-
-      if (error) {
-        throw error;
-      }
-
-      // ✅ Aggiorna il contesto anche per l'avatar
-      setUserProfile((prev) => ({
-        ...prev,
-        avatar_url: filePath,
-      }));
-    } catch (error) {
-      console.error("Errore aggiornando l'avatar nel DB:", error.message);
-    }
+  const handleAvatarUpload = (filePath) => {
+    // ⛔ NON aggiorniamo più il DB qui
+    // ✅ aggiorniamo solo lo stato locale
+    setAvatarUrl(filePath);
   };
 
   /*
@@ -172,6 +151,7 @@ function AccountPage() {
           firstName={first_name}
           lastName={last_name}
         />
+
         <Stack spacing={3}>
           {/* Email - readonly */}
           <TextField
