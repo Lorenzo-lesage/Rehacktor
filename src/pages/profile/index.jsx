@@ -38,7 +38,15 @@ function ProfilePage() {
   |----------------------------------------------------------------
   */
   return (
-    <Box sx={{ p: 1,  backgroundColor: "background.default", boxShadow: 6, borderRadius: 2 }}>
+    <Box
+      sx={{
+        p: 1,
+        pb: 5,
+        backgroundColor: "background.default",
+        boxShadow: 6,
+        borderRadius: 2,
+      }}
+    >
       <Typography variant="h4" gutterBottom>
         Hey{" "}
         {userProfile?.username
@@ -56,7 +64,16 @@ function ProfilePage() {
           gap: 2,
         }}
       >
-        <Box sx={{ width: { xs: "100%", md: "50%" }, textAlign: "left", boxShadow: 3, borderRadius: 2, p: 2, bgcolor: "background.paper" }}>
+        <Box
+          sx={{
+            width: { xs: "100%", md: "50%" },
+            textAlign: "left",
+            boxShadow: 3,
+            borderRadius: 2,
+            p: 2,
+            bgcolor: "background.paper",
+          }}
+        >
           <Typography variant="h6">Lorem ipsum</Typography>
           <Typography>
             Lorem ipsum dolor sit amet consectetur adipisicing elit. Debitis
@@ -206,15 +223,23 @@ function ProfilePage() {
             </Box>
           </Alert>
         ) : (
-          <List sx={{ mt: 2 }}>
+          <List
+            sx={{
+              mt: 2,
+              display: "flex",
+              flexWrap: "wrap", 
+              justifyContent: "end",
+            }}
+          >
             {sortedFavorites.map((game) => (
               <ListItem
                 key={game.id}
                 disableGutters
-                sx={{ mb: 2, display: "flex", alignItems: "center", position: "relative" }}
+                sx={{
+                  flex: "2", 
+                }}
               >
-                <CardFavoriteItem key={game.id} favorite={game} />
-
+                <CardFavoriteItem favorite={game} />
               </ListItem>
             ))}
           </List>

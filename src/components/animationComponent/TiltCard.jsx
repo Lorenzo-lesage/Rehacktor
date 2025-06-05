@@ -14,8 +14,8 @@ function TiltCard({ children, sx = {} }) {
     const centerY = rect.height / 2;
 
     // Tilt effect
-    const rotateX = -((y - centerY) / 20);
-    const rotateY = (x - centerX) / 20;
+    const rotateX = -((y - centerY) / 30);
+    const rotateY = (x - centerX) / 30;
 
     // Glow effect
     const dx = x - centerX;
@@ -26,7 +26,9 @@ function TiltCard({ children, sx = {} }) {
 
     setStyle({
       transform: `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg)`,
-      boxShadow: `0 0 ${30 * intensity}px ${10 * intensity}px rgba(88,166,255, ${intensity})`,
+      boxShadow: `0 0 ${30 * intensity}px ${
+        10 * intensity
+      }px rgba(88,166,255, ${intensity})`,
       transition: "all 0.1s ease-out",
     });
   };
@@ -34,7 +36,7 @@ function TiltCard({ children, sx = {} }) {
   const resetStyle = () => {
     setStyle({
       transform: "perspective(1000px) rotateX(0deg) rotateY(0deg)",
-      boxShadow: "0 0 10px 2px rgba(88,166,255, 0.3)",
+      boxShadow: "none",
       transition: "all 0.3s ease-out",
     });
   };
@@ -58,4 +60,3 @@ function TiltCard({ children, sx = {} }) {
 }
 
 export default TiltCard;
-

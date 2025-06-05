@@ -8,6 +8,7 @@ import {
 import LazyLoadGameImage from "../animationComponent/LazyLoadGameImage";
 import { Link } from "react-router";
 import InfoIcon from "@mui/icons-material/Info";
+import TiltCard from "../animationComponent/TiltCard";
 import { useContext } from "react";
 import FavoritesContext from "../../context/FavoritesContext";
 import RemoveCircleIcon from "@mui/icons-material/RemoveCircle";
@@ -22,7 +23,7 @@ function CardFavoriteItem({ favorite }) {
   const { removeFavorite } = useContext(FavoritesContext);
 
   return (
-    <Card sx={{ width: { xs: 150, sm: 290 } }} key={favorite.id}>
+    <TiltCard sx={{ width: { xs: 150, sm: 290 } }} key={favorite.id}>
       <Box
         sx={{
           height: { xs: 150, sm: "15rem" },
@@ -31,7 +32,7 @@ function CardFavoriteItem({ favorite }) {
         }}
       >
         <LazyLoadGameImage image={game_image} />
-        <Tooltip title="Click for Detail" placement="top">
+        <Tooltip title="Go to Detail" placement="top">
           <IconButton
             size="small"
             sx={{
@@ -118,7 +119,7 @@ function CardFavoriteItem({ favorite }) {
           </Box>
         </Box>
       </Box>
-    </Card>
+    </TiltCard>
   );
 }
 

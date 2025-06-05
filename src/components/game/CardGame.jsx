@@ -7,6 +7,7 @@ import {
   IconButton,
   Collapse,
   Chip,
+  Rating,
 } from "@mui/material";
 import LazyLoadGameImage from "../animationComponent/LazyLoadGameImage";
 import { Link } from "react-router";
@@ -34,42 +35,118 @@ function CardGame({ game }) {
 
   return (
     <TiltCard sx={{ width: { xs: 150, sm: 290 } }} key={game.id} elevation={16}>
-      <Box sx={{ height: { xs: 150, sm: '15rem' }, overflow: "hidden", position: "relative" }}>
+      <Box
+        sx={{
+          height: { xs: 150, sm: "15rem" },
+          overflow: "hidden",
+          position: "relative",
+        }}
+      >
         <LazyLoadGameImage image={image} />
-        <Tooltip title="Click for Detail" placement="top">
-          <IconButton
-            size="small"
-            sx={{
-              position: "absolute",
-              top: "0.5rem",
-              right: "0.5rem",
-              zIndex: 1,
-            }}
-            component={Link}
-            to={`/games/${game.slug}/${game.id}`}
-          >
-            <InfoIcon
-              sx={{
-                color: "yellow",
-                filter: "drop-shadow(1px 2px 2px rgba(0,0,0))",
-                ":hover": {
-                  filter: "drop-shadow(1px 2px 5px rgba(0,0,0))",
-                  transform: "scale(1.2) rotateY(720deg)",
-                },
-                transition: "all 0.3s ease-in-out",
-              }}
-            />
+        <Box
+          sx={{
+            position: "absolute",
+            top: "0.5rem",
+            right: "0.5rem",
+            zIndex: 1,
+            display: "flex",
+            flexDirection: "column",
+            justifyContent: "space-between",
+            alignItems: "center",
+          }}
+        >
+          {/* FavoriteButton */}
+          <ToggleFavorite data={game} />
+          {/* InfoButton */}
+          <Tooltip title="Go to Detail" placement="left">
+            <IconButton
+              size="small"
+              component={Link}
+              to={`/games/${game.slug}/${game.id}`}
+            >
+              <InfoIcon
+                sx={{
+                  color: "yellow",
+                  filter: "drop-shadow(1px 2px 2px rgba(0,0,0))",
+                  ":hover": {
+                    filter: "drop-shadow(1px 2px 5px rgba(0,0,0))",
+                    transform: "scale(1.2) rotateY(720deg)",
+                  },
+                  transition: "all 0.3s ease-in-out",
+                }}
+              />
+            </IconButton>
+          </Tooltip>
+
+          {/* info */}
+          <IconButton size="small" onClick={() => setOpen((prev) => !prev)}>
+            {open ? (
+              <Tooltip title="Close Info" placement="bottom">
+                <ArrowDropUpIcon
+                  sx={{
+                    color: "yellow",
+                    filter: "drop-shadow(2px 3px 4px rgba(0,0,0))",
+                    transition: "all 0.2s ease-in-out",
+                    ":hover": {
+                      transform: "scale(1.2)",
+                    },
+                  }}
+                />
+              </Tooltip>
+            ) : (
+              <Tooltip title="Open Info" placement="bottom">
+                <AddCircleOutlineIcon
+                  sx={{
+                    color: "yellow",
+                    filter: "drop-shadow(2px 3px 4px rgba(0,0,0))",
+                    transition: "all 0.2s ease-in-out",
+                    ":hover": {
+                      transform: "scale(1.2)",
+                    },
+                  }}
+                />
+              </Tooltip>
+            )}
           </IconButton>
-        </Tooltip>
+        </Box>
+
         <Box
           sx={{
             position: "absolute",
             top: "0.5rem",
             left: "0.5rem",
+            zIndex: 1,
+            display: "flex",
+            alignItems: "center",
+            backdropFilter: "blur(100px)",
+            backgroundColor: "rgba(88,166,255)",
+            padding: "0.1rem ",
+            borderRadius: 2,
           }}
         >
-          <ToggleFavorite data={game} />
+          <Tooltip title={game.rating} placement="top">
+            <Rating
+              name="read-only-rating"
+              size="small"
+              max={5}
+              precision={0.1}
+              readOnly
+              value={game.rating || 0}
+              sx={{
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                flexDirection: "column",
+                filter: "drop-shadow(2px 2px 3px rgba(0,0,0))",
+                color: "yellow",
+                "& .MuiRating-iconEmpty": {
+                  color: "black", 
+                },
+              }}
+            />
+          </Tooltip>
         </Box>
+
         <Box
           sx={{
             position: "absolute",
@@ -80,36 +157,6 @@ function CardGame({ game }) {
             borderRadius: 0,
           }}
         >
-          <Box
-            sx={{
-              display: "flex",
-              justifyContent: "end",
-            }}
-          >
-            <Box
-              sx={{
-                padding: "0.3rem 0.2rem 0.2rem 0.3rem",
-                borderRadius: "0.5rem 0 0 0",
-              }}
-            >
-              <IconButton size="small" onClick={() => setOpen((prev) => !prev)}>
-                {open ? (
-                  <ArrowDropUpIcon sx={{ color: "yellow" }} />
-                ) : (
-                  <AddCircleOutlineIcon
-                    sx={{
-                      color: "yellow",
-                      filter: "drop-shadow(2px 3px 4px rgba(0,0,0))",
-                      transition: "all 0.2s ease-in-out",
-                      ":hover": {
-                        transform: "scale(1.2)",
-                      },
-                    }}
-                  />
-                )}
-              </IconButton>
-            </Box>
-          </Box>
           <Box
             sx={{
               width: "100%",
@@ -175,18 +222,15 @@ function CardGame({ game }) {
               />
             ))}
           </Box>
-          <Box sx={{ display: "flex", justifyContent: "space-between", mt: 1 }}>
-            <Typography variant="body2">
-              <strong style={{ color: "rgba(88,166,255)" }}>
-                {game.rating != null ? game.rating.toFixed(1) : "N/A"}/5
-              </strong>
-            </Typography>
-            <Typography variant="body2" gutterBottom>
-              <strong style={{ color: "rgba(88,166,255)" }}>
-                {game.released || "N/A"}
-              </strong>{" "}
-            </Typography>
-          </Box>
+          <Typography
+            variant="body2"
+            gutterBottom
+            sx={{ mt: 1, textAlign: "center" }}
+          >
+            <strong style={{ color: "rgba(88,166,255)" }}>
+              {game.released || "N/A"}
+            </strong>{" "}
+          </Typography>
         </Box>
       </Collapse>
     </TiltCard>
