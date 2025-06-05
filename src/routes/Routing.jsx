@@ -8,6 +8,7 @@ import SearchPage from "../pages/searchpage/index";
 import RegisterPage from "../pages/register/index";
 import LoginPage from "../pages/login/index";
 import AccountPage from "../pages/account/index";
+import ProfilePage from "../pages/profile";
 
 
 export function Routing() {
@@ -33,8 +34,10 @@ export function Routing() {
           <Route path="/register" element={<RegisterPage />}/>
           {/* Login page */}
           <Route path="/login" element={<LoginPage />}/>
-          {/* Account page */}
+          {/* Edit Account page */}
           <Route path="/account" element={<AccountPage />}/>
+          {/* Profile page */}
+          <Route path="/profile" element={<ProfilePage />} />
           {/* Error page */}
           <Route path="*" element={<ErrorPage />} />
         </Route>

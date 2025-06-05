@@ -101,10 +101,9 @@ function AccountPage() {
     } else {
       showToast("success", "Profile updated successfully!");
 
-      // ✅ aggiorna il contesto globale
       setUserProfile(updates);
 
-      navigate("/");
+      navigate("/profile");
     }
 
     setLoading(false);
@@ -115,8 +114,6 @@ function AccountPage() {
    * @param {string} filePath
    */
   const handleAvatarUpload = (filePath) => {
-    // ⛔ NON aggiorniamo più il DB qui
-    // ✅ aggiorniamo solo lo stato locale
     setAvatarUrl(filePath);
   };
 
@@ -128,9 +125,6 @@ function AccountPage() {
 
   return (
     <Box className="container" maxWidth="sm" mx="auto" mt={4}>
-      <Typography variant="h3" gutterBottom align="center">
-        {first_name?.toUpperCase()} {last_name?.toUpperCase()}
-      </Typography>
 
       <Typography variant="h5" gutterBottom>
         Profile Settings
@@ -142,7 +136,6 @@ function AccountPage() {
           e.preventDefault();
           updateProfile();
         }}
-        className="form-widget"
       >
         <AvatarAccount
           url={avatar_url}

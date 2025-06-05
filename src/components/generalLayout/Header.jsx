@@ -208,7 +208,7 @@ function Header(props) {
                         }}
                       >
                         <Link
-                          to="/account"
+                          to="/profile"
                           style={{
                             display: "flex",
                             alignItems: "center",
