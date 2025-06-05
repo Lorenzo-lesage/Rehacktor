@@ -10,6 +10,7 @@ import {
 } from "@mui/material";
 import LazyLoadGameImage from "../animationComponent/LazyLoadGameImage";
 import { Link } from "react-router";
+import TiltCard from "../animationComponent/TiltCard";
 import InfoIcon from "@mui/icons-material/Info";
 import ToggleFavorite from "../animationComponent/ToggleFavorite";
 import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
@@ -32,7 +33,7 @@ function CardGame({ game }) {
   */
 
   return (
-    <Card sx={{ width: { xs: 150, sm: 290 } }} key={game.id} elevation={16}>
+    <TiltCard sx={{ width: { xs: 150, sm: 290 } }} key={game.id} elevation={16}>
       <Box sx={{ height: { xs: 150, sm: '15rem' }, overflow: "hidden", position: "relative" }}>
         <LazyLoadGameImage image={image} />
         <Tooltip title="Click for Detail" placement="top">
@@ -115,7 +116,7 @@ function CardGame({ game }) {
               borderRadius: 0,
               padding: "0.2rem 0.5rem",
               background:
-                "linear-gradient(to bottom, rgba(0,0,0,0), rgba(0,0,0,0.9))",
+                "linear-gradient(to bottom, rgba(0,0,0,0), rgb(17,24,39))",
             }}
           >
             <Typography
@@ -144,7 +145,7 @@ function CardGame({ game }) {
         <Box
           sx={{
             padding: "0.8rem",
-            backgroundColor: "rgba(0, 0, 0)",
+            backgroundColor: "#111827",
             color: "yellow",
             textAlign: "left",
           }}
@@ -188,7 +189,7 @@ function CardGame({ game }) {
           </Box>
         </Box>
       </Collapse>
-    </Card>
+    </TiltCard>
   );
 }
 

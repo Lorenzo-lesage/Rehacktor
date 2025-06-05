@@ -1,7 +1,6 @@
 import { useContext } from "react";
 import SessionContext from "../../context/SessionContext";
 import FavoritesContext from "../../context/FavoritesContext";
-import RemoveCircleIcon from "@mui/icons-material/RemoveCircle";
 import {
   Box,
   Typography,
@@ -14,6 +13,7 @@ import {
   Divider,
 } from "@mui/material";
 import { Link } from "react-router";
+import CardFavoriteItem from "../../components/game/CardFavoriteItem";
 import useAvatarUrl from "../../hooks/useAvatarUrl";
 import PanToolAltIcon from "@mui/icons-material/PanToolAlt";
 import SportsEsportsIcon from "@mui/icons-material/SportsEsports";
@@ -27,10 +27,8 @@ function ProfilePage() {
   */
 
   const { userProfile } = useContext(SessionContext);
-  console.log(userProfile);
-  const { favorites, removeFavorite } = useContext(FavoritesContext);
+  const { favorites } = useContext(FavoritesContext);
   const { avatarUrl } = useAvatarUrl(userProfile?.avatar_url);
-  console.log(favorites);
   favorites.forEach((game) => console.log(game));
   const sortedFavorites = [...favorites].reverse();
 
@@ -40,7 +38,7 @@ function ProfilePage() {
   |----------------------------------------------------------------
   */
   return (
-    <Box sx={{ p: 3 }}>
+    <Box sx={{ p: 1,  backgroundColor: "background.default", boxShadow: 6, borderRadius: 2 }}>
       <Typography variant="h4" gutterBottom>
         Hey{" "}
         {userProfile?.username
@@ -48,17 +46,17 @@ function ProfilePage() {
             userProfile.username.slice(1)
           : "User"}
       </Typography>
+      <Divider />
       <Box
         sx={{
           display: { xs: "flex", md: "flex" },
           flexDirection: { xs: "column-reverse", md: "row" },
-          alignItems: "center",
           justifyContent: "space-around",
           my: 5,
           gap: 2,
         }}
       >
-        <Box sx={{ width: { xs: "100%", md: "50%" }, textAlign: "left" }}>
+        <Box sx={{ width: { xs: "100%", md: "50%" }, textAlign: "left", boxShadow: 3, borderRadius: 2, p: 2, bgcolor: "background.paper" }}>
           <Typography variant="h6">Lorem ipsum</Typography>
           <Typography>
             Lorem ipsum dolor sit amet consectetur adipisicing elit. Debitis
@@ -84,6 +82,8 @@ function ProfilePage() {
             borderRadius: "10px",
             p: 2,
             position: "relative",
+            backgroundColor: "background.paper",
+            boxShadow: 6,
           }}
         >
           <Box sx={{ position: "absolute", top: "0.5rem", right: "0.5rem" }}>
@@ -211,19 +211,10 @@ function ProfilePage() {
               <ListItem
                 key={game.id}
                 disableGutters
-                sx={{ mb: 2, display: "flex", alignItems: "center" }}
+                sx={{ mb: 2, display: "flex", alignItems: "center", position: "relative" }}
               >
-                <Box sx={{ flexGrow: 1 }}>
-                  <Typography>{game.game_name}</Typography>
-                </Box>
-                <IconButton
-                  edge="end"
-                  aria-label="remove favorite"
-                  onClick={() => removeFavorite(game.game_id)}
-                  sx={{ ml: 1 }}
-                >
-                  <RemoveCircleIcon color="error" />
-                </IconButton>
+                <CardFavoriteItem key={game.id} favorite={game} />
+
               </ListItem>
             ))}
           </List>

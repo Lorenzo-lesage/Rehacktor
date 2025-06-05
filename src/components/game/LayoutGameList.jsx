@@ -1,5 +1,6 @@
 import { Box, Typography, Grid, CircularProgress } from "@mui/material";
 import CardGame from "./CardGame.jsx";
+import TiltCard from "../animationComponent/TiltCard.jsx";
 
 function GamesList({ data, loading, error, title, titleStyles = {} }) {
   /*
@@ -56,7 +57,9 @@ function GamesList({ data, loading, error, title, titleStyles = {} }) {
       >
         {data?.results?.map((game) => (
           <Grid key={game.id}>
-            <CardGame game={game} />
+            <TiltCard>
+              <CardGame game={game} />
+            </TiltCard>
           </Grid>
         ))}
       </Grid>
