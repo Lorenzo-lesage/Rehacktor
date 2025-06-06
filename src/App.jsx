@@ -3,14 +3,17 @@ import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import SessionProvider from "./context/SessionProvider";
 import FavoritesProvider from "./context/FavoritesProvider";
+import { BackgroundProvider } from "./context/BackgroundContext.jsx";
 
 function App() {
   return (
     <>
       <SessionProvider>
         <FavoritesProvider>
-          <Routing />
-          <ToastContainer position="top-right" autoClose={3000} />
+          <BackgroundProvider>
+            <Routing />
+            <ToastContainer position="top-right" autoClose={3000} />
+          </BackgroundProvider>
         </FavoritesProvider>
       </SessionProvider>
     </>

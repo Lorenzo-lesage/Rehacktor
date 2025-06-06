@@ -229,6 +229,7 @@ function ProfilePage() {
               display: "flex",
               flexWrap: "wrap", 
               justifyContent: "end",
+              gap: 2,
             }}
           >
             {sortedFavorites.map((game) => (

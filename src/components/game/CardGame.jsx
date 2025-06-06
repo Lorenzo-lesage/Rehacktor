@@ -1,22 +1,25 @@
 import { useState } from "react";
 import {
-  Card,
   Typography,
   Box,
   Tooltip,
-  IconButton,
   Collapse,
-  Chip,
   Rating,
+  CircularProgress,
 } from "@mui/material";
 import LazyLoadGameImage from "../animationComponent/LazyLoadGameImage";
 import { Link } from "react-router";
 import TiltCard from "../animationComponent/TiltCard";
-import InfoIcon from "@mui/icons-material/Info";
+import PlatformIcons from "./PlatformIcons";
+import StoreIcons from "./StoreIcons";
+import DeveloperIcon from "./DeveloperIcon";
+import EsrbRating from "./EsrbRating";
+import Playtime from "./Playtime";
+import MetacriticScore from "./MetacriticScore";
 import ToggleFavorite from "../animationComponent/ToggleFavorite";
-import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
-import ArrowDropUpIcon from "@mui/icons-material/ArrowDropUp";
-import { FaXbox } from "react-icons/fa";
+import useFetchSolution from "../../hooks/useFetchSolution";
+import apiConfig from "../../config/apiConfig";
+import GenreTags from "./GenreTags";
 
 function CardGame({ game }) {
   /*
@@ -27,13 +30,10 @@ function CardGame({ game }) {
 
   const { background_image: image } = game;
   const [open, setOpen] = useState(false);
-  const platformIcons = {
-    Xbox: FaXbox,
-    "Xbox One": FaXbox,
-    // ...
-  };
-
-  console.log(game.platforms);
+  const { data, loading, error } = useFetchSolution(
+    apiConfig.endpoints.gameDetails(game.id)
+  );
+  console.log("GAME", game);
 
   /*
   |-----------------------------------------------------
@@ -60,9 +60,13 @@ function CardGame({ game }) {
             height: { xs: 150, sm: "15rem" },
             overflow: "hidden",
             position: "relative",
+            borderRadius: open ? "0.2rem 0.2rem 0 0" : 1,
           }}
         >
-          <LazyLoadGameImage image={image} />
+          <Link to={`/games/${game.slug}/${game.id}`}>
+            <LazyLoadGameImage image={image} />
+          </Link>
+
           <Box
             sx={{
               position: "absolute",
@@ -73,30 +77,45 @@ function CardGame({ game }) {
               flexDirection: "column",
               justifyContent: "space-between",
               alignItems: "center",
+              gap: 0.5,
+              backdropFilter: open ? "blur(1px)" : "blur(0px)",
+              transition: "backdrop-filter 0.2s ease",
+              padding: "0.1rem ",
+              borderRadius: 2,
             }}
           >
             {/* FavoriteButton */}
             <ToggleFavorite data={game} />
-            {/* InfoButton */}
-            <Tooltip title="Go to Detail" placement="left">
-              <IconButton
-                size="small"
-                component={Link}
-                to={`/games/${game.slug}/${game.id}`}
-              >
-                <InfoIcon
-                  sx={{
-                    color: "yellow",
-                    filter: "drop-shadow(1px 2px 2px rgba(0,0,0))",
-                    ":hover": {
-                      filter: "drop-shadow(1px 2px 5px rgba(0,0,0))",
-                      transform: "scale(1.2) rotateX(-720deg)",
-                    },
-                    transition: "all 0.3s ease-in-out",
-                  }}
-                />
-              </IconButton>
-            </Tooltip>
+            <Box
+              sx={{
+                opacity: open ? 1 : 0,
+                transform: open ? "translateX(0)" : "translateX(50px)",
+                transition:
+                  "opacity 0.1s ease-in-out, transform 0.1s ease-in-out",
+              }}
+            >
+              <MetacriticScore score={game.metacritic} />
+            </Box>
+            <Box
+              sx={{
+                opacity: open ? 1 : 0,
+                transform: open ? "translateX(0)" : "translateX(60px)",
+                transition:
+                  "opacity 0.3s ease-in-out, transform 0.3s ease-in-out",
+              }}
+            >
+              <EsrbRating rating={game.esrb_rating} />
+            </Box>
+            <Box
+              sx={{
+                opacity: open ? 1 : 0,
+                transform: open ? "translateX(0)" : "translateX(70px)",
+                transition:
+                  "opacity 0.5s ease-in-out, transform 0.5s ease-in-out",
+              }}
+            >
+              <Playtime hours={game.playtime} />
+            </Box>
           </Box>
 
           <Box
@@ -107,7 +126,8 @@ function CardGame({ game }) {
               zIndex: 1,
               display: "flex",
               alignItems: "center",
-              backgroundColor: "rgba(88,166,255, 0.5)",
+              backdropFilter: "blur(1px)",
+
               padding: "0.1rem ",
               borderRadius: 2,
             }}
@@ -166,7 +186,7 @@ function CardGame({ game }) {
                 component="div"
                 sx={{
                   overflow: "hidden",
-                  whiteSpace: "nowrap",
+                  whiteSpace: open ? "normal" : "nowrap",
                   textOverflow: "ellipsis",
                   display: "block",
                   textAlign: "center",
@@ -182,15 +202,17 @@ function CardGame({ game }) {
             </Box>
           </Box>
         </Box>
+
         <Collapse in={open}>
           <Box
             sx={{
               position: "absolute",
-              top: "99%",
+              top: "99.5%",
               left: 0,
               width: "100%",
               padding: "0.8rem",
               backgroundColor: "#111827",
+              borderRadius: "0 0 0.2rem 0.2rem",
               color: "yellow",
               textAlign: "left",
               zIndex: 100,
@@ -202,52 +224,74 @@ function CardGame({ game }) {
           >
             <Box
               sx={{
+                mb: 1,
+              }}
+            >
+              <StoreIcons stores={game.stores} />
+            </Box>
+
+            <Box
+              sx={{
                 display: "flex",
-                gap: 0.5,
-                flexWrap: "wrap",
-                mt: 1,
                 justifyContent: "center",
               }}
             >
-              {game.genres?.map((genre) => (
-                <Chip
-                  key={genre.id || genre.name}
-                  label={genre.name}
-                  size="small"
-                  variant="outlined"
-                  sx={{
-                    color: "yellow",
-                    borderColor: "yellow",
-                  }}
-                  clickable
-                  component={Link}
-                  to={`/games/${genre.slug}`}
-                />
-              ))}
+              <GenreTags genres={game.genres} />
             </Box>
-            <Typography
-              variant="body2"
-              gutterBottom
-              sx={{ mt: 1, textAlign: "center" }}
+
+            {/* developers */}
+            <Box sx={{ display: "flex", justifyContent: "center" }}>
+              {error && null}
+              {loading && (
+                <Box
+                  sx={{
+                    display: "flex",
+                    justifyContent: "center",
+                    alignItems: "center",
+                  }}
+                >
+                  <CircularProgress size={15} />
+                </Box>
+              )}
+              {data?.publishers?.length > 0 ? (
+                <Box
+                  sx={{
+                    display: "flex",
+                    justifyContent: "center",
+                    flexWrap: "wrap",
+                  }}
+                >
+                  {data.publishers.map((pub) => (
+                    <DeveloperIcon
+                      key={pub.id}
+                      name={pub.name}
+                      type="Publisher"
+                    />
+                  ))}
+                </Box>
+              ) : null}
+            </Box>
+
+            <Box
+              sx={{
+                display: "flex",
+                justifyContent: "space-between",
+                alignItems: "center",
+                mt: 1,
+              }}
             >
-              <strong style={{ color: "rgba(88,166,255)" }}>
-                {game.released || "N/A"}
-              </strong>{" "}
-            </Typography>
-            <Box>
-              {game.platforms?.map((platformWrapper) => {
-                const platform = platformWrapper.platform; // estrai platform dall'oggetto wrapper
-                const Icon = platformIcons[platform.name];
-                return Icon ? (
-                  <Tooltip
-                    key={platform.id || platform.name}
-                    title={platform.name}
-                    placement="top"
-                  >
-                    <Icon fontSize="large" style={{ color: "yellow" }} />
-                  </Tooltip>
-                ) : null;
-              })}
+              <PlatformIcons platforms={game.platforms} />
+              <Typography
+                variant="body2"
+                gutterBottom
+                sx={{
+                  textAlign: "center",
+                }}
+              >
+                <strong style={{ color: "rgba(88,166,255)" }}>
+                  {game.released || "N/A"}
+                </strong>{" "}
+              </Typography>
             </Box>
           </Box>
         </Collapse>

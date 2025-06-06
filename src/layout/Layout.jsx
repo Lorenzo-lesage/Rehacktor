@@ -6,6 +6,7 @@ import { Outlet } from "react-router";
 import { useRef } from "react";
 import useScrollTrigger from "@mui/material/useScrollTrigger";
 import SearchBar from "../components/generalLayout/SearchBar";
+import { useBackground } from "../context/BackgroundContext";
 
 function Layout() {
   /*
@@ -16,6 +17,7 @@ function Layout() {
 
   const trigger = useScrollTrigger();
   const footerRef = useRef(null);
+  const { backgroundImage } = useBackground();
 
   /*
   |-----------------------------------------------------
@@ -24,7 +26,18 @@ function Layout() {
   */
 
   return (
-    <Box display="flex" flexDirection="column" minHeight="100vh">
+    <Box
+      display="flex"
+      flexDirection="column"
+      minHeight="100vh"
+      sx={{
+        backgroundImage: backgroundImage ? `url(${backgroundImage})` : "none",
+        backgroundSize: "cover",
+        backgroundPosition: "center",
+        backgroundRepeat: "no-repeat",
+        backgroundAttachment: "fixed",
+      }}
+    >
       {/* Header */}
       <Header />
 

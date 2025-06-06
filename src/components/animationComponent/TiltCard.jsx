@@ -47,7 +47,6 @@ function TiltCard({ children, sx = {} }) {
       sx={{
         overflow: "visible",
         backgroundColor: "background.default",
-        borderRadius: 1,
         width: { xs: 150, sm: 290 },
         ...style,
         ...sx,
