@@ -45,6 +45,7 @@ function TiltCard({ children, sx = {} }) {
     <Card
       ref={cardRef}
       sx={{
+        overflow: "visible",
         backgroundColor: "background.default",
         borderRadius: 1,
         width: { xs: 150, sm: 290 },

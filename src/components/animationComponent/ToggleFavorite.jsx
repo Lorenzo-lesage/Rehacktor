@@ -58,7 +58,7 @@ function ToggleFavorite({ data }) {
   if (!userProfile)
     return (
       <Box>
-        <Tooltip title="Sign in to add to favorites">
+        <Tooltip title="Sign in to add to favorites" placement="top">
           <IconButton onClick={handleClick} size="small">
             <FavoriteBorderIcon
               color={iconColor === "default" ? "action" : undefined}

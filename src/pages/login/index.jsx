@@ -65,11 +65,12 @@ function LoginPage() {
         password: data.password,
       });
       if (error) {
-        console.log(error);
         setFormErrors({ password: error.message, email: error.message });
         showToast("error", "Invalid login credentials");
       } else {
-        showToast("success", "Signed in successfully!");
+        setTimeout(() => {
+          showToast("success", "Signed in successfully!");
+        }, 150);
         navigate("/");
       }
     }

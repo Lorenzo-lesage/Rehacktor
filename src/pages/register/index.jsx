@@ -77,7 +77,9 @@ function RegisterPage() {
       if (error) {
         showToast("error", "Something went wrong");
       } else {
-        showToast("success", "Signed up successfully!");
+        setTimeout(() => {
+          showToast("success", "Signed up successfully!");
+        }, 200);
         navigate("/");
       }
     }

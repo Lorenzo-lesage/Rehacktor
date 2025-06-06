@@ -56,10 +56,8 @@ function GamesList({ data, loading, error, title, titleStyles = {} }) {
         justifyContent="center"
       >
         {data?.results?.map((game) => (
-          <Grid key={game.id}>
-            <TiltCard>
+          <Grid key={game.id} >
               <CardGame game={game} />
-            </TiltCard>
           </Grid>
         ))}
       </Grid>
