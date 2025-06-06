@@ -26,44 +26,45 @@ function Layout() {
   */
 
   return (
-    <Box
-      display="flex"
-      flexDirection="column"
-      minHeight="100vh"
-      sx={{
-        backgroundImage: backgroundImage ? `url(${backgroundImage})` : "none",
-        backgroundSize: "cover",
-        backgroundPosition: "center",
-        backgroundRepeat: "no-repeat",
-        backgroundAttachment: "fixed",
-      }}
-    >
-      {/* Header */}
-      <Header />
+    <Box display="flex" flexDirection="column" minHeight="100vh">
+      <Box
+        sx={(theme) => ({
+          backgroundImage: backgroundImage
+            ? `linear-gradient(${theme.palette.background.default}cc, ${theme.palette.background.default}), url(${backgroundImage})`
+            : "none",
+          backgroundSize: "cover",
+          backgroundPosition: "center",
+          backgroundRepeat: "no-repeat",
+          height: "100vh",
+        })}
+      >
+        {/* Header */}
+        <Header />
 
-      {/* Main layout: Sidebar + Content */}
-      <Box display="flex" flex={1}>
-        {/* Sidebar */}
-        <SideBar navbarHidden={trigger} />
+        {/* Main layout: Sidebar + Content */}
+        <Box display="flex" flex={1}>
+          {/* Sidebar */}
+          <SideBar navbarHidden={trigger} />
 
-        {/* Page content */}
-        <Box
-          component="main"
-          sx={{
-            flexGrow: 1,
-            padding: 2,
-            mt: 8,
-          }}
-        >
-          <Box sx={{ display: { xs: "block", md: "none" } }}>
-            <SearchBar />
+          {/* Page content */}
+          <Box
+            component="main"
+            sx={{
+              flexGrow: 1,
+              padding: 2,
+              mt: 8,
+            }}
+          >
+            <Box sx={{ display: { xs: "block", md: "none" } }}>
+              <SearchBar />
+            </Box>
+            <Outlet />
           </Box>
-          <Outlet />
         </Box>
-      </Box>
 
-      {/* Footer */}
-      <Footer footerRef={footerRef} />
+        {/* Footer */}
+        <Footer footerRef={footerRef} />
+      </Box>
     </Box>
   );
 }

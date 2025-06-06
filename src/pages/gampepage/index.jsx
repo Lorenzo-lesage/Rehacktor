@@ -28,9 +28,12 @@ function GamePage() {
   useEffect(() => {
     if (data?.background_image) {
       setBackgroundImage(data.background_image);
-    } else {
-      setBackgroundImage(null);
     }
+
+    return () => {
+      // Pulizia: rimuovi lo sfondo quando lasci la pagina
+      setBackgroundImage(null);
+    };
   }, [data, setBackgroundImage]);
 
   if (loading) {
@@ -72,7 +75,7 @@ function GamePage() {
   return (
     <Container sx={{ paddingTop: 4, paddingBottom: 8 }}>
               
-      <Paper  sx={{ p: 4, backgroundColor: "transparent",  }}>
+      <Paper  sx={{ p: 4, backgroundColor: "transparent"}} elevation={0}>
         <Stack spacing={3}>
           {/* Header row: release date, rating stars, favorite */}
           <Box
