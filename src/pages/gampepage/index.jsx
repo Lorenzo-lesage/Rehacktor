@@ -16,7 +16,7 @@ import {
 import { useEffect } from "react";
 import ToggleFavorite from "../../components/animationComponent/ToggleFavorite.jsx";
 import StarIcon from "@mui/icons-material/Star";
-import { useBackground } from "../../context/BackgroundContext";
+import { useBackground } from "../../hooks/useBackground.js";
 import PlatformIcons from "../../components/game/renderingCard-Detail/PlatformIcons";
 import StoreIcons from "../../components/game/renderingCard-Detail/StoreIcons";
 import DeveloperIcon from "../../components/game/renderingCard-Detail/DeveloperIcon";

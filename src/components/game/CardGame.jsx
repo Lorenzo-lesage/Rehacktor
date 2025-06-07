@@ -213,7 +213,7 @@ function CardGame({ game }) {
                 borderRadius: 0,
                 padding: "0.2rem 0.5rem",
                 background:
-                  "linear-gradient(to bottom, rgba(0,0,0,0), rgb(17,24,39))",
+                  "linear-gradient(to bottom, rgba(0,0,0,0), rgb(0,0,0))",
               }}
             >
               <Typography
@@ -247,7 +247,7 @@ function CardGame({ game }) {
               left: 0,
               width: "100%",
               padding: "0.8rem",
-              backgroundColor: "#111827",
+              backgroundColor: "#000000",
               borderRadius: "0 0 0.2rem 0.2rem",
               color: "yellow",
               textAlign: "left",

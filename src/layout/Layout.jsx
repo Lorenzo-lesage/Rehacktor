@@ -6,7 +6,7 @@ import { Outlet } from "react-router";
 import { useRef } from "react";
 import useScrollTrigger from "@mui/material/useScrollTrigger";
 import SearchBar from "../components/generalLayout/SearchBar";
-import { useBackground } from "../context/BackgroundContext";
+import { useBackground } from "../hooks/useBackground.js";
 
 function Layout() {
   /*
@@ -30,8 +30,8 @@ function Layout() {
       <Box
         sx={(theme) => ({
           backgroundImage: backgroundImage
-            ? `linear-gradient(${theme.palette.background.default}cc, ${theme.palette.background.default}), url(${backgroundImage})`
-            : "none",
+            ? `linear-gradient(${theme.palette.background.default}cc 60%, ${theme.palette.background.default}), url(${backgroundImage})`
+            : `linear-gradient(${theme.palette.background.default}cc, ${theme.palette.background.default}), url('../../public/giochi.jpg')`,
           backgroundSize: "cover",
           backgroundPosition: "center",
           backgroundRepeat: "no-repeat",
