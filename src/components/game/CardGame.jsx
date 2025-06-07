@@ -10,16 +10,16 @@ import {
 import LazyLoadGameImage from "../animationComponent/LazyLoadGameImage";
 import { Link } from "react-router";
 import TiltCard from "../animationComponent/TiltCard";
-import PlatformIcons from "./PlatformIcons";
-import StoreIcons from "./StoreIcons";
-import DeveloperIcon from "./DeveloperIcon";
-import EsrbRating from "./EsrbRating";
-import Playtime from "./Playtime";
-import MetacriticScore from "./MetacriticScore";
+import PlatformIcons from "./renderingCard-Detail/PlatformIcons";
+import StoreIcons from "./renderingCard-Detail/StoreIcons";
+import DeveloperIcon from "./renderingCard-Detail/DeveloperIcon";
+import EsrbRating from "./renderingCard-Detail/EsrbRating";
+import Playtime from "./renderingCard-Detail/Playtime";
+import GenreTags from "./renderingCard-Detail/GenreTags";
+import MetacriticScore from "./renderingCard-Detail/MetacriticScore";
 import ToggleFavorite from "../animationComponent/ToggleFavorite";
 import useFetchSolution from "../../hooks/useFetchSolution";
 import apiConfig from "../../config/apiConfig";
-import GenreTags from "./GenreTags";
 
 function CardGame({ game }) {
   /*
@@ -33,7 +33,43 @@ function CardGame({ game }) {
   const { data, loading, error } = useFetchSolution(
     apiConfig.endpoints.gameDetails(game.id)
   );
-  console.log("GAME", game);
+  
+  /*
+  |-----------------------------------------------------
+  | Methods
+  |-----------------------------------------------------
+  */
+
+
+  /*
+  |-----------------------------------------------------
+  | Props Style
+  |-----------------------------------------------------
+  */
+
+  const styleGenre = {
+    color: "yellow",
+    borderColor: "yellow",
+    paddingX: 0.5,
+  };
+  const styleIconGenre = { color: "yellow" };
+  const styleIconPlatform = { color: "yellow", marginRight: 4 };
+  const styleStores = {
+    textDecoration: "none",
+    color: "lightblue",
+    transition: "all 0.2s ease-in-out",
+    "&:hover": {
+      textDecoration: "underline",
+      transform: "scale(1.2)",
+    },
+  };
+  const stylePublisher = {
+    color: "rgba(88,166,255)",
+    borderColor: "rgba(88,166,255)",
+    px: 0.5,
+    m: 0.2,
+  };
+  const styleIconPublisher = { color: "rgba(88,166,255)" };
 
   /*
   |-----------------------------------------------------
@@ -227,7 +263,7 @@ function CardGame({ game }) {
                 mb: 1,
               }}
             >
-              <StoreIcons stores={game.stores} />
+              <StoreIcons stores={game.stores} styleStores={styleStores} />
             </Box>
 
             <Box
@@ -236,10 +272,14 @@ function CardGame({ game }) {
                 justifyContent: "center",
               }}
             >
-              <GenreTags genres={game.genres} />
+              <GenreTags
+                genres={game.genres}
+                styleGenre={styleGenre}
+                styleIconGenre={styleIconGenre}
+              />
             </Box>
 
-            {/* developers */}
+            {/* publishers */}
             <Box sx={{ display: "flex", justifyContent: "center" }}>
               {error && null}
               {loading && (
@@ -266,6 +306,8 @@ function CardGame({ game }) {
                       key={pub.id}
                       name={pub.name}
                       type="Publisher"
+                      stylePublisher={stylePublisher}
+                      styleIconPublisher={styleIconPublisher}
                     />
                   ))}
                 </Box>
@@ -280,7 +322,10 @@ function CardGame({ game }) {
                 mt: 1,
               }}
             >
-              <PlatformIcons platforms={game.platforms} />
+              <PlatformIcons
+                platforms={game.platforms}
+                styleIconPlatform={styleIconPlatform}
+              />
               <Typography
                 variant="body2"
                 gutterBottom

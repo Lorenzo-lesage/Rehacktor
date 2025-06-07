@@ -10,20 +10,80 @@ import {
   Stack,
   Chip,
   Link as MuiLink,
-  Tooltip,
   Rating,
+  LinearProgress,
 } from "@mui/material";
-import { Link } from "react-router";
 import { useEffect } from "react";
 import ToggleFavorite from "../../components/animationComponent/ToggleFavorite.jsx";
 import StarIcon from "@mui/icons-material/Star";
 import { useBackground } from "../../context/BackgroundContext";
+import PlatformIcons from "../../components/game/renderingCard-Detail/PlatformIcons";
+import StoreIcons from "../../components/game/renderingCard-Detail/StoreIcons";
+import DeveloperIcon from "../../components/game/renderingCard-Detail/DeveloperIcon";
+import GenreTags from "../../components/game/renderingCard-Detail/GenreTags";
+import GameUserEngagement from "../../components/game/renderingCard-Detail/GameUserEngagement.jsx";
+import FormatListNumberedIcon from "@mui/icons-material/FormatListNumbered";
+import MilitaryTechIcon from "@mui/icons-material/MilitaryTech";
+import AccessTimeIcon from "@mui/icons-material/AccessTime";
+import StarRateIcon from "@mui/icons-material/StarRate";
+import EmojiEventsIcon from "@mui/icons-material/EmojiEvents";
+import GroupAddIcon from "@mui/icons-material/GroupAdd";
+import useGameScreenshots from "../../hooks/useGameScreenshots";
 
 function GamePage() {
+  /*
+  |------------------------------------------------
+  | Data
+  |------------------------------------------------
+  */
+
   const { id } = useParams();
   const initialUrl = apiConfig.endpoints.gameDetails(id);
   const { data, loading, error } = useFetchSolution(initialUrl);
   const { setBackgroundImage } = useBackground();
+  const {
+    screenshots,
+    loading: screenshotsLoading,
+    error: screenshotsError,
+  } = useGameScreenshots(id);
+  console.log(data);
+
+  /*
+  |------------------------------------------------
+  | Props Style
+  |------------------------------------------------
+  */
+
+  const styleGenre = {
+    padding: 1,
+    fontSize: 15,
+  };
+  const styleIconPlatform = { marginRight: 4, fontSize: 20 };
+  const styleStores = {
+    textDecoration: "none",
+    transition: "all 0.2s ease-in-out",
+    paddingX: 0.5,
+    "&:hover": {
+      color: "text.secondary",
+      transform: "scale(1.2)",
+    },
+  };
+  const styleIconStores = {
+    color: "text.primary",
+    fontSize: 20,
+    padding: 1,
+  };
+  const stylePublisher = {
+    fontSize: 15,
+    padding: 1,
+  };
+  const styleIconPublisher = { color: "text.primary" };
+
+  /*
+  |------------------------------------------------
+  | Hooks
+  |------------------------------------------------
+  */
 
   useEffect(() => {
     if (data?.background_image) {
@@ -31,10 +91,15 @@ function GamePage() {
     }
 
     return () => {
-      // Pulizia: rimuovi lo sfondo quando lasci la pagina
       setBackgroundImage(null);
     };
   }, [data, setBackgroundImage]);
+
+  /*
+  |------------------------------------------------
+  | Return
+  |------------------------------------------------
+  */
 
   if (loading) {
     return (
@@ -73,9 +138,8 @@ function GamePage() {
   if (!data) return null;
 
   return (
-    <Container sx={{ paddingTop: 4, paddingBottom: 8 }}>
-              
-      <Paper  sx={{ p: 4, backgroundColor: "transparent"}} elevation={0}>
+    <Container sx={{ paddingBottom: 8 }}>
+      <Paper sx={{ p: 0, backgroundColor: "transparent" }} elevation={0}>
         <Stack spacing={3}>
           {/* Header row: release date, rating stars, favorite */}
           <Box
@@ -85,9 +149,12 @@ function GamePage() {
               alignItems: "center",
             }}
           >
-            <Typography variant="body2" color="text.secondary">
-              {data.released ?? "Unknown release date"}
-            </Typography>
+            <Chip
+              label={data.released ?? "Unknown release date"}
+              color="background.default"
+              variant="outlined"
+              sx={{ p: 1 }}
+            />
 
             <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
               <Rating
@@ -95,9 +162,13 @@ function GamePage() {
                 value={data.rating ?? 0}
                 precision={0.1}
                 max={5}
+                sx={{ color: "text.primary" }}
                 readOnly
                 emptyIcon={
-                  <StarIcon style={{ opacity: 0.3 }} fontSize="inherit" />
+                  <StarIcon
+                    style={{ opacity: 1, color: "text.primary" }}
+                    fontSize="inherit"
+                  />
                 }
               />
               <Typography
@@ -109,154 +180,446 @@ function GamePage() {
               </Typography>
             </Box>
 
+            {/* Metacritic and link */}
+            <Box sx={{ display: "flex", flexDirection: "column" }}>
+              <Box sx={{ display: "flex", gap: 1, alignItems: "center" }}>
+                <Typography variant="body1">Metacritic:</Typography>
+                <Typography variant="body2" color="text.secondary">
+                  {data.metacritic ?? "N/A"}/100
+                </Typography>
+              </Box>
+              {data.metacritic_url && (
+                <MuiLink
+                  href={data.metacritic_url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  variant="body2"
+                >
+                  View Metacritic page
+                </MuiLink>
+              )}
+            </Box>
+
             <ToggleFavorite data={data} />
           </Box>
 
-          {/* Title */}
-          <Typography
-            variant="h3"
-            component="h1"
-            textAlign="center"
-            color="text.primary"
-          >
-            {data.name ?? "Untitled"}
-          </Typography>
+          <Box>
+            <Box>
+              {/* Title */}
+              <Typography
+                variant="h3"
+                component="h1"
+                textAlign="center"
+                color="text.primary"
+              >
+                {data.name ?? "Untitled"}
+              </Typography>
+              {/* ESRB Rating */}
+              {data.esrb_rating && (
+                <Typography
+                  variant="body2"
+                  color="text.secondary"
+                  textAlign="center"
+                  sx={{ fontWeight: "bold" }}
+                >
+                  ESRB Rating: {data.esrb_rating.name}
+                </Typography>
+              )}
+              {/* Description */}
+              <Typography
+                variant="body1"
+                color="text.secondary"
+                textAlign="center"
+                mt={2}
+              >
+                {data.description_raw ?? "No description available."}
+              </Typography>
+            </Box>
+            <Box>
+              {/* Main Image */}
+              {data.background_image && (
+                <Box
+                  sx={{
+                    width: "100%",
+                    height: 500,
+                    borderRadius: 2,
+                    mt: 2,
+                    backgroundImage: `url(${data.background_image})`,
+                    backgroundSize: "cover",
+                    backgroundPosition: "center",
+                    backgroundRepeat: "no-repeat",
+                  }}
+                />
+              )}
 
-          {/* ESRB Rating */}
-          {data.esrb_rating && (
-            <Typography
-              variant="body2"
-              color="text.secondary"
-              textAlign="center"
-              sx={{ fontWeight: "bold" }}
-            >
-              ESRB Rating: {data.esrb_rating.name}
-            </Typography>
-          )}
+              {/* Additional Background Image at bottom */}
+              {data.background_image_additional && (
+                <Box
+                  component="img"
+                  src={data.background_image_additional}
+                  alt={`Additional image of the game ${data.name}`}
+                  sx={{
+                    width: "100%",
+                    maxHeight: 300,
+                    objectFit: "cover",
+                    borderRadius: 2,
+                    mt: 1,
+                  }}
+                />
+              )}
+            </Box>
+          </Box>
 
-          {/* Description */}
-          <Typography variant="body1" color="text.secondary" textAlign="center">
-            {data.description_raw ?? "No description available."}
-          </Typography>
+          <Container>
+            {/* ...altro contenuto */}
 
-          {/* Main Image */}
-          {data.background_image && (
-            <Box
-              component="img"
-              src={data.background_image}
-              alt={`Image of the game ${data.name}`}
-              sx={{
-                width: "100%",
-                maxHeight: 500,
-                objectFit: "cover",
-                borderRadius: 2,
-                mt: 2,
-              }}
-            />
-          )}
+            {screenshotsLoading && <CircularProgress />}
+            {screenshotsError && (
+              <Typography color="error">
+                Errore nel caricamento degli screenshot.
+              </Typography>
+            )}
+            {screenshots?.length > 0 && (
+              <Box sx={{ display: "flex", overflowX: "auto", gap: 2, mt: 4 }}>
+                {screenshots.map((shot) => (
+                  <Box
+                    key={shot.id}
+                    component="img"
+                    src={shot.image}
+                    alt={`Screenshot ${shot.id}`}
+                    sx={{
+                      height: 200,
+                      borderRadius: 2,
+                      objectFit: "cover",
+                    }}
+                  />
+                ))}
+              </Box>
+            )}
+          </Container>
 
           {/* Genres */}
-          <Box>
-            <Typography variant="h6" gutterBottom>
-              Genres:
-            </Typography>
-            <Box sx={{ display: "flex", flexWrap: "wrap", gap: 1 }}>
-              {data.genres?.map((genre) => (
-                <Chip
-                  key={genre.id}
-                  component={Link}
-                  to={`/games/${genre.slug}`}
-                  label={genre.name}
-                  clickable
-                  variant="outlined"
-                  color="primary"
-                />
-              ))}
-            </Box>
-          </Box>
+          <Box
+            sx={{
+              display: "flex",
+              justifyContent: "space-between",
+              alignItems: "center",
+            }}
+          >
+            <GenreTags genres={data.genres} styleGenre={styleGenre} />
 
-          {/* Platforms */}
-          <Box>
-            <Typography variant="h6" gutterBottom>
-              Platforms:
-            </Typography>
-            <Box sx={{ display: "flex", flexWrap: "wrap", gap: 1 }}>
-              {data.platforms?.map(({ platform }) => (
-                <Chip
-                  key={platform.id}
-                  label={platform.name}
-                  variant="outlined"
-                />
-              )) || <Typography color="text.secondary">N/A</Typography>}
-            </Box>
-          </Box>
+            {/* Stores */}
+            <StoreIcons
+              stores={data.stores}
+              styleStores={styleStores}
+              styleIconStores={styleIconStores}
+            />
 
-          {/* Stores */}
-          <Box>
-            <Typography variant="h6" gutterBottom>
-              Stores:
-            </Typography>
-            <Box sx={{ display: "flex", flexWrap: "wrap", gap: 1 }}>
-              {data.stores?.map(({ store }) => (
-                <Chip key={store.id} label={store.name} variant="outlined" />
-              )) || <Typography color="text.secondary">N/A</Typography>}
-            </Box>
+            {/* Platforms */}
+            <PlatformIcons
+              platforms={data.parent_platforms}
+              styleIconPlatform={styleIconPlatform}
+            />
           </Box>
+          {/* Added By Status */}
+          <Box
+            sx={{
+              width: "100%",
+              display: "flex",
+              gap: 1,
+              justifyContent: "space-between",
+            }}
+          >
+            <GameUserEngagement data={data.added_by_status} />
+            {/* Additional stats in chips */}
+            <Box
+              sx={{
+                textAlign: "end",
+              }}
+            >
+              <Typography variant="h6" gutterBottom>
+                Additional Stats:
+              </Typography>
 
-          {/* Metacritic and link */}
-          <Box>
-            <Typography variant="h6" gutterBottom>
-              Metacritic:
-            </Typography>
-            <Typography variant="body1" color="text.secondary">
-              {data.metacritic ?? "N/A"}/100
-            </Typography>
-            {data.metacritic_url && (
-              <MuiLink
-                href={data.metacritic_url}
-                target="_blank"
-                rel="noopener noreferrer"
-                variant="body2"
+              <Box
+                sx={{
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "flex-end",
+                  gap: 1,
+                  mb: 0.5,
+                }}
               >
-                View Metacritic page
-              </MuiLink>
-            )}
+                <Typography color="text.primary">
+                  <strong>Games in the Series:</strong>{" "}
+                </Typography>
+                <Typography color="text.secondary">
+                  {data.game_series_count ?? "N/A"}
+                </Typography>
+                <FormatListNumberedIcon fontSize="small" />
+              </Box>
+
+              <Box
+                sx={{
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "flex-end",
+                  gap: 1,
+                  mb: 0.5,
+                }}
+              >
+                <Typography color="text.primary">
+                  <strong>Parent Achievements:</strong>{" "}
+                </Typography>
+                <Typography color="text.secondary">
+                  {data.parent_achievements_count ?? "N/A"}
+                </Typography>
+                <MilitaryTechIcon fontSize="small" />
+              </Box>
+
+              <Box
+                sx={{
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "flex-end",
+                  gap: 1,
+                  mb: 0.5,
+                }}
+              >
+                <Typography color="text.primary">
+                  <strong>Average Playtime:</strong>
+                </Typography>
+                <Typography color="text.secondary">
+                  {data.playtime ?? "N/A"} hours
+                </Typography>
+                <AccessTimeIcon fontSize="small" />
+              </Box>
+
+              <Box
+                sx={{
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "flex-end",
+                  gap: 1,
+                  mb: 0.5,
+                }}
+              >
+                <Typography color="text.primary">
+                  <strong>Total Ratings Count:</strong>{" "}
+                </Typography>
+                <Typography color="text.secondary">
+                  {data.ratings_count ?? "N/A"}
+                </Typography>
+                <StarRateIcon fontSize="small" />
+              </Box>
+
+              <Box
+                sx={{
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "flex-end",
+                  gap: 1,
+                  mb: 0.5,
+                }}
+              >
+                <Typography color="text.primary">
+                  <strong>Achievements:</strong>{" "}
+                </Typography>
+                <Typography color="text.secondary">
+                  {data.achievements_count ?? "N/A"}u
+                </Typography>
+                <EmojiEventsIcon fontSize="small" />
+              </Box>
+
+              <Box
+                sx={{
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "flex-end",
+                  gap: 1,
+                }}
+              >
+                <Typography color="text.primary">
+                  <strong>Users Who Added the Game:</strong>{" "}
+                </Typography>
+                <Typography color="text.secondary">
+                  {data.added ?? "N/A"}
+                </Typography>
+                <GroupAddIcon fontSize="small" />
+              </Box>
+            </Box>
           </Box>
+
+          <Box
+            sx={{ display: { xs: "none", md: "flex" }, gap: 2, width: "100%" }}
+          >
+            {/* Reviews */}
+            <Box
+              sx={{
+                width: "fit-content",
+                display: "flex",
+                gap: 1,
+                alignItems: "start",
+              }}
+            >
+              <Typography
+                variant="body1"
+                color="text.primary"
+                sx={{ fontWeight: "bold" }}
+              >
+                Reviews:
+              </Typography>
+              <Box>
+                <Typography
+                  variant="body1"
+                  color="text.secondary"
+                  sx={{ whiteSpace: "nowrap" }}
+                >
+                  Total: {data.reviews_count ?? 0},
+                </Typography>
+                <Typography
+                  variant="body1"
+                  color="text.secondary"
+                  sx={{ whiteSpace: "nowrap" }}
+                >
+                  With Text: {data.reviews_text_count ?? 0}
+                </Typography>
+              </Box>
+            </Box>
+
+            {/* Ratings */}
+            <Box sx={{ width: "100%" }}>
+              {data.ratings?.length > 0 ? (
+                <Box sx={{ display: "flex", flexDirection: "column", gap: 1 }}>
+                  {data.ratings.map((rating, index) => (
+                    <Box key={index}>
+                      <Box
+                        sx={{
+                          display: "flex",
+                          justifyContent: "space-between",
+                        }}
+                      >
+                        <Typography
+                          variant="body2"
+                          sx={{ color: "text.primary" }}
+                        >
+                          {rating.title}
+                        </Typography>
+                        <Typography
+                          variant="body2"
+                          sx={{ color: "text.secondary" }}
+                        >
+                          {rating.count} votes
+                        </Typography>
+                      </Box>
+                      <LinearProgress
+                        variant="determinate"
+                        value={rating.percent}
+                        sx={{
+                          height: 8,
+                          borderRadius: 5,
+                          backgroundColor: "#background.default",
+                          "& .MuiLinearProgress-bar": {
+                            backgroundColor: "#background.paper",
+                          },
+                        }}
+                      />
+                    </Box>
+                  ))}
+                </Box>
+              ) : (
+                <Typography color="text.secondary">
+                  No ratings available
+                </Typography>
+              )}
+            </Box>
+          </Box>
+
+          {/* Reddit Description */}
+          {data.reddit_description && (
+            <Box mt={3}>
+              <Typography variant="h6" gutterBottom>
+                Reddit Description:
+              </Typography>
+              <Typography
+                variant="body2"
+                color="text.secondary"
+                sx={{ whiteSpace: "pre-line" }}
+              >
+                {data.reddit_description}
+              </Typography>
+            </Box>
+          )}
 
           {/* Publishers and Developers */}
-          <Box sx={{ display: "flex", gap: 4, flexWrap: "wrap" }}>
+          <Box
+            sx={{
+              display: "flex",
+              gap: 4,
+              flexWrap: "wrap",
+              justifyContent: "space-between",
+            }}
+          >
             <Box sx={{ flex: 1 }}>
               <Typography variant="h6" gutterBottom>
                 Publishers:
               </Typography>
               <Box sx={{ display: "flex", flexWrap: "wrap", gap: 1 }}>
                 {data.publishers?.map((pub) => (
-                  <Chip key={pub.id} label={pub.name} variant="outlined" />
+                  <DeveloperIcon
+                    developers={data.publishers}
+                    stylePublisher={stylePublisher}
+                    styleIconPublisher={styleIconPublisher}
+                    name={pub.name}
+                    key={pub.id}
+                    type="publisher"
+                  />
                 )) || <Typography color="text.secondary">N/A</Typography>}
               </Box>
             </Box>
 
-            <Box sx={{ flex: 1 }}>
+            <Box
+              sx={{
+                flex: 1,
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "flex-end",
+              }}
+            >
               <Typography variant="h6" gutterBottom>
                 Developers:
               </Typography>
               <Box sx={{ display: "flex", flexWrap: "wrap", gap: 1 }}>
                 {data.developers?.map((dev) => (
-                  <Chip key={dev.id} label={dev.name} variant="outlined" />
+                  <DeveloperIcon
+                    developers={data.developers}
+                    stylePublisher={stylePublisher}
+                    styleIconPublisher={styleIconPublisher}
+                    name={dev.name}
+                    key={dev.id}
+                    type="publisher"
+                  />
                 )) || <Typography color="text.secondary">N/A</Typography>}
               </Box>
             </Box>
           </Box>
 
           {/* Tags */}
-          <Box>
+          <Box sx={{ my: 2 }}>
             <Typography variant="h6" gutterBottom>
               Tags:
             </Typography>
             <Box sx={{ display: "flex", flexWrap: "wrap", gap: 1 }}>
-              {data.tags?.map((tag) => (
-                <Chip key={tag.id} label={`#${tag.name}`} variant="outlined" />
-              )) || <Typography color="text.secondary">No tags</Typography>}
+              {data.tags?.length > 0 ? (
+                data.tags.map((tag, i) => (
+                  <Typography key={tag.id || i} component="span">
+                    #{tag.name}
+                    {i < data.tags.length - 1 ? ", " : ""}
+                  </Typography>
+                ))
+              ) : (
+                <Typography color="text.secondary">No tags</Typography>
+              )}
             </Box>
           </Box>
 
@@ -279,110 +642,6 @@ function GamePage() {
               </Typography>
             )}
           </Box>
-
-          {/* Added By Status */}
-          <Box>
-            <Typography variant="h6" gutterBottom>
-              Added By Status:
-            </Typography>
-            <Box sx={{ color: "text.secondary" }}>
-              {data.added_by_status &&
-                Object.entries(data.added_by_status).map(([status, count]) => (
-                  <Typography
-                    key={status}
-                    variant="body2"
-                    sx={{ textTransform: "capitalize" }}
-                  >
-                    {status.replace(/_/g, " ")}: {count}
-                  </Typography>
-                ))}
-            </Box>
-          </Box>
-
-          {/* Ratings */}
-          <Box>
-            <Typography variant="h6" gutterBottom>
-              Ratings:
-            </Typography>
-            <Box sx={{ color: "text.secondary" }}>
-              {data.ratings?.map((rating, index) => (
-                <Typography key={index} variant="body2">
-                  {rating.title}: {rating.count} votes, {rating.percent}%
-                </Typography>
-              )) || "No ratings available"}
-            </Box>
-          </Box>
-
-          {/* Reviews */}
-          <Box>
-            <Typography variant="h6" gutterBottom>
-              Reviews:
-            </Typography>
-            <Typography variant="body2" color="text.secondary">
-              Total: {data.reviews_count ?? 0}, With Text:{" "}
-              {data.reviews_text_count ?? 0}
-            </Typography>
-          </Box>
-
-          {/* Additional stats in chips */}
-          <Box sx={{ display: "flex", flexWrap: "wrap", gap: 1 }}>
-            <Tooltip title="Number of games in the series">
-              <Chip label={`Series: ${data.game_series_count ?? "N/A"}`} />
-            </Tooltip>
-            <Tooltip title="Number of parent achievements">
-              <Chip
-                label={`Parent Achievements: ${
-                  data.parent_achievements_count ?? "N/A"
-                }`}
-              />
-            </Tooltip>
-            <Tooltip title="Average playtime in hours">
-              <Chip label={`Playtime: ${data.playtime ?? "N/A"} hrs`} />
-            </Tooltip>
-            <Tooltip title="Total ratings count">
-              <Chip label={`Ratings Count: ${data.ratings_count ?? "N/A"}`} />
-            </Tooltip>
-            <Tooltip title="Achievements count">
-              <Chip
-                label={`Achievements: ${data.achievements_count ?? "N/A"}`}
-              />
-            </Tooltip>
-            <Tooltip title="Number of users who added the game">
-              <Chip label={`Added: ${data.added ?? "N/A"}`} />
-            </Tooltip>
-          </Box>
-
-          {/* Reddit Description */}
-          {data.reddit_description && (
-            <Box mt={3}>
-              <Typography variant="h6" gutterBottom>
-                Reddit Description:
-              </Typography>
-              <Typography
-                variant="body2"
-                color="text.secondary"
-                sx={{ whiteSpace: "pre-line" }}
-              >
-                {data.reddit_description}
-              </Typography>
-            </Box>
-          )}
-
-          {/* Additional Background Image at bottom */}
-          {data.background_image_additional && (
-            <Box
-              component="img"
-              src={data.background_image_additional}
-              alt={`Additional image of the game ${data.name}`}
-              sx={{
-                width: "100%",
-                maxHeight: 300,
-                objectFit: "cover",
-                borderRadius: 2,
-                mt: 4,
-              }}
-            />
-          )}
         </Stack>
       </Paper>
     </Container>

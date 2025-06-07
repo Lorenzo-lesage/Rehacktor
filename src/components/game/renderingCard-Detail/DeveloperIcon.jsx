@@ -12,7 +12,7 @@ const developerIconMap = {
   default: MdBusiness,
 };
 
-function DeveloperIcon({ name, type = "developer" }) {
+function DeveloperIcon({ name, type = "developer", stylePublisher, styleIconPublisher }) {
   const Icon = developerIconMap[name] || developerIconMap.default;
   return (
     <Tooltip title={type} placement="top-start">
@@ -20,14 +20,8 @@ function DeveloperIcon({ name, type = "developer" }) {
         label={name}
         size="small"
         variant="outlined"
-        sx={{
-          color: "rgba(88,166,255)",
-          borderColor: "rgba(88,166,255)",
-          px: 0.5,
-          m: 0.2,
-        }}
-        icon={Icon && <Icon size={15}style={{ color: "rgba(88,166,255)" }} />}
-        clickable
+        sx={stylePublisher}
+        icon={Icon && <Icon size={15} style={styleIconPublisher} />}
       />
     </Tooltip>
   );

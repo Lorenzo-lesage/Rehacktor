@@ -77,7 +77,7 @@ const platformCategoryMap = {
   "Web": "Web",
 };
 
-function PlatformIcons({ platforms }) {
+function PlatformIcons({ platforms, styleIconPlatform }) {
   if (!platforms) return null;
 
   const shown = new Set();
@@ -94,7 +94,7 @@ function PlatformIcons({ platforms }) {
 
         return (
           <Tooltip key={category} title={category} placement="top">
-            <Icon fontSize="small" style={{ color: "yellow", marginRight: 4 }} />
+            <Icon fontSize="small" style={styleIconPlatform} />
           </Tooltip>
         );
       })}

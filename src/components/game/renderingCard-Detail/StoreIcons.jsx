@@ -39,7 +39,7 @@ const storeUrls = {
   official: "#", // metti pure null o "#" se non hai un link ufficiale
 };
 
-function StoreIcons({ stores }) {
+function StoreIcons({ stores, styleStores, styleIconStores }) {
   if (!stores || stores.length === 0) return null;
 
   const shown = new Set();
@@ -64,17 +64,9 @@ function StoreIcons({ stores }) {
               href={url}
               target="_blank"
               rel="noopener noreferrer"
-              sx={{
-                textDecoration: "none",
-                color: "lightblue",
-                transition: "all 0.2s ease-in-out",
-                "&:hover": {
-                  textDecoration: "underline",
-                  transform: "scale(1.2)",
-                },
-              }}
+              sx={styleStores}
             >
-              <Icon fontSize="1.2em" />
+              <Icon fontSize="1.2em" style={styleIconStores} />
             </Box>
           </Tooltip>
         );

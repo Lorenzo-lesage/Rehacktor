@@ -62,7 +62,7 @@ function ToggleFavorite({ data }) {
           <IconButton onClick={handleClick} size="small">
             <FavoriteBorderIcon
               color={iconColor === "default" ? "action" : undefined}
-              sx={iconColor !== "default" ? { color: iconColor } : {}}
+              sx={iconColor !== "default" ? { color: iconColor, filter: "drop-shadow(2px 2px 3px rgba(0,0,0))", } : {}}
             />
           </IconButton>
         </Tooltip>
@@ -79,6 +79,7 @@ function ToggleFavorite({ data }) {
             <FavoriteIcon
               color={iconColor === "default" ? "action" : undefined}
               sx={{
+                 filter: "drop-shadow(2px 2px 3px rgba(0,0,0))",
                 ...(iconColor !== "default" && { color: iconColor }),
                 ...sxStyles,
               }}

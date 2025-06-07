@@ -47,8 +47,7 @@ const genreIconMap = {
   "Science Fiction": GiUfo, // nuova mappatura
 };
 
-function GenreTags({ genres }) {
-
+function GenreTags({ genres, styleGenre, styleIconGenre }) {
   if (!genres?.length) return null;
 
   return (
@@ -69,12 +68,8 @@ function GenreTags({ genres }) {
             label={name}
             size="small"
             variant="outlined"
-            sx={{
-              color: "yellow",
-              borderColor: "yellow",
-              px: 0.5,
-            }}
-            icon={Icon && <Icon size={15}  style={{ color: "yellow" }} />}
+            sx={styleGenre}
+            icon={Icon && <Icon size={15} style={styleIconGenre} />}
             clickable
             component={Link}
             to={`/games/${slug}`}
