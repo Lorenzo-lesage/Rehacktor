@@ -18,8 +18,8 @@ import Playtime from "./renderingCard-Detail/Playtime";
 import GenreTags from "./renderingCard-Detail/GenreTags";
 import MetacriticScore from "./renderingCard-Detail/MetacriticScore";
 import ToggleFavorite from "../animationComponent/ToggleFavorite";
-import useFetchSolution from "../../hooks/useFetchSolution";
-import apiConfig from "../../config/apiConfig";
+import { useQuery } from "@tanstack/react-query";
+import { fetchGameDetails } from "../../api/games";
 
 function CardGame({ game }) {
   /*
@@ -30,16 +30,17 @@ function CardGame({ game }) {
 
   const { background_image: image } = game;
   const [open, setOpen] = useState(false);
-  const { data, loading, error } = useFetchSolution(
-    apiConfig.endpoints.gameDetails(game.id)
-  );
-  
+
+  const { data, isLoading, isError } = useQuery({
+    queryKey: ["gameDetails", game.id],
+    queryFn: () => fetchGameDetails(game.id),
+  });
+
   /*
   |-----------------------------------------------------
   | Methods
   |-----------------------------------------------------
   */
-
 
   /*
   |-----------------------------------------------------
@@ -80,7 +81,7 @@ function CardGame({ game }) {
   return (
     <TiltCard
       sx={{
-        width: { xs: 150, sm: 290 },
+        width: { xs: 150, sm: 270 },
         zIndex: open ? 200 : 1,
         position: "relative",
       }}
@@ -281,8 +282,8 @@ function CardGame({ game }) {
 
             {/* publishers */}
             <Box sx={{ display: "flex", justifyContent: "center" }}>
-              {error && null}
-              {loading && (
+              {isError && null}
+              {isLoading && (
                 <Box
                   sx={{
                     display: "flex",

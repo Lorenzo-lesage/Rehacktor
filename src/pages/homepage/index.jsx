@@ -1,6 +1,6 @@
-import useFetchSolution from "../../hooks/useFetchSolution.js";
-import apiConfig from "../../config/apiConfig";
-import GamesList from "../../components/game/LayoutGameList.jsx";
+import { useQuery } from "@tanstack/react-query";
+import { fetchGamesByDate } from "../../api/games";
+import LayoutGameList from "../../components/game/LayoutGameList.jsx";
 
 function HomePage() {
   /*
@@ -9,12 +9,15 @@ function HomePage() {
   |-----------------------------------------------------
   */
 
-  const initialUrl = apiConfig.endpoints.gamesByDate(
-    "2024-01-01",
-    "2024-12-31",
-    1
-  );
-  const { data, loading, error, updateUrl } = useFetchSolution(initialUrl);
+  const startDate = "2024-01-01";
+  const endDate = "2024-12-31";
+  const page = 1;
+  const { data, isLoading, error } = useQuery({
+    queryKey: ["gamesByDate", startDate, endDate, page],
+    queryFn: () => fetchGamesByDate(startDate, endDate, page),
+    staleTime: 5 * 60 * 1000,
+    keepPreviousData: true,
+  });
 
   /*
   |-----------------------------------------------------
@@ -23,9 +26,9 @@ function HomePage() {
   */
 
   return (
-    <GamesList
+    <LayoutGameList
       data={data}
-      loading={loading}
+      loading={isLoading}
       error={error}
       title="Home"
       titleStyles={{ color: "secondary.main", fontWeight: 700 }}

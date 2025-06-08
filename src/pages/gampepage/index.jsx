@@ -1,6 +1,4 @@
 import { useParams } from "react-router";
-import apiConfig from "../../config/apiConfig";
-import useFetchSolution from "../../hooks/useFetchSolution.js";
 import {
   Box,
   Typography,
@@ -30,6 +28,8 @@ import EmojiEventsIcon from "@mui/icons-material/EmojiEvents";
 import GroupAddIcon from "@mui/icons-material/GroupAdd";
 import useGameScreenshots from "../../hooks/useGameScreenshots";
 import Chatbox from "../../components/generalLayout/Chatbox";
+import { useQuery } from "@tanstack/react-query";
+import { fetchGameDetails } from "../../api/games.js";
 
 function GamePage() {
   /*
@@ -39,15 +39,18 @@ function GamePage() {
   */
 
   const { id } = useParams();
-  const initialUrl = apiConfig.endpoints.gameDetails(id);
-  const { data, loading, error } = useFetchSolution(initialUrl);
+  const { data, isLoading, error } = useQuery({
+    queryKey: ["gameDetails", id],
+    queryFn: () => fetchGameDetails(id),
+    enabled: !!id,
+    staleTime: 5 * 60 * 1000,
+  });
   const { setBackgroundImage } = useBackground();
   const {
-    screenshots,
-    loading: screenshotsLoading,
+    data: screenshots,
+    isLoading: screenshotsLoading,
     error: screenshotsError,
   } = useGameScreenshots(id);
-  console.log(data);
 
   /*
   |------------------------------------------------
@@ -102,7 +105,7 @@ function GamePage() {
   |------------------------------------------------
   */
 
-  if (loading) {
+  if (isLoading) {
     return (
       <Box
         sx={{
@@ -275,8 +278,6 @@ function GamePage() {
           </Box>
 
           <Container>
-            {/* ...altro contenuto */}
-
             {screenshotsLoading && <CircularProgress />}
             {screenshotsError && (
               <Typography color="error">
@@ -291,11 +292,7 @@ function GamePage() {
                     component="img"
                     src={shot.image}
                     alt={`Screenshot ${shot.id}`}
-                    sx={{
-                      height: 200,
-                      borderRadius: 2,
-                      objectFit: "cover",
-                    }}
+                    sx={{ height: 200, borderRadius: 2, objectFit: "cover" }}
                   />
                 ))}
               </Box>

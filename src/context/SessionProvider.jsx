@@ -1,12 +1,12 @@
 import { useState, useEffect } from "react";
 import { supabase } from "../supabase/supabase-client";
 import SessionContext from "./SessionContext";
+import useUserProfile from "../hooks/useUserProfile";
+import LayoutSkeleton from "../components/skeleton/LayoutSkeleton";
 
 function SessionProvider({ children }) {
   const [session, setSession] = useState(null);
-  const [userProfile, setUserProfile] = useState(null);
   const [loadingSession, setLoadingSession] = useState(true);
-  const [loadingProfile, setLoadingProfile] = useState(false);
 
   useEffect(() => {
     const getSession = async () => {
@@ -22,47 +22,27 @@ function SessionProvider({ children }) {
     const { data: listener } = supabase.auth.onAuthStateChange(
       (_event, session) => {
         setSession(session);
-        if (!session) {
-          setUserProfile(null);
-        }
       }
     );
 
-    return () => {
-      listener?.subscription?.unsubscribe?.();
-    };
+    return () => listener?.subscription?.unsubscribe?.();
   }, []);
 
-  useEffect(() => {
-    if (!session?.user) return;
-
-    setLoadingProfile(true);
-
-    supabase
-      .from("profiles")
-      .select("*")
-      .eq("id", session.user.id)
-      .single()
-      .then(({ data, error }) => {
-        if (!error) {
-          setUserProfile(data);
-        }
-        setLoadingProfile(false);
-      });
-  }, [session]);
+  // Usa la hook qui per fetchare il profilo
+  const { data: userProfile, isLoading: loadingProfile } =
+    useUserProfile(session);
 
   if (loadingSession || loadingProfile) {
-    return null; // O qui puoi mettere uno skeleton o spinner
+    return <LayoutSkeleton />;
   }
 
   return (
     <SessionContext.Provider
-      value={{ session, userProfile, setUserProfile, loadingSession }}
+      value={{ session, userProfile, setUserProfile: () => {} }}
     >
       {children}
     </SessionContext.Provider>
   );
 }
-
 
 export default SessionProvider;

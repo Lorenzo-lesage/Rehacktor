@@ -1,9 +1,8 @@
-import { useEffect } from "react";
 import { useSearchParams } from "react-router";
-import apiConfig from "../../config/apiConfig";
-import useFetchSolution from "../../hooks/useFetchSolution.js";
 import GamesList from "../../components/game/LayoutGameList.jsx";
 import { Box, Typography } from "@mui/material";
+import { useQuery } from "@tanstack/react-query";
+import { searchGames } from "../../api/games";
 
 function SearchPage() {
   /*
@@ -14,18 +13,17 @@ function SearchPage() {
 
   let [searchParams] = useSearchParams();
   const game = searchParams.get("query");
-  const initialUrl = apiConfig.endpoints.gameSearch(game);
-  const { data, loading, error, updateUrl } = useFetchSolution(initialUrl);
-
-  /*
-  |-----------------------------------------------------
-  | Hooks
-  |-----------------------------------------------------
-  */
-
-  useEffect(() => {
-    updateUrl(initialUrl);
-  }, [initialUrl, updateUrl]);
+  const {
+    data,
+    isLoading: loading,
+    isError: error,
+  } = useQuery({
+    queryKey: ["searchGames", game],
+    queryFn: () => searchGames(game),
+    enabled: !!game, // evita di chiamare se `game` è null
+    staleTime: 5 * 60 * 1000, // 5 minuti senza refetch automatico
+    cacheTime: 10 * 60 * 1000,
+  });
 
   /*
   |-----------------------------------------------------

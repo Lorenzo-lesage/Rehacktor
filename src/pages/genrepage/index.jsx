@@ -1,8 +1,7 @@
 import { useParams } from "react-router";
-import apiConfig from "../../config/apiConfig";
-import useFetchSolution from "../../hooks/useFetchSolution.js";
 import GamesList from "../../components/game/LayoutGameList.jsx";
-import { useEffect } from "react";
+import { useQuery } from "@tanstack/react-query";
+import { fetchGamesByGenre, fetchGenres } from "../../api/games";
 
 function GenrePage() {
   /*
@@ -12,32 +11,23 @@ function GenrePage() {
   */
 
   const { genre } = useParams();
-  const initialUrl = apiConfig.endpoints.gamesByGenre(genre, 1);
-  const genreUrl = apiConfig.endpoints.genres;
-  /**
-   * Fetch dei giochi di un determinato genere
-   */
   const {
     data: gamesData,
-    loading: gamesLoading,
-    error: gamesError,
-    updateUrl: updateGamesUrl,
-  } = useFetchSolution(initialUrl);
+    isLoading: gamesLoading,
+    isError: gamesError,
+  } = useQuery({
+    queryKey: ["gamesByGenre", genre],
+    queryFn: () => fetchGamesByGenre(genre, 1),
+  });
+
   const {
     data: genresData,
-    loading: genresLoading,
-    error: genresError,
-  } = useFetchSolution(genreUrl);
-
-  /*
-  |-----------------------------------------------------
-  | Hooks
-  |-----------------------------------------------------
-  */
-
-  useEffect(() => {
-    updateGamesUrl(apiConfig.endpoints.gamesByGenre(genre, 1));
-  }, [updateGamesUrl, genre]);
+    isLoading: genresLoading,
+    isError: genresError,
+  } = useQuery({
+    queryKey: ["genres"],
+    queryFn: fetchGenres,
+  });
 
   /*
   |-----------------------------------------------------

@@ -1,22 +1,8 @@
-import GenresDropdown from "../game/GenresDropdown";
-import { Box, Typography } from "@mui/material";
-import { Link } from "react-router";
+import { Box, Skeleton } from "@mui/material";
 
-function SideBar({  navbarHidden }) {
-  /*
-  |-----------------------------------------------------
-  | Data
-  |-----------------------------------------------------
-  */
-
+function SideBarSkeleton({ navbarHidden }) {
   const headerHeight = 64;
   const marginTop = navbarHidden ? 0 : headerHeight;
-
-  /*
-  |-----------------------------------------------------
-  | Return
-  |-----------------------------------------------------
-  */
 
   return (
     <Box
@@ -27,7 +13,6 @@ function SideBar({  navbarHidden }) {
         flexShrink: 0,
       }}
     >
-      {/* Wrapper con altezza 100vh e overflow hidden */}
       <Box
         sx={{
           position: "sticky",
@@ -38,7 +23,6 @@ function SideBar({  navbarHidden }) {
           boxSizing: "border-box",
         }}
       >
-        {/* Contenuto con marginTop per spostarlo verso il basso */}
         <Box
           sx={{
             marginTop: `${marginTop}px`,
@@ -49,14 +33,22 @@ function SideBar({  navbarHidden }) {
             "&::-webkit-scrollbar": {
               display: "none",
             },
-          padding: "0 0.5rem 1rem 0.5rem",
+            padding: "0 0.5rem 1rem 0.5rem",
           }}
         >
-          <GenresDropdown />
+          {/* Simulazione delle voci di generi */}
+          {[...Array(10)].map((_, i) => (
+            <Skeleton
+              key={i}
+              variant="rounded"
+              height={32}
+              sx={{ mb: 1, borderRadius: 1 }}
+            />
+          ))}
         </Box>
       </Box>
     </Box>
   );
 }
 
-export default SideBar;
+export default SideBarSkeleton;

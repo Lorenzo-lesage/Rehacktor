@@ -4,6 +4,9 @@ import "react-toastify/dist/ReactToastify.css";
 import SessionProvider from "./context/SessionProvider";
 import FavoritesProvider from "./context/FavoritesProvider";
 import BackgroundProvider from "./context/BackgroundProvider";
+import "slick-carousel/slick/slick.css"; 
+import "slick-carousel/slick/slick-theme.css";
+
 
 function App() {
   return (

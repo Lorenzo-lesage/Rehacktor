@@ -13,8 +13,6 @@ function Chatbox({ data }) {
   */
 
   const { userProfile } = useContext(SessionContext);
-  console.log(userProfile);
-  console.log(data);
 
   /*
   |-----------------------------------------------------

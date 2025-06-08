@@ -29,7 +29,6 @@ function ProfilePage() {
   const { userProfile } = useContext(SessionContext);
   const { favorites } = useContext(FavoritesContext);
   const { avatarUrl } = useAvatarUrl(userProfile?.avatar_url);
-  favorites.forEach((game) => console.log(game));
   const sortedFavorites = [...favorites].reverse();
 
   /*

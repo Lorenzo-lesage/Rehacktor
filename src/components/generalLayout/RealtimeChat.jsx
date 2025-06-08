@@ -33,7 +33,7 @@ export default function RealtimeChat({ data }) {
 
     setMessages(messages);
     setLoadingInitial(false);
-  }, [ data.id ]);
+  }, [data.id]);
 
   useEffect(() => {
     if (data) getInitialMessages();
@@ -42,8 +42,15 @@ export default function RealtimeChat({ data }) {
       .channel("messages")
       .on(
         "postgres_changes",
-        { event: "*", schema: "public", table: "messages" },
-        () => getInitialMessages()
+        {
+          event: "INSERT",
+          schema: "public",
+          table: "messages",
+          filter: `game_id=eq.${data.id}`,
+        },
+        (payload) => {
+          setMessages((prev) => [...prev, payload.new]);
+        }
       )
       .subscribe();
 
@@ -54,10 +61,6 @@ export default function RealtimeChat({ data }) {
       }
     };
   }, [data, getInitialMessages]);
-
-  useEffect(() => {
-    scrollSmoothToBottom();
-  }, [messages]);
 
   return (
     <Paper
@@ -102,7 +105,8 @@ export default function RealtimeChat({ data }) {
                 {msg.content}
               </Typography>
               <Typography variant="caption" color="gray">
-                {dayjs(msg.created_at).fromNow()}
+                {dayjs(msg.created_at).format("HH:mm")} (
+                {dayjs(msg.created_at).fromNow()})
               </Typography>
             </Box>
           ))}

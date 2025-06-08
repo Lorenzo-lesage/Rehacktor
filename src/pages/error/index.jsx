@@ -24,7 +24,7 @@ function ErrorPage() {
         flexDirection: "column",
         justifyContent: "center",
         alignItems: "center",
-        bgcolor: "background.default",
+        bgcolor: "transparent",
         px: 2,
         textAlign: "center",
       }}

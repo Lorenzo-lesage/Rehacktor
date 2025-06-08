@@ -12,9 +12,9 @@ import {
 } from "@mui/material";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import CategoryIcon from "@mui/icons-material/Category";
-import apiConfig from "../../config/apiConfig.js";
-import useFetchSolution from "../../hooks/useFetchSolution.js";
 import { Link } from "react-router";
+import { useQuery } from "@tanstack/react-query";
+import { fetchGenres } from "../../api/games.js";
 
 function GenresDropdown() {
   /*
@@ -23,8 +23,11 @@ function GenresDropdown() {
   |-----------------------------------------------------
   */
 
-  const initialUrl = apiConfig.endpoints.genres;
-  const { data, loading, error, updateUrl } = useFetchSolution(initialUrl);
+  const { data, isLoading, isError, error } = useQuery({
+    queryKey: ["genres"],
+    queryFn: fetchGenres,
+    staleTime: 5 * 60 * 1000, // cache per 5 minuti
+  });
 
   /*
   |-----------------------------------------------------
@@ -32,7 +35,7 @@ function GenresDropdown() {
   |-----------------------------------------------------
   */
 
-  if (loading) {
+  if (isLoading) {
     return (
       <Box
         sx={{
@@ -43,7 +46,7 @@ function GenresDropdown() {
       </Box>
     );
   }
-  if (error) return <p>Error: {error}</p>;
+  if (isError) return <p>Error: {error.message}</p>;
 
   return (
     <>
@@ -53,7 +56,6 @@ function GenresDropdown() {
           backgroundColor: "transparent",
         }}
         elevation={0}
-        
       >
         <AccordionSummary
           sx={{
@@ -61,7 +63,9 @@ function GenresDropdown() {
             borderRadius: 1,
             transition: "all 0.2s ease-in-out",
           }}
-          expandIcon={<ExpandMoreIcon sx={{ color: "text.primary" }} fontSize="small" />}
+          expandIcon={
+            <ExpandMoreIcon sx={{ color: "text.primary" }} fontSize="small" />
+          }
         >
           <Typography
             variant="h6"

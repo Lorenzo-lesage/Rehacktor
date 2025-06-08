@@ -1,6 +1,5 @@
 import { useColorScheme, FormControlLabel, Switch, Box } from "@mui/material";
 import { styled } from "@mui/material/styles";
-import { m } from "framer-motion";
 
 const MaterialUISwitch = styled(Switch)(({ theme }) => ({
   width: 40,
