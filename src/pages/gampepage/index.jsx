@@ -29,6 +29,7 @@ import StarRateIcon from "@mui/icons-material/StarRate";
 import EmojiEventsIcon from "@mui/icons-material/EmojiEvents";
 import GroupAddIcon from "@mui/icons-material/GroupAdd";
 import useGameScreenshots from "../../hooks/useGameScreenshots";
+import Chatbox from "../../components/generalLayout/Chatbox";
 
 function GamePage() {
   /*
@@ -141,6 +142,9 @@ function GamePage() {
     <Container sx={{ paddingBottom: 8 }}>
       <Paper sx={{ p: 0, backgroundColor: "transparent" }} elevation={0}>
         <Stack spacing={3}>
+          <Box>
+            <Chatbox data={data && data} />
+          </Box>
           {/* Header row: release date, rating stars, favorite */}
           <Box
             sx={{

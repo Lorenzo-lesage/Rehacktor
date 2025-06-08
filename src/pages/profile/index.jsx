@@ -42,8 +42,6 @@ function ProfilePage() {
       sx={{
         p: 1,
         pb: 5,
-        backgroundColor: "background.default",
-        boxShadow: 6,
         borderRadius: 2,
       }}
     >
@@ -68,10 +66,7 @@ function ProfilePage() {
           sx={{
             width: { xs: "100%", md: "50%" },
             textAlign: "left",
-            boxShadow: 3,
-            borderRadius: 2,
             p: 2,
-            bgcolor: "background.paper",
           }}
         >
           <Typography variant="h6">Lorem ipsum</Typography>
@@ -96,27 +91,25 @@ function ProfilePage() {
             alignItems: "center",
             justifyContent: "center",
             gap: 2,
-            borderRadius: "10px",
             p: 2,
             position: "relative",
-            backgroundColor: "background.paper",
-            boxShadow: 6,
           }}
         >
-          <Box sx={{ position: "absolute", top: "0.5rem", right: "0.5rem" }}>
-            <Link to="/account">
-              <IconButton
-                variant="contained"
-                sx={{
-                  position: "relative",
-                  backgroundColor: "background.paper",
-                }}
-                size="small"
-              >
-                <EditNoteIcon />
-              </IconButton>
-            </Link>
-          </Box>
+          <Tooltip title="Edit Profile" placement="top">
+            <Box sx={{ position: "absolute", top: "0.5rem", right: "0.5rem" }}>
+              <Link to="/account">
+                <IconButton
+                  variant="contained"
+                  sx={{
+                    position: "relative",
+                  }}
+                  size="small"
+                >
+                  <EditNoteIcon />
+                </IconButton>
+              </Link>
+            </Box>
+          </Tooltip>
           <Box
             sx={{ width: "100%", display: "flex", justifyContent: "center" }}
           >
@@ -227,7 +220,7 @@ function ProfilePage() {
             sx={{
               mt: 2,
               display: "flex",
-              flexWrap: "wrap", 
+              flexWrap: "wrap",
               justifyContent: "end",
               gap: 2,
             }}
@@ -237,7 +230,7 @@ function ProfilePage() {
                 key={game.id}
                 disableGutters
                 sx={{
-                  flex: "2", 
+                  flex: "2",
                 }}
               >
                 <CardFavoriteItem favorite={game} />
