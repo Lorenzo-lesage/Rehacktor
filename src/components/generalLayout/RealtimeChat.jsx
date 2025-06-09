@@ -1,12 +1,15 @@
-import { useEffect, useState, useRef, useCallback } from "react";
+// RealtimeChat.jsx
+import { useEffect, useState, useRef, useCallback, useContext } from "react";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
 import supabase from "../../supabase/supabase-client";
-import { Box, Typography, CircularProgress, Paper, Stack } from "@mui/material";
+import SessionContext from "../../context/SessionContext";
+import { Box, Typography, CircularProgress, Stack } from "@mui/material";
 
 dayjs.extend(relativeTime);
 
-export default function RealtimeChat({ data }) {
+function RealtimeChat({ data }) {
+  const { userProfile } = useContext(SessionContext);
   const [messages, setMessages] = useState([]);
   const [loadingInitial, setLoadingInitial] = useState(false);
   const [error, setError] = useState(null);
@@ -23,7 +26,7 @@ export default function RealtimeChat({ data }) {
     const { data: messages, error } = await supabase
       .from("messages")
       .select("*")
-      .eq("game_id", data.id) // filtro per gioco
+      .eq("game_id", data.id)
       .order("id", { ascending: true });
 
     if (error) {
@@ -33,6 +36,7 @@ export default function RealtimeChat({ data }) {
 
     setMessages(messages);
     setLoadingInitial(false);
+    scrollSmoothToBottom();
   }, [data.id]);
 
   useEffect(() => {
@@ -50,32 +54,48 @@ export default function RealtimeChat({ data }) {
         },
         (payload) => {
           setMessages((prev) => [...prev, payload.new]);
+          scrollSmoothToBottom();
         }
       )
       .subscribe();
 
     return () => {
-      if (channel) {
-        supabase.removeChannel(channel);
-        channel.unsubscribe();
-      }
+      supabase.removeChannel(channel);
+      channel.unsubscribe();
     };
   }, [data, getInitialMessages]);
 
   return (
-    <Paper
-      elevation={3}
+    <Box
+      ref={messageRef}
       sx={{
         mt: 1,
-        p: 1,
+        px: 2,
+        py: 1,
         width: "100%",
         height: "50vh",
         display: "flex",
         flexDirection: "column",
-        bgcolor: "#1b212b",
+        bgcolor: "transparent",
+        border: "1px solid #ccc",
         overflowY: "auto",
+        borderRadius: 2,
+        /* Scrollbar styles */
+        "&::-webkit-scrollbar": {
+          width: "8px", 
+        },
+        "&::-webkit-scrollbar-track": {
+          backgroundColor: "#f0f0f0", 
+          borderRadius: "8px",
+        },
+        "&::-webkit-scrollbar-thumb": {
+          backgroundColor: "#888", 
+          borderRadius: "8px",
+        },
+        "&::-webkit-scrollbar-thumb:hover": {
+          backgroundColor: "#555", 
+        },
       }}
-      ref={messageRef}
     >
       {error && (
         <Typography color="error" variant="body2">
@@ -88,30 +108,50 @@ export default function RealtimeChat({ data }) {
           <CircularProgress size={24} />
         </Box>
       ) : (
-        <Stack spacing={2}>
-          {messages.map((msg) => (
-            <Box
-              key={msg.id}
-              sx={{
-                p: 1,
-                bgcolor: "grey.800",
-                borderRadius: 1,
-              }}
-            >
-              <Typography variant="subtitle2" color="primary">
-                {msg.profile_username}
-              </Typography>
-              <Typography variant="body2" color="white">
-                {msg.content}
-              </Typography>
-              <Typography variant="caption" color="gray">
-                {dayjs(msg.created_at).format("HH:mm")} (
-                {dayjs(msg.created_at).fromNow()})
-              </Typography>
-            </Box>
-          ))}
+        <Stack spacing={1}>
+          {messages.map((msg) => {
+            const isOwn = msg.profile_id === userProfile?.id;
+            return (
+              <Box
+                key={msg.id}
+                sx={{
+                  maxWidth: "75%",
+                  alignSelf: isOwn ? "flex-end" : "flex-start",
+                  bgcolor: isOwn ? "#dcf8c6" : "white",
+                  px: 2,
+                  py: 1,
+                  borderRadius: 2,
+                  borderTopRightRadius: isOwn ? 0 : 2,
+                  borderTopLeftRadius: isOwn ? 2 : 0,
+                  boxShadow: 1,
+                }}
+              >
+                {!isOwn && (
+                  <Typography
+                    variant="subtitle2"
+                    color="primary"
+                    sx={{ mb: 0.5 }}
+                  >
+                    {msg.profile_username}
+                  </Typography>
+                )}
+                <Typography variant="body2" color="black">
+                  {msg.content}
+                </Typography>
+                <Typography
+                  variant="caption"
+                  color="text.secondary"
+                  sx={{ display: "block", textAlign: "right", mt: 0.5 }}
+                >
+                  {dayjs(msg.created_at).format("HH:mm")}
+                </Typography>
+              </Box>
+            );
+          })}
         </Stack>
       )}
-    </Paper>
+    </Box>
   );
 }
+
+export default RealtimeChat;

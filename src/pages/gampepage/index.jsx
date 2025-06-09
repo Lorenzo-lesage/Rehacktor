@@ -10,8 +10,9 @@ import {
   Link as MuiLink,
   Rating,
   LinearProgress,
+  Grid,
 } from "@mui/material";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import ToggleFavorite from "../../components/animationComponent/ToggleFavorite.jsx";
 import StarIcon from "@mui/icons-material/Star";
 import { useBackground } from "../../hooks/useBackground.js";
@@ -30,6 +31,8 @@ import useGameScreenshots from "../../hooks/useGameScreenshots";
 import Chatbox from "../../components/generalLayout/Chatbox";
 import { useQuery } from "@tanstack/react-query";
 import { fetchGameDetails } from "../../api/games.js";
+import { Masonry } from "@mui/lab";
+import Lightbox from "react-image-lightbox";
 
 function GamePage() {
   /*
@@ -51,6 +54,15 @@ function GamePage() {
     isLoading: screenshotsLoading,
     error: screenshotsError,
   } = useGameScreenshots(id);
+  const [isOpen, setIsOpen] = useState(false);
+  const [photoIndex, setPhotoIndex] = useState(0);
+  const images = [
+    data?.background_image,
+    data?.background_image_additional,
+    ...(screenshots || []),
+  ]
+    .filter(Boolean)
+    .map((img) => (typeof img === "string" ? img : img.image));
 
   /*
   |------------------------------------------------
@@ -145,9 +157,6 @@ function GamePage() {
     <Container sx={{ paddingBottom: 8 }}>
       <Paper sx={{ p: 0, backgroundColor: "transparent" }} elevation={0}>
         <Stack spacing={3}>
-          <Box>
-            <Chatbox data={data && data} />
-          </Box>
           {/* Header row: release date, rating stars, favorite */}
           <Box
             sx={{
@@ -210,118 +219,84 @@ function GamePage() {
             <ToggleFavorite data={data} />
           </Box>
 
-          <Box>
-            <Box>
-              {/* Title */}
-              <Typography
-                variant="h3"
-                component="h1"
-                textAlign="center"
-                color="text.primary"
-              >
-                {data.name ?? "Untitled"}
-              </Typography>
-              {/* ESRB Rating */}
-              {data.esrb_rating && (
-                <Typography
-                  variant="body2"
-                  color="text.secondary"
-                  textAlign="center"
-                  sx={{ fontWeight: "bold" }}
-                >
-                  ESRB Rating: {data.esrb_rating.name}
-                </Typography>
-              )}
-              {/* Description */}
+          <Typography
+            variant="h3"
+            component="h1"
+            textAlign="center"
+            color="text.primary"
+          >
+            {data.name ?? "Untitled"}
+          </Typography>
+
+          {data.esrb_rating && (
+            <Typography
+              variant="body2"
+              color="text.secondary"
+              textAlign="center"
+              sx={{ fontWeight: "bold" }}
+            >
+              ESRB Rating: {data.esrb_rating.name}
+            </Typography>
+          )}
+
+          <Grid container spacing={2}>
+            {/* Title & Info Section */}
+            <Grid size={8}>
               <Typography
                 variant="body1"
-                color="text.secondary"
+                color="text.primary"
                 textAlign="center"
-                mt={2}
               >
                 {data.description_raw ?? "No description available."}
               </Typography>
-            </Box>
-            <Box>
-              {/* Main Image */}
-              {data.background_image && (
-                <Box
-                  sx={{
-                    width: "100%",
-                    height: 500,
-                    borderRadius: 2,
-                    mt: 2,
-                    backgroundImage: `url(${data.background_image})`,
-                    backgroundSize: "cover",
-                    backgroundPosition: "center",
-                    backgroundRepeat: "no-repeat",
-                  }}
-                />
-              )}
+            </Grid>
 
-              {/* Additional Background Image at bottom */}
-              {data.background_image_additional && (
-                <Box
-                  component="img"
-                  src={data.background_image_additional}
-                  alt={`Additional image of the game ${data.name}`}
-                  sx={{
-                    width: "100%",
-                    maxHeight: 300,
-                    objectFit: "cover",
-                    borderRadius: 2,
-                    mt: 1,
-                  }}
-                />
-              )}
-            </Box>
-          </Box>
-
-          <Container>
-            {screenshotsLoading && <CircularProgress />}
-            {screenshotsError && (
-              <Typography color="error">
-                Errore nel caricamento degli screenshot.
-              </Typography>
-            )}
-            {screenshots?.length > 0 && (
-              <Box sx={{ display: "flex", overflowX: "auto", gap: 2, mt: 4 }}>
-                {screenshots.map((shot) => (
+            <Grid size={4}>
+              <Masonry columns={{ xs: 1, sm: 2, md: 3 }} spacing={2}>
+                {images.map((img, index) => (
                   <Box
-                    key={shot.id}
+                    key={index}
                     component="img"
-                    src={shot.image}
-                    alt={`Screenshot ${shot.id}`}
-                    sx={{ height: 200, borderRadius: 2, objectFit: "cover" }}
+                    src={img}
+                    alt={`Screenshot ${index}`}
+                    sx={{
+                      width: "100%",
+                      borderRadius: 2,
+                      display: "block",
+                      cursor: "pointer",
+                      transition: "transform 0.3s ease",
+                      ":hover": {
+                        transform: "scale(1.1)",
+                      },
+                    }}
+                    onClick={() => {
+                      setPhotoIndex(index);
+                      setIsOpen(true);
+                    }}
                   />
                 ))}
-              </Box>
-            )}
-          </Container>
+              </Masonry>
+              {isOpen && (
+                <Lightbox
+                  mainSrc={images[photoIndex]}
+                  nextSrc={images[(photoIndex + 1) % images.length]}
+                  prevSrc={
+                    images[(photoIndex + images.length - 1) % images.length]
+                  }
+                  onCloseRequest={() => setIsOpen(false)}
+                  onMovePrevRequest={() =>
+                    setPhotoIndex(
+                      (photoIndex + images.length - 1) % images.length
+                    )
+                  }
+                  onMoveNextRequest={() =>
+                    setPhotoIndex((photoIndex + 1) % images.length)
+                  }
+                />
+              )}
+            </Grid>
+          </Grid>
 
-          {/* Genres */}
-          <Box
-            sx={{
-              display: "flex",
-              justifyContent: "space-between",
-              alignItems: "center",
-            }}
-          >
-            <GenreTags genres={data.genres} styleGenre={styleGenre} />
-
-            {/* Stores */}
-            <StoreIcons
-              stores={data.stores}
-              styleStores={styleStores}
-              styleIconStores={styleIconStores}
-            />
-
-            {/* Platforms */}
-            <PlatformIcons
-              platforms={data.parent_platforms}
-              styleIconPlatform={styleIconPlatform}
-            />
-          </Box>
           {/* Added By Status */}
           <Box
             sx={{
@@ -451,159 +426,192 @@ function GamePage() {
             </Box>
           </Box>
 
-          <Box
-            sx={{ display: { xs: "none", md: "flex" }, gap: 2, width: "100%" }}
-          >
-            {/* Reviews */}
-            <Box
-              sx={{
-                width: "fit-content",
-                display: "flex",
-                gap: 1,
-                alignItems: "start",
-              }}
-            >
-              <Typography
-                variant="body1"
-                color="text.primary"
-                sx={{ fontWeight: "bold" }}
-              >
-                Reviews:
-              </Typography>
-              <Box>
-                <Typography
-                  variant="body1"
-                  color="text.secondary"
-                  sx={{ whiteSpace: "nowrap" }}
-                >
-                  Total: {data.reviews_count ?? 0},
-                </Typography>
-                <Typography
-                  variant="body1"
-                  color="text.secondary"
-                  sx={{ whiteSpace: "nowrap" }}
-                >
-                  With Text: {data.reviews_text_count ?? 0}
-                </Typography>
-              </Box>
-            </Box>
-
-            {/* Ratings */}
-            <Box sx={{ width: "100%" }}>
-              {data.ratings?.length > 0 ? (
-                <Box sx={{ display: "flex", flexDirection: "column", gap: 1 }}>
-                  {data.ratings.map((rating, index) => (
-                    <Box key={index}>
-                      <Box
-                        sx={{
-                          display: "flex",
-                          justifyContent: "space-between",
-                        }}
-                      >
-                        <Typography
-                          variant="body2"
-                          sx={{ color: "text.primary" }}
-                        >
-                          {rating.title}
-                        </Typography>
-                        <Typography
-                          variant="body2"
-                          sx={{ color: "text.secondary" }}
-                        >
-                          {rating.count} votes
-                        </Typography>
-                      </Box>
-                      <LinearProgress
-                        variant="determinate"
-                        value={rating.percent}
-                        sx={{
-                          height: 8,
-                          borderRadius: 5,
-                          backgroundColor: "#background.default",
-                          "& .MuiLinearProgress-bar": {
-                            backgroundColor: "#background.paper",
-                          },
-                        }}
-                      />
-                    </Box>
-                  ))}
-                </Box>
-              ) : (
-                <Typography color="text.secondary">
-                  No ratings available
-                </Typography>
-              )}
-            </Box>
-          </Box>
-
-          {/* Reddit Description */}
-          {data.reddit_description && (
-            <Box mt={3}>
-              <Typography variant="h6" gutterBottom>
-                Reddit Description:
-              </Typography>
-              <Typography
-                variant="body2"
-                color="text.secondary"
-                sx={{ whiteSpace: "pre-line" }}
-              >
-                {data.reddit_description}
-              </Typography>
-            </Box>
-          )}
-
-          {/* Publishers and Developers */}
+          {/* Genres */}
           <Box
             sx={{
               display: "flex",
-              gap: 4,
-              flexWrap: "wrap",
               justifyContent: "space-between",
+              alignItems: "center",
             }}
           >
-            <Box sx={{ flex: 1 }}>
-              <Typography variant="h6" gutterBottom>
-                Publishers:
-              </Typography>
-              <Box sx={{ display: "flex", flexWrap: "wrap", gap: 1 }}>
-                {data.publishers?.map((pub) => (
-                  <DeveloperIcon
-                    developers={data.publishers}
-                    stylePublisher={stylePublisher}
-                    styleIconPublisher={styleIconPublisher}
-                    name={pub.name}
-                    key={pub.id}
-                    type="publisher"
-                  />
-                )) || <Typography color="text.secondary">N/A</Typography>}
-              </Box>
-            </Box>
+            <GenreTags genres={data.genres} styleGenre={styleGenre} />
 
-            <Box
-              sx={{
-                flex: 1,
-                display: "flex",
-                flexDirection: "column",
-                alignItems: "flex-end",
-              }}
-            >
-              <Typography variant="h6" gutterBottom>
-                Developers:
-              </Typography>
-              <Box sx={{ display: "flex", flexWrap: "wrap", gap: 1 }}>
-                {data.developers?.map((dev) => (
-                  <DeveloperIcon
-                    developers={data.developers}
-                    stylePublisher={stylePublisher}
-                    styleIconPublisher={styleIconPublisher}
-                    name={dev.name}
-                    key={dev.id}
-                    type="publisher"
-                  />
-                )) || <Typography color="text.secondary">N/A</Typography>}
-              </Box>
-            </Box>
+            {/* Stores */}
+            <StoreIcons
+              stores={data.stores}
+              styleStores={styleStores}
+              styleIconStores={styleIconStores}
+            />
+
+            {/* Platforms */}
+            <PlatformIcons
+              platforms={data.parent_platforms}
+              styleIconPlatform={styleIconPlatform}
+            />
           </Box>
+
+          <Grid container spacing={2}>
+            <Grid size={8}>
+              <Box
+                sx={{
+                  display: "flex",
+                  flexDirection: "column",
+                  justifyContent: "space-between",
+                  height: "100%",
+                }}
+              >
+                {/* Reviews */}
+                <Box
+                  sx={{
+                    display: "flex",
+                    gap: 2,
+                    width: "100%",
+                    flexDirection: "column",
+                  }}
+                >
+                  {/* Ratings */}
+                  <Box sx={{ width: "100%" }}>
+                    {data.ratings?.length > 0 ? (
+                      <Box
+                        sx={{
+                          display: "flex",
+                          flexDirection: "column",
+                          gap: 1,
+                        }}
+                      >
+                        {data.ratings.map((rating, index) => (
+                          <Box key={index}>
+                            <Box
+                              sx={{
+                                display: "flex",
+                                justifyContent: "space-between",
+                              }}
+                            >
+                              <Typography
+                                variant="body2"
+                                sx={{ color: "text.primary" }}
+                              >
+                                {rating.title}
+                              </Typography>
+                              <Typography
+                                variant="body2"
+                                sx={{ color: "text.secondary" }}
+                              >
+                                {rating.count} votes
+                              </Typography>
+                            </Box>
+                            <LinearProgress
+                              variant="determinate"
+                              value={rating.percent}
+                              sx={{
+                                height: 8,
+                                borderRadius: 5,
+                                backgroundColor: "#background.default",
+                                "& .MuiLinearProgress-bar": {
+                                  backgroundColor: "#background.paper",
+                                },
+                              }}
+                            />
+                          </Box>
+                        ))}
+                      </Box>
+                    ) : (
+                      <Typography color="text.secondary">
+                        No ratings available
+                      </Typography>
+                    )}
+                  </Box>
+
+                  <Box
+                    sx={{
+                      display: "flex",
+                      justifyContent: "end",
+                    }}
+                  >
+                    <Typography
+                      variant="body1"
+                      color="text.secondary"
+                      sx={{ whiteSpace: "nowrap" }}
+                    >
+                      Total: {data.reviews_count ?? 0}
+                    </Typography>
+                  </Box>
+                </Box>
+
+                {/* Reddit Description */}
+                {data.reddit_description && (
+                  <Box
+                    sx={{
+                      display: "flex",
+                      flexDirection: "column",
+                      alignItems: "flex-end",
+                    }}
+                  >
+                    <Typography variant="h6">Reddit Description:</Typography>
+                    <Typography
+                      variant="body2"
+                      color="text.secondary"
+                      sx={{ whiteSpace: "pre-line" }}
+                    >
+                      {data.reddit_description}
+                    </Typography>
+                  </Box>
+                )}
+
+                {/* Publishers and Developers */}
+
+                <Box>
+                  <Typography variant="h6" gutterBottom>
+                    Publishers:
+                  </Typography>
+                  <Box sx={{ display: "flex", flexWrap: "wrap", gap: 1 }}>
+                    {data.publishers?.map((pub) => (
+                      <DeveloperIcon
+                        developers={data.publishers}
+                        stylePublisher={stylePublisher}
+                        styleIconPublisher={styleIconPublisher}
+                        name={pub.name}
+                        key={pub.id}
+                        type="publisher"
+                      />
+                    )) || <Typography color="text.secondary">N/A</Typography>}
+                  </Box>
+                </Box>
+
+                <Box
+                  sx={{
+                    justifyContent: "end",
+                    display: "flex",
+                    flexDirection: "column",
+                    alignItems: "flex-end",
+                  }}
+                >
+                  <Typography variant="h6" gutterBottom>
+                    Developers:
+                  </Typography>
+                  <Box sx={{ display: "flex", flexWrap: "wrap", gap: 1 }}>
+                    {data.developers?.map((dev) => (
+                      <DeveloperIcon
+                        developers={data.developers}
+                        stylePublisher={stylePublisher}
+                        styleIconPublisher={styleIconPublisher}
+                        name={dev.name}
+                        key={dev.id}
+                        type="publisher"
+                      />
+                    )) || <Typography color="text.secondary">N/A</Typography>}
+                  </Box>
+                </Box>
+              </Box>
+            </Grid>
+
+            <Grid size={4}>
+              {/* Chatbox */}
+              <Box sx={{ height: "100%" }}>
+                <Chatbox data={data && data} />
+              </Box>
+            </Grid>
+          </Grid>
 
           {/* Tags */}
           <Box sx={{ my: 2 }}>

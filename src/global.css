@@ -1,5 +1,6 @@
 @import "tailwindcss";
 
+
 /* effect hover card image */
 .hoverImage {
   transition: transform 0.2s ease !important;
