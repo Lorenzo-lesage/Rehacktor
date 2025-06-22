@@ -309,6 +309,7 @@ function CardGame({ game }) {
                       type="Publisher"
                       stylePublisher={stylePublisher}
                       styleIconPublisher={styleIconPublisher}
+                      showTooltip={true}
                     />
                   ))}
                 </Box>

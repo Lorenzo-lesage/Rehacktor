@@ -1,9 +1,10 @@
 import { useContext } from "react";
 import supabase from "../../supabase/supabase-client";
 import SessionContext from "../../context/SessionContext";
-import { Box, TextField, Button } from "@mui/material";
+import { Box, TextField, Button, Typography } from "@mui/material";
 import { showToast } from "../toast/toastHelper";
 import RealtimeChat from "./RealtimeChat";
+import { useNavigate } from "react-router";
 
 function Chatbox({ data }) {
   /*
@@ -13,6 +14,7 @@ function Chatbox({ data }) {
   */
 
   const { userProfile } = useContext(SessionContext);
+  const navigate = useNavigate();
 
   /*
   |-----------------------------------------------------
@@ -20,10 +22,15 @@ function Chatbox({ data }) {
   |-----------------------------------------------------
   */
 
+  /**
+   * Method to handle the message submit
+   * @param {*} event
+   * @returns
+   */
   const handleMessageSubmit = async (event) => {
     event.preventDefault();
     if (!userProfile?.id || !data?.id) {
-      console.warn("Dati utente o gioco mancanti.");
+      console.warn("Data not available.");
       showToast("error", "Oops! Something went wrong");
       return;
     }
@@ -60,13 +67,13 @@ function Chatbox({ data }) {
       sx={{
         display: "flex",
         flexDirection: "column",
-        height: "100%", // Fondamentale: serve per il calcolo del flex parent
+        height: "100%",
       }}
     >
       {/* MESSAGGI: Scrollabile */}
       <Box
         sx={{
-          flexGrow: 1, // Prende tutto lo spazio disponibile
+          flexGrow: 1,
           overflowY: "auto",
           pr: 1,
         }}
@@ -74,37 +81,52 @@ function Chatbox({ data }) {
         <RealtimeChat data={data} />
       </Box>
 
-      {/* INPUT + BUTTON: Sempre visibile */}
-      <Box
-        sx={{
-          display: "flex",
-          alignItems: "center",
-          mt: 1,
-          pt: 1,
-          borderTop: "1px solid #ccc",
-        }}
-      >
-        <TextField
-          id="message"
-          name="message"
-          placeholder="Chat..."
-          fullWidth
-          multiline
-          rows={1}
-          size="small"
-          sx={{ backgroundColor: "transparent", borderRadius: 1 }}
-        />
-        <Button
-          type="submit"
-          variant="text"
-          color="primary"
-          size="small"
-          disabled={!userProfile?.id || !data?.id}
-          sx={{ minWidth: "80px", mt: 1 }}
-        >
-          Send
-        </Button>
-      </Box>
+      {userProfile?.id ? (
+        <>
+          {/* INPUT + BUTTON */}
+          <Box
+            sx={{
+              display: "flex",
+              alignItems: "center",
+              mt: 1,
+              pt: 1,
+              borderTop: "1px solid #ccc",
+            }}
+          >
+            <TextField
+              id="message"
+              name="message"
+              placeholder="Chat..."
+              fullWidth
+              multiline
+              rows={1}
+              size="small"
+              sx={{ backgroundColor: "transparent", borderRadius: 1 }}
+            />
+            <Button
+              type="submit"
+              variant="text"
+              color="primary"
+              size="small"
+              disabled={!userProfile?.id || !data?.id}
+              sx={{ minWidth: "80px", mt: 1 }}
+            >
+              Send
+            </Button>
+          </Box>
+        </>
+      ) : (
+        <Box sx={{ mt: 1, textAlign: "center" }}>
+          <Button
+            onClick={() => navigate("/login")}
+            size="small"
+            variant="text"
+            color="primary"
+          >
+            Login to chat
+          </Button>
+        </Box>
+      )}
     </Box>
   );
 }

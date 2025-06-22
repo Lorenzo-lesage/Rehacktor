@@ -11,6 +11,7 @@ import {
   Rating,
   LinearProgress,
   Grid,
+  Skeleton,
 } from "@mui/material";
 import { useEffect, useState } from "react";
 import ToggleFavorite from "../../components/animationComponent/ToggleFavorite.jsx";
@@ -49,11 +50,7 @@ function GamePage() {
     staleTime: 5 * 60 * 1000,
   });
   const { setBackgroundImage } = useBackground();
-  const {
-    data: screenshots,
-    isLoading: screenshotsLoading,
-    error: screenshotsError,
-  } = useGameScreenshots(id);
+  const { data: screenshots } = useGameScreenshots(id);
   const [isOpen, setIsOpen] = useState(false);
   const [photoIndex, setPhotoIndex] = useState(0);
   const images = [
@@ -252,30 +249,44 @@ function GamePage() {
             </Grid>
 
             <Grid size={4}>
-              <Masonry columns={{ xs: 1, sm: 2, md: 3 }} spacing={2}>
+              <Masonry columns={{ xs: 1, sm: 2, md: 3 }} spacing={0.5}>
                 {images.map((img, index) => (
                   <Box
                     key={index}
-                    component="img"
-                    src={img}
-                    alt={`Screenshot ${index}`}
                     sx={{
                       width: "100%",
-                      borderRadius: 2,
-                      display: "block",
+                      borderRadius: 1,
                       cursor: "pointer",
                       transition: "transform 0.3s ease",
                       ":hover": {
                         transform: "scale(1.1)",
                       },
+                      aspectRatio: "16 / 9",
+                      overflow: "hidden",
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
                     }}
                     onClick={() => {
                       setPhotoIndex(index);
                       setIsOpen(true);
                     }}
-                  />
+                  >
+                    <Box
+                      component="img"
+                      src={img}
+                      alt={`Screenshot ${index}`}
+                      sx={{
+                        width: "100%",
+                        height: "100%",
+                        objectFit: "cover", 
+                        display: "block",
+                      }}
+                    />
+                  </Box>
                 ))}
               </Masonry>
+
               {isOpen && (
                 <Lightbox
                   mainSrc={images[photoIndex]}
@@ -402,7 +413,7 @@ function GamePage() {
                   <strong>Achievements:</strong>{" "}
                 </Typography>
                 <Typography color="text.secondary">
-                  {data.achievements_count ?? "N/A"}u
+                  {data.achievements_count ?? "N/A"}
                 </Typography>
                 <EmojiEventsIcon fontSize="small" />
               </Box>
@@ -573,6 +584,7 @@ function GamePage() {
                         name={pub.name}
                         key={pub.id}
                         type="publisher"
+                        showTooltip={false}
                       />
                     )) || <Typography color="text.secondary">N/A</Typography>}
                   </Box>
@@ -598,6 +610,7 @@ function GamePage() {
                         name={dev.name}
                         key={dev.id}
                         type="publisher"
+                        showTooltip={false}
                       />
                     )) || <Typography color="text.secondary">N/A</Typography>}
                   </Box>

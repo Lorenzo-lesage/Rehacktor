@@ -3,6 +3,7 @@ import { useEffect, useState, useRef, useCallback, useContext } from "react";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
 import supabase from "../../supabase/supabase-client";
+import { getMessageChannel, removeMessageChannel } from "../../supabase/supabaseRealtime";
 import SessionContext from "../../context/SessionContext";
 import { Box, Typography, CircularProgress, Stack } from "@mui/material";
 
@@ -26,8 +27,8 @@ function RealtimeChat({ data }) {
     const { data: messages, error } = await supabase
       .from("messages")
       .select("*")
-      .eq("game_id", data.id)
-      .order("id", { ascending: true });
+      .eq("game_id", data?.id)
+      .order("updated_at", { ascending: true });
 
     if (error) {
       setError(error.message);
@@ -36,34 +37,54 @@ function RealtimeChat({ data }) {
 
     setMessages(messages);
     setLoadingInitial(false);
-    scrollSmoothToBottom();
-  }, [data.id]);
+  }, [data?.id]);
 
   useEffect(() => {
-    if (data) getInitialMessages();
+    if (!data?.id) return;
 
-    const channel = supabase
-      .channel("messages")
-      .on(
-        "postgres_changes",
-        {
-          event: "INSERT",
-          schema: "public",
-          table: "messages",
-          filter: `game_id=eq.${data.id}`,
-        },
-        (payload) => {
-          setMessages((prev) => [...prev, payload.new]);
-          scrollSmoothToBottom();
-        }
-      )
-      .subscribe();
+    let isMounted = true; // evita setState dopo unmount
+
+    const setupRealtime = () => {
+      return getMessageChannel(data.id, (newMsg) => {
+        setMessages((prev) => {
+          // evita duplicati basandoti sull'id del messaggio
+          if (prev.some((msg) => msg.id === newMsg.id)) return prev;
+          return [...prev, newMsg];
+        });
+      });
+    };
+
+    const init = async () => {
+      setLoadingInitial(true);
+      const { data: initialMessages, error } = await supabase
+        .from("messages")
+        .select("*")
+        .eq("game_id", data.id)
+        .order("updated_at", { ascending: true });
+
+      if (error) {
+        setError(error.message);
+      } else if (isMounted) {
+        setMessages(initialMessages);
+      }
+      setLoadingInitial(false);
+
+      if (isMounted) {
+        setupRealtime();
+      }
+    };
+
+    init();
 
     return () => {
-      supabase.removeChannel(channel);
-      channel.unsubscribe();
+      isMounted = false;
+      removeMessageChannel();
     };
-  }, [data, getInitialMessages]);
+  }, [data?.id]);
+
+  useEffect(() => {
+    scrollSmoothToBottom();
+  }, [messages]);
 
   return (
     <Box
@@ -80,21 +101,16 @@ function RealtimeChat({ data }) {
         border: "1px solid #ccc",
         overflowY: "auto",
         borderRadius: 2,
-        /* Scrollbar styles */
-        "&::-webkit-scrollbar": {
-          width: "8px", 
-        },
+        "&::-webkit-scrollbar": { width: "8px" },
         "&::-webkit-scrollbar-track": {
-          backgroundColor: "#f0f0f0", 
+          backgroundColor: "#f0f0f0",
           borderRadius: "8px",
         },
         "&::-webkit-scrollbar-thumb": {
-          backgroundColor: "#888", 
+          backgroundColor: "#888",
           borderRadius: "8px",
         },
-        "&::-webkit-scrollbar-thumb:hover": {
-          backgroundColor: "#555", 
-        },
+        "&::-webkit-scrollbar-thumb:hover": { backgroundColor: "#555" },
       }}
     >
       {error && (
@@ -143,7 +159,7 @@ function RealtimeChat({ data }) {
                   color="text.secondary"
                   sx={{ display: "block", textAlign: "right", mt: 0.5 }}
                 >
-                  {dayjs(msg.created_at).format("HH:mm")}
+                  {dayjs(msg.updated_at).format("DD/MM/YYYY - HH:mm")}
                 </Typography>
               </Box>
             );
