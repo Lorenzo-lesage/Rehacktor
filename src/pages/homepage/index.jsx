@@ -4,6 +4,12 @@ import { fetchGamesByDate } from "../../api/games";
 import LayoutGameList from "../../components/game/LayoutGameList.jsx";
 
 function HomePage() {
+  /*
+  |-----------------------------------------------------
+  | Data
+  |-----------------------------------------------------
+  */
+
   const [page, setPage] = useState(1);
   const startDate = "2024-01-01";
   const endDate = "2024-12-31";
@@ -17,10 +23,16 @@ function HomePage() {
   });
 
   const itemsPerPage = 20;
-  const maxSafePage = 500; // RAWG API non va oltre
+  const maxSafePage = 500;
   const count = data?.count || 0;
   const realLastPage = Math.ceil(count / itemsPerPage);
-  const lastPage = Math.min(realLastPage, maxSafePage); // Limita a 500
+  const lastPage = Math.min(realLastPage, maxSafePage);
+
+  /*
+  |-----------------------------------------------------
+  | Hooks
+  |-----------------------------------------------------
+  */
 
   // Se andiamo oltre il massimo supportato, riportaci indietro
   useEffect(() => {
@@ -35,6 +47,12 @@ function HomePage() {
       setPage((prev) => prev - 1);
     }
   }, [data, isLoading, page]);
+
+  /*
+  |-----------------------------------------------------
+  | Return
+  |-----------------------------------------------------
+  */
 
   return (
     <LayoutGameList

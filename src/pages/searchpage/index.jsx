@@ -1,8 +1,9 @@
+import { useState, useEffect } from "react";
 import { useSearchParams } from "react-router";
-import GamesList from "../../components/game/LayoutGameList.jsx";
 import { Box, Typography } from "@mui/material";
 import { useQuery } from "@tanstack/react-query";
 import { searchGames } from "../../api/games";
+import LayoutGamesList from "../../components/game/LayoutGameList.jsx";
 
 function SearchPage() {
   /*
@@ -11,6 +12,7 @@ function SearchPage() {
   |-----------------------------------------------------
   */
 
+  const [page, setPage] = useState(1);
   let [searchParams] = useSearchParams();
   const game = searchParams.get("query");
   const {
@@ -18,12 +20,28 @@ function SearchPage() {
     isLoading: loading,
     isError: error,
   } = useQuery({
-    queryKey: ["searchGames", game],
-    queryFn: () => searchGames(game),
-    enabled: !!game, // evita di chiamare se `game` è null
-    staleTime: 5 * 60 * 1000, // 5 minuti senza refetch automatico
+    queryKey: ["searchGames", game, page],
+    queryFn: () => searchGames(game, page),
+    enabled: !!game,
+    staleTime: 5 * 60 * 1000,
     cacheTime: 10 * 60 * 1000,
   });
+
+  // Calcolate last page
+  const itemsPerPage = 20;
+  const count = data?.count || 0;
+  const lastPage = Math.ceil(count / itemsPerPage);
+
+  /*
+  |-----------------------------------------------------
+  | Hooks
+  |-----------------------------------------------------
+  */
+
+  // Reset page when query changes
+  useEffect(() => {
+    setPage(1);
+  }, [game]);
 
   /*
   |-----------------------------------------------------
@@ -33,12 +51,15 @@ function SearchPage() {
   return (
     <>
       {data?.results?.length !== 0 ? (
-        <GamesList
+        <LayoutGamesList
           data={data}
           loading={loading}
           error={error}
           title={`Results for "${game}"`}
           titleStyles={{ color: "secondary.main", fontWeight: 700 }}
+          currentPage={page}
+          setCurrentPage={setPage}
+          lastPage={lastPage}
         />
       ) : (
         <Box

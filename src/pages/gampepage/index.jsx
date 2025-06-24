@@ -11,7 +11,6 @@ import {
   Rating,
   LinearProgress,
   Grid,
-  Skeleton,
 } from "@mui/material";
 import { useEffect, useState } from "react";
 import ToggleFavorite from "../../components/animationComponent/ToggleFavorite.jsx";
@@ -40,6 +39,9 @@ import "yet-another-react-lightbox/plugins/thumbnails.css";
 import { Fullscreen } from "yet-another-react-lightbox/plugins";
 import "yet-another-react-lightbox/plugins/counter.css";
 import Counter from "yet-another-react-lightbox/plugins/counter";
+import { fetchGameMovies } from "../../api/games.js";
+import Video from "yet-another-react-lightbox/plugins/video";
+import "yet-another-react-lightbox/styles.css";
 
 function GamePage() {
   /*
@@ -66,6 +68,36 @@ function GamePage() {
   ]
     .filter(Boolean)
     .map((img) => (typeof img === "string" ? img : img.image));
+
+  // Fetch game movies
+  const { data: movies = [] } = useQuery({
+    queryKey: ["gameMovies", id],
+    queryFn: () => fetchGameMovies(id),
+    enabled: !!id,
+  });
+
+  // slides per lightbox: immagini
+  const imageSlides = images.map((src) => ({ type: "image", src }));
+  // slides per video (video trailer)
+  const videoSlides = movies.map((movie) => {
+    const data = movie?.data || {};
+    const videoSrc = data["480"] || data.max || movie.preview;
+    return {
+      type: "video",
+      width: 1280,
+      height: 720,
+      poster: movie.preview,
+      sources: [
+        {
+          src: videoSrc,
+          type: "video/mp4",
+        },
+      ],
+    };
+  });
+  const slides = [...imageSlides, ...videoSlides];
+  console.log("VIDEO MOVIES", movies);
+  console.log("VIDEO SLIDES", videoSlides);
 
   /*
   |------------------------------------------------
@@ -292,15 +324,95 @@ function GamePage() {
                   </Box>
                 ))}
               </Masonry>
+              <Box sx={{ mt: 2 }}>
+                {movies.length > 0 ? (
+                  <>
+                    <Typography variant="h6" gutterBottom>
+                      Trailers
+                    </Typography>
+                    <Stack
+                      direction="row"
+                      spacing={1}
+                      sx={{
+                        overflowX: "auto",
+                        py: 1,
+                        // Scrollbar moderna per WebKit (Chrome, Safari, Edge)
+                        "&::-webkit-scrollbar": {
+                          height: "8px",
+                        },
+                        "&::-webkit-scrollbar-track": {
+                          backgroundColor: "text.primary",
+                          borderRadius: "10px",
+                        },
+                        "&::-webkit-scrollbar-thumb": {
+                          backgroundColor: "text.primary",
+                          borderRadius: "10px",
+                          border: "1px solid rgba(255, 255, 255, 0.1)",
+                          transition: "background-color 0.3s ease",
+                        },
+                        "&::-webkit-scrollbar-thumb:hover": {
+                          backgroundColor: "rgba(255, 255, 255, 0.5)",
+                        },
+                        "&::-webkit-scrollbar-thumb:active": {
+                          backgroundColor: "rgba(255, 255, 255, 0.7)",
+                        },
+                        "&::-webkit-scrollbar-corner": {
+                          backgroundColor: "transparent",
+                        },
+                        // Supporto per Firefox
+                        scrollbarWidth: "thin",
+                        scrollbarColor:
+                          "rgba(255, 255, 255, 0.3) rgba(255, 255, 255, 0.1)",
+                        // Comportamento scroll fluido
+                        scrollBehavior: "smooth",
+                        // Nascondere la scrollbar su mobile mantenendo la funzionalità
+                        "@media (max-width: 768px)": {
+                          "&::-webkit-scrollbar": {
+                            display: "none",
+                          },
+                          msOverflowStyle: "none",
+                          scrollbarWidth: "none",
+                        },
+                      }}
+                    >
+                      {movies.map((movie, index) => (
+                        <Box
+                          key={movie.id || index}
+                          component="img"
+                          src={movie.preview}
+                          alt={movie.name || "Trailer"}
+                          sx={{
+                            width: 160,
+                            height: 90,
+                            objectFit: "cover",
+                            borderRadius: 1,
+                            cursor: "pointer",
+                            flexShrink: 0,
+                            boxShadow: "0 0 8px rgba(0,0,0,0.3)",
+                            transition: "transform 0.3s",
+                            "&:hover": { transform: "scale(1.05)" },
+                          }}
+                          onClick={() => {
+                            setPhotoIndex(images.length + index);
+                            setIsOpen(true);
+                          }}
+                        />
+                      ))}
+                    </Stack>
+                  </>
+                ) : (
+                  <Typography>No trailers available for this game.</Typography>
+                )}
+              </Box>
 
               {isOpen && (
                 <Lightbox
                   open={isOpen}
                   close={() => setIsOpen(false)}
-                  slides={images.map((src) => ({ src }))}
+                  slides={slides}
                   index={photoIndex}
                   onIndexChange={setPhotoIndex}
-                  plugins={[Thumbnails, Fullscreen, Counter]}
+                  plugins={[Thumbnails, Fullscreen, Counter, Video]}
                   thumbnails={{ showToggle: true }}
                 />
               )}

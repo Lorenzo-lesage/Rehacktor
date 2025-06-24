@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useParams } from "react-router";
 import LayoutGameList from "../../components/game/LayoutGameList.jsx";
 import { useQuery } from "@tanstack/react-query";
@@ -18,10 +18,11 @@ function GenrePage() {
     isLoading: gamesLoading,
     isError: gamesError,
   } = useQuery({
-    queryKey: ["gamesByGenre", genre],
-    queryFn: () => fetchGamesByGenre(genre, 1),
+    queryKey: ["gamesByGenre", genre, page],
+    queryFn: () => fetchGamesByGenre(genre, page),
+    keepPreviousData: true,
+    staleTime: 5 * 60 * 1000,
   });
-
   const {
     data: genresData,
     isLoading: genresLoading,
@@ -29,10 +30,34 @@ function GenrePage() {
   } = useQuery({
     queryKey: ["genres"],
     queryFn: fetchGenres,
+    staleTime: Infinity,
   });
 
-  const itemsPerPage = gamesData?.results?.length || 20;
-  const lastPage = gamesData?.count ? Math.ceil(gamesData.count / itemsPerPage) : 1;
+  // Paginazione calcolata
+  const itemsPerPage = 20;
+  const count = gamesData?.count || 0;
+  const realLastPage = Math.ceil(count / itemsPerPage);
+  const maxSafePage = 500;
+  const lastPage = Math.min(realLastPage, maxSafePage);
+
+  // Se oltre il massimo, riporta alla lastPage
+  useEffect(() => {
+    if (!gamesLoading && page > lastPage) {
+      setPage(lastPage);
+    }
+  }, [page, lastPage, gamesLoading]);
+
+  // Se pagina corrente è vuota, scala indietro
+  useEffect(() => {
+    if (!gamesLoading && gamesData?.results?.length === 0 && page > 1) {
+      setPage((prev) => prev - 1);
+    }
+  }, [gamesData, gamesLoading, page]);
+
+  // Reset pagina a 1 quando cambia il genere
+  useEffect(() => {
+    setPage(1);
+  }, [genre]);
 
   /*
   |-----------------------------------------------------
