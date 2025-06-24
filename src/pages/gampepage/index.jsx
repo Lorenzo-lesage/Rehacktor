@@ -33,7 +33,13 @@ import Chatbox from "../../components/generalLayout/Chatbox";
 import { useQuery } from "@tanstack/react-query";
 import { fetchGameDetails } from "../../api/games.js";
 import { Masonry } from "@mui/lab";
-import Lightbox from "react-image-lightbox";
+import Lightbox from "yet-another-react-lightbox";
+import "yet-another-react-lightbox/styles.css";
+import { Thumbnails } from "yet-another-react-lightbox/plugins";
+import "yet-another-react-lightbox/plugins/thumbnails.css";
+import { Fullscreen } from "yet-another-react-lightbox/plugins";
+import "yet-another-react-lightbox/plugins/counter.css";
+import Counter from "yet-another-react-lightbox/plugins/counter";
 
 function GamePage() {
   /*
@@ -279,7 +285,7 @@ function GamePage() {
                       sx={{
                         width: "100%",
                         height: "100%",
-                        objectFit: "cover", 
+                        objectFit: "cover",
                         display: "block",
                       }}
                     />
@@ -289,20 +295,13 @@ function GamePage() {
 
               {isOpen && (
                 <Lightbox
-                  mainSrc={images[photoIndex]}
-                  nextSrc={images[(photoIndex + 1) % images.length]}
-                  prevSrc={
-                    images[(photoIndex + images.length - 1) % images.length]
-                  }
-                  onCloseRequest={() => setIsOpen(false)}
-                  onMovePrevRequest={() =>
-                    setPhotoIndex(
-                      (photoIndex + images.length - 1) % images.length
-                    )
-                  }
-                  onMoveNextRequest={() =>
-                    setPhotoIndex((photoIndex + 1) % images.length)
-                  }
+                  open={isOpen}
+                  close={() => setIsOpen(false)}
+                  slides={images.map((src) => ({ src }))}
+                  index={photoIndex}
+                  onIndexChange={setPhotoIndex}
+                  plugins={[Thumbnails, Fullscreen, Counter]}
+                  thumbnails={{ showToggle: true }}
                 />
               )}
             </Grid>

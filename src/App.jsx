@@ -10,7 +10,6 @@ import "slick-carousel/slick/slick-theme.css";
 if (typeof global === "undefined") {
   window.global = window;
 }
-import "react-image-lightbox/style.css";
 
 function App() {
   return (

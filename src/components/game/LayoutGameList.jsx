@@ -1,8 +1,17 @@
 import { Box, Typography, Grid, CircularProgress } from "@mui/material";
 import CardGame from "./CardGame.jsx";
-import TiltCard from "../animationComponent/TiltCard.jsx";
+import PaginationMui from "../generalLayout/Pagination";
 
-function GamesList({ data, loading, error, title, titleStyles = {} }) {
+function LayoutGamesList({
+  data,
+  loading,
+  error,
+  title,
+  titleStyles = {},
+  currentPage,
+  setCurrentPage,
+  lastPage,
+}) {
   /*
   |-----------------------------------------------------
   | Return
@@ -56,13 +65,28 @@ function GamesList({ data, loading, error, title, titleStyles = {} }) {
         justifyContent="center"
       >
         {data?.results?.map((game) => (
-          <Grid key={game.id} >
-              <CardGame game={game} />
+          <Grid key={game.id}>
+            <CardGame game={game} />
           </Grid>
         ))}
       </Grid>
+
+      {/* Pagination */}
+      <Box
+        sx={{
+          display: "flex",
+          justifyContent: "center",
+          marginTop: "2rem",
+        }}
+      >
+        <PaginationMui
+          currentPage={currentPage}
+          setPage={setCurrentPage}
+          lastPage={lastPage}
+        />
+      </Box>
     </Box>
   );
 }
 
-export default GamesList;
+export default LayoutGamesList;

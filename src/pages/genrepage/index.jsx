@@ -1,5 +1,6 @@
+import { useState } from "react";
 import { useParams } from "react-router";
-import GamesList from "../../components/game/LayoutGameList.jsx";
+import LayoutGameList from "../../components/game/LayoutGameList.jsx";
 import { useQuery } from "@tanstack/react-query";
 import { fetchGamesByGenre, fetchGenres } from "../../api/games";
 
@@ -10,6 +11,7 @@ function GenrePage() {
   |-----------------------------------------------------
   */
 
+  const [page, setPage] = useState(1);
   const { genre } = useParams();
   const {
     data: gamesData,
@@ -29,6 +31,9 @@ function GenrePage() {
     queryFn: fetchGenres,
   });
 
+  const itemsPerPage = gamesData?.results?.length || 20;
+  const lastPage = gamesData?.count ? Math.ceil(gamesData.count / itemsPerPage) : 1;
+
   /*
   |-----------------------------------------------------
   | Return
@@ -41,12 +46,15 @@ function GenrePage() {
   const error = gamesError && genresError;
 
   return (
-    <GamesList
+    <LayoutGameList
       data={gamesData}
       loading={isLoading}
       error={error}
       title={genreTitle}
       titleStyles={{ color: "secondary.main", fontWeight: 700 }}
+      currentPage={page}
+      setCurrentPage={setPage}
+      lastPage={lastPage}
     />
   );
 }
