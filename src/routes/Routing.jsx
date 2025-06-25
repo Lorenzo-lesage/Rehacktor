@@ -9,7 +9,8 @@ import RegisterPage from "../pages/register/index";
 import LoginPage from "../pages/login/index";
 import AccountPage from "../pages/account/index";
 import ProfilePage from "../pages/profile";
-
+import TopGamesPage from "../pages/topgamesweekpage";
+import TopGamesMonthPage from "../pages/topgamesmonthpage/index";
 
 export function Routing() {
   /*
@@ -31,13 +32,17 @@ export function Routing() {
           {/* Search game */}
           <Route path="/search" element={<SearchPage />} />
           {/* Register page */}
-          <Route path="/register" element={<RegisterPage />}/>
+          <Route path="/register" element={<RegisterPage />} />
           {/* Login page */}
-          <Route path="/login" element={<LoginPage />}/>
+          <Route path="/login" element={<LoginPage />} />
           {/* Edit Account page */}
-          <Route path="/account" element={<AccountPage />}/>
+          <Route path="/account" element={<AccountPage />} />
           {/* Profile page */}
           <Route path="/profile" element={<ProfilePage />} />
+          {/* Top games page */}
+          <Route path="/top-games" element={<TopGamesPage />} />
+          {/* Top games month page */}
+          <Route path="/top-games-month" element={<TopGamesMonthPage />} />
           {/* Error page */}
           <Route path="*" element={<ErrorPage />} />
         </Route>

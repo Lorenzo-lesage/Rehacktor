@@ -1,8 +1,10 @@
 import GenresDropdown from "../game/GenresDropdown";
 import { Box, Typography } from "@mui/material";
 import { Link } from "react-router";
+import StarIcon from "@mui/icons-material/Star";
+import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
 
-function SideBar({  navbarHidden }) {
+function SideBar({ navbarHidden }) {
   /*
   |-----------------------------------------------------
   | Data
@@ -49,10 +51,48 @@ function SideBar({  navbarHidden }) {
             "&::-webkit-scrollbar": {
               display: "none",
             },
-          padding: "0 0.5rem 1rem 0.5rem",
+            padding: "0 0.5rem 1rem 0.5rem",
           }}
         >
           <GenresDropdown />
+
+          {/* Top of the week */}
+          <Box>
+            <Link to="/top-games" style={{ textDecoration: "none" }}>
+              <Typography
+                variant="body1"
+                sx={{
+                  display: "flex",
+                  alignItems: "center",
+                  padding: "0.3rem 1rem",
+                  fontWeight: 600,
+                  color: "text.primary",
+                }}
+              >
+                <StarIcon sx={{ mr: 1 }} fontSize="small" />
+                Top of The Week
+              </Typography>
+            </Link>
+          </Box>
+
+          {/* Top of the month */}
+          <Box>
+            <Link to="/top-games-month" style={{ textDecoration: "none" }}>
+              <Typography
+                variant="body1"
+                sx={{
+                  display: "flex",
+                  alignItems: "center",
+                  padding: "0.3rem 1rem",
+                  fontWeight: 600,
+                  color: "text.primary",
+                }}
+              >
+                <CalendarMonthIcon sx={{ mr: 1 }} fontSize="small" />
+                Top of the Month
+              </Typography>
+            </Link>
+          </Box>
         </Box>
       </Box>
     </Box>

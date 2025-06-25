@@ -81,7 +81,12 @@ export const fetchGameScreenshots = async (gameId) => {
   return response.data.results;
 };
 
-
+/**
+ * Fetch game movies
+ * @param {*} gameId 
+ * @param {*} gameName 
+ * @returns 
+ */
 export const fetchGameMovies = async (gameId, gameName) => {
   try {
     // RAWG
@@ -118,9 +123,11 @@ export const fetchGameMovies = async (gameId, gameName) => {
   }
 };
 
-
-//-------------------
-// Migliori giochi della settimana (ultimo 7 giorni) ordinati per rating
+/**
+ * Fetch top games of the week
+ * @param {*} page 
+ * @returns 
+ */
 export const fetchTopGamesOfWeek = async (page = 1) => {
   const today = new Date();
   const lastWeek = new Date();
@@ -138,7 +145,11 @@ export const fetchTopGamesOfWeek = async (page = 1) => {
   return response.data;
 };
 
-// Migliori giochi del mese (ultimo mese) ordinati per rating
+/**
+ * Fetch top games of the month
+ * @param {*} page 
+ * @returns 
+ */
 export const fetchTopGamesOfMonth = async (page = 1) => {
   const today = new Date();
   const lastMonth = new Date();
@@ -156,6 +167,7 @@ export const fetchTopGamesOfMonth = async (page = 1) => {
   return response.data;
 };
 
+//-------------------
 // Giochi usciti nel 2023 ordinati per rating
 export const fetchGamesOf2023 = async (page = 1) => {
   const response = await axiosClient.get(apiConfig.endpoints.gamesByDate(), {
