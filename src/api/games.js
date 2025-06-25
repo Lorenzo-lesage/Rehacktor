@@ -1,5 +1,6 @@
 import axiosClient from "./axiosClient";
 import apiConfig from "../config/apiConfig";
+import axios from "axios";
 
 /**
  * Fetch genres
@@ -80,15 +81,43 @@ export const fetchGameScreenshots = async (gameId) => {
   return response.data.results;
 };
 
-/**
- * Fetcgh game movies
- * @param {*} gameId 
- * @returns 
- */
-export const fetchGameMovies = async (gameId) => {
-  const response = await axiosClient.get(`/games/${gameId}/movies`);
-  return response.data.results;
+
+export const fetchGameMovies = async (gameId, gameName) => {
+  try {
+    // RAWG
+    const rawgRes = await axiosClient.get(`/games/${gameId}/movies`);
+    const rawgResults = rawgRes.data.results;
+
+    if (rawgResults?.length > 0) {
+      return rawgResults.map(movie => ({
+        source: "rawg",
+        name: movie.name,
+        preview: movie.preview,
+        videoUrl: movie.data?.max || movie.data['480'],
+      }));
+    }
+
+    // YouTube fallback
+    const ytUrl = apiConfig.endpoints.youtubeSearch(`${gameName} trailer`);
+    const ytRes = await axios.get(ytUrl);
+    const ytVideo = ytRes.data.items?.[0];
+
+    if (ytVideo) {
+      return [{
+        source: "youtube",
+        name: ytVideo.snippet.title,
+        preview: ytVideo.snippet.thumbnails.high.url,
+        videoUrl: `https://www.youtube.com/watch?v=${ytVideo.id.videoId}`,
+      }];
+    }
+
+    return [];
+  } catch (error) {
+    console.error("Errore nel fetch dei trailer:", error);
+    return [];
+  }
 };
+
 
 //-------------------
 // Migliori giochi della settimana (ultimo 7 giorni) ordinati per rating
