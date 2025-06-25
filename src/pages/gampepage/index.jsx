@@ -11,7 +11,10 @@ import {
   Rating,
   LinearProgress,
   Grid,
+  Button,
 } from "@mui/material";
+import PlayArrowIcon from "@mui/icons-material/PlayArrow";
+import PhotoLibraryIcon from "@mui/icons-material/PhotoLibrary";
 import { useEffect, useState } from "react";
 import ToggleFavorite from "../../components/animationComponent/ToggleFavorite.jsx";
 import StarIcon from "@mui/icons-material/Star";
@@ -96,8 +99,6 @@ function GamePage() {
     };
   });
   const slides = [...imageSlides, ...videoSlides];
-  console.log("VIDEO MOVIES", movies);
-  console.log("VIDEO SLIDES", videoSlides);
 
   /*
   |------------------------------------------------
@@ -287,124 +288,170 @@ function GamePage() {
             </Grid>
 
             <Grid size={4}>
-              <Masonry columns={{ xs: 1, sm: 2, md: 3 }} spacing={0.5}>
-                {images.map((img, index) => (
-                  <Box
-                    key={index}
-                    sx={{
-                      width: "100%",
-                      borderRadius: 1,
-                      cursor: "pointer",
-                      transition: "transform 0.3s ease",
-                      ":hover": {
-                        transform: "scale(1.1)",
-                      },
-                      aspectRatio: "16 / 9",
-                      overflow: "hidden",
-                      display: "flex",
-                      alignItems: "center",
-                      justifyContent: "center",
-                    }}
-                    onClick={() => {
-                      setPhotoIndex(index);
-                      setIsOpen(true);
-                    }}
-                  >
-                    <Box
-                      component="img"
-                      src={img}
-                      alt={`Screenshot ${index}`}
-                      sx={{
-                        width: "100%",
-                        height: "100%",
-                        objectFit: "cover",
-                        display: "block",
-                      }}
-                    />
-                  </Box>
-                ))}
-              </Masonry>
               <Box sx={{ mt: 2 }}>
-                {movies.length > 0 ? (
+                {images.length > 0 ? (
                   <>
-                    <Typography variant="h6" gutterBottom>
-                      Trailers
-                    </Typography>
-                    <Stack
-                      direction="row"
-                      spacing={1}
-                      sx={{
-                        overflowX: "auto",
-                        py: 1,
-                        // Scrollbar moderna per WebKit (Chrome, Safari, Edge)
-                        "&::-webkit-scrollbar": {
-                          height: "8px",
-                        },
-                        "&::-webkit-scrollbar-track": {
-                          backgroundColor: "text.primary",
-                          borderRadius: "10px",
-                        },
-                        "&::-webkit-scrollbar-thumb": {
-                          backgroundColor: "text.primary",
-                          borderRadius: "10px",
-                          border: "1px solid rgba(255, 255, 255, 0.1)",
-                          transition: "background-color 0.3s ease",
-                        },
-                        "&::-webkit-scrollbar-thumb:hover": {
-                          backgroundColor: "rgba(255, 255, 255, 0.5)",
-                        },
-                        "&::-webkit-scrollbar-thumb:active": {
-                          backgroundColor: "rgba(255, 255, 255, 0.7)",
-                        },
-                        "&::-webkit-scrollbar-corner": {
-                          backgroundColor: "transparent",
-                        },
-                        // Supporto per Firefox
-                        scrollbarWidth: "thin",
-                        scrollbarColor:
-                          "rgba(255, 255, 255, 0.3) rgba(255, 255, 255, 0.1)",
-                        // Comportamento scroll fluido
-                        scrollBehavior: "smooth",
-                        // Nascondere la scrollbar su mobile mantenendo la funzionalità
-                        "@media (max-width: 768px)": {
-                          "&::-webkit-scrollbar": {
-                            display: "none",
-                          },
-                          msOverflowStyle: "none",
-                          scrollbarWidth: "none",
-                        },
-                      }}
+                    <Box
+                      sx={{ display: "flex", flexDirection: "column", gap: 2 }}
                     >
-                      {movies.map((movie, index) => (
+                      {/* Grid di immagini */}
+                      <Box
+                        sx={{
+                          display: "flex",
+                          flexDirection: "column",
+                          gap: 1,
+                          maxWidth: 320,
+                        }}
+                      >
+                        {/* Prima immagine grande */}
                         <Box
-                          key={movie.id || index}
                           component="img"
-                          src={movie.preview}
-                          alt={movie.name || "Trailer"}
+                          src={images[0]}
+                          alt="Screenshot 1"
                           sx={{
-                            width: 160,
-                            height: 90,
+                            width: "100%",
+                            height: 180,
                             objectFit: "cover",
                             borderRadius: 1,
                             cursor: "pointer",
-                            flexShrink: 0,
                             boxShadow: "0 0 8px rgba(0,0,0,0.3)",
                             transition: "transform 0.3s",
-                            "&:hover": { transform: "scale(1.05)" },
+                            "&:hover": { transform: "scale(1.02)" },
                           }}
                           onClick={() => {
-                            setPhotoIndex(images.length + index);
+                            setPhotoIndex(0);
                             setIsOpen(true);
                           }}
                         />
-                      ))}
-                    </Stack>
+
+                        {/* Altre immagini piccole */}
+                        <Box sx={{ display: "flex", gap: 1 }}>
+                          {images.slice(1, 3).map((img, index) => (
+                            <Box
+                              key={index + 1}
+                              component="img"
+                              src={img}
+                              alt={`Screenshot ${index + 2}`}
+                              sx={{
+                                width: "50%",
+                                height: 80,
+                                objectFit: "cover",
+                                borderRadius: 1,
+                                cursor: "pointer",
+                                boxShadow: "0 0 8px rgba(0,0,0,0.3)",
+                                transition: "transform 0.3s",
+                                "&:hover": { transform: "scale(1.05)" },
+                              }}
+                              onClick={() => {
+                                setPhotoIndex(index + 1);
+                                setIsOpen(true);
+                              }}
+                            />
+                          ))}
+                        </Box>
+                      </Box>
+
+                      {/* Bottone per vedere tutte le foto */}
+                      <Box>
+                        <Button
+                          variant="outlined"
+                          size="small"
+                          startIcon={<PhotoLibraryIcon />}
+                          onClick={() => {
+                            setPhotoIndex(0);
+                            setIsOpen(true);
+                          }}
+                          sx={{
+                            borderColor: (theme) => theme.palette.text.primary,
+                            color: (theme) => theme.palette.text.primary,
+                            "&:hover": {
+                              borderColor: (theme) =>
+                                theme.palette.primary.main,
+                              backgroundColor: (theme) =>
+                                theme.palette.primary.main + "20",
+                            },
+                          }}
+                        >
+                          See all photos ({images.length})
+                        </Button>
+                      </Box>
+                    </Box>
+                  </>
+                ) : (
+                  <Typography>
+                    No screenshots available for this game.
+                  </Typography>
+                )}
+              </Box>
+              <Box sx={{ mt: 2 }}>
+                {movies.length > 0 ? (
+                  <>
+                    <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
+                      {/* Preview del primo trailer */}
+                      <Box
+                        component="img"
+                        src={movies[0].preview}
+                        alt={movies[0].name || "Trailer"}
+                        sx={{
+                          width: 160,
+                          height: 90,
+                          objectFit: "cover",
+                          borderRadius: 1,
+                          cursor: "pointer",
+                          flexShrink: 0,
+                          boxShadow: "0 0 8px rgba(0,0,0,0.3)",
+                          transition: "transform 0.3s",
+                          "&:hover": { transform: "scale(1.05)" },
+                        }}
+                        onClick={() => {
+                          setPhotoIndex(images.length); // Inizia dal primo trailer
+                          setIsOpen(true);
+                        }}
+                      />
+
+                      {/* Bottone per aprire tutti i trailer */}
+                      <Box
+                        sx={{
+                          display: "flex",
+                          flexDirection: "column",
+                          gap: 1,
+                        }}
+                      >
+                        <Button
+                          variant="outlined"
+                          size="small"
+                          startIcon={<PlayArrowIcon />}
+                          onClick={() => {
+                            setPhotoIndex(images.length); // Inizia dal primo trailer
+                            setIsOpen(true);
+                          }}
+                          sx={{
+                            borderColor: (theme) => theme.palette.text.primary,
+                            color: (theme) => theme.palette.text.primary,
+                            "&:hover": {
+                              borderColor: (theme) =>
+                                theme.palette.primary.main,
+                              backgroundColor: (theme) =>
+                                theme.palette.primary.main + "20",
+                            },
+                          }}
+                        >
+                          Play All
+                        </Button>
+
+                        {movies.length > 1 && (
+                          <Typography variant="caption" color="text.secondary">
+                            {movies.length} trailer
+                            {movies.length > 1 ? "s" : ""} available
+                          </Typography>
+                        )}
+                      </Box>
+                    </Box>
                   </>
                 ) : (
                   <Typography>No trailers available for this game.</Typography>
                 )}
               </Box>
-
               {isOpen && (
                 <Lightbox
                   open={isOpen}
