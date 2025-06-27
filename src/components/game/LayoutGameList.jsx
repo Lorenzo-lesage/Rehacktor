@@ -1,6 +1,7 @@
 import { Box, Typography, Grid, CircularProgress } from "@mui/material";
 import CardGame from "./CardGame.jsx";
 import PaginationMui from "../generalLayout/Pagination";
+import GameOrderingSelect from "./GameOrderingSelect.jsx";
 
 function LayoutGamesList({
   data,
@@ -11,6 +12,9 @@ function LayoutGamesList({
   currentPage,
   setCurrentPage,
   lastPage,
+  ordering,
+  setOrdering,
+  availableOrderings = [],
 }) {
   /*
   |-----------------------------------------------------
@@ -53,10 +57,29 @@ function LayoutGamesList({
   }
 
   return (
-    <Box sx={{ paddingTop: "2rem" }}>
-      <Typography variant="h3" gutterBottom sx={titleStyles}>
-        {title}
-      </Typography>
+    <Box
+      sx={{
+        paddingTop: "2rem",
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+      }}
+    >
+      <Box sx={{ display: "flex", alignItems: "center", justifyContent: "space-between", width: "90%", mb: 2 }}>
+        <Typography variant="h3" gutterBottom sx={titleStyles}>
+          {title}
+        </Typography>
+
+        {availableOrderings.length > 0 && ordering && setOrdering && (
+          <Box sx={{ mb: 2, width: "100%", maxWidth: 300 }}>
+            <GameOrderingSelect
+              ordering={ordering}
+              setOrdering={setOrdering}
+              options={availableOrderings}
+            />
+          </Box>
+        )}
+      </Box>
 
       <Grid
         container

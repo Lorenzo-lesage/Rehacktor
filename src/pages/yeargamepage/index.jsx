@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from "react";
 import { useQuery } from "@tanstack/react-query";
-import { fetchTopGamesOfWeek } from "../../api/games"; // assicurati del path
-import LayoutGameList from "../../components/game/LayoutGameList";
+import { fetchGamesFromYearStart } from "../../api/games";
+import LayoutGamesList from "../../components/game/LayoutGameList.jsx";
+import { Typography } from "@mui/material";
 
-function TopGamesPage() {
+function YearGamesPage() {
   /*
   |-----------------------------------------------------
   | Data
@@ -14,8 +15,8 @@ function TopGamesPage() {
   const [ordering, setOrdering] = useState("-relevance");
 
   const { data, isLoading, error } = useQuery({
-    queryKey: ["topGamesOfWeek", page, ordering],
-    queryFn: () => fetchTopGamesOfWeek(page, ordering),
+    queryKey: ["yearGames", page, ordering],
+    queryFn: () => fetchGamesFromYearStart(page, ordering),
     staleTime: 5 * 60 * 1000,
     keepPreviousData: true,
   });
@@ -51,11 +52,11 @@ function TopGamesPage() {
   */
 
   return (
-    <LayoutGameList
+    <LayoutGamesList
       data={data}
       loading={isLoading}
       error={error}
-      title="Top of The Week"
+      title="Games Released This Year"
       titleStyles={{ color: "text.primary", fontWeight: 700 }}
       currentPage={page}
       setCurrentPage={setPage}
@@ -72,4 +73,4 @@ function TopGamesPage() {
   );
 }
 
-export default TopGamesPage;
+export default YearGamesPage;

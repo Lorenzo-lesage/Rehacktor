@@ -3,7 +3,7 @@ import Layout from "../layout/Layout";
 import HomePage from "../pages/homepage/index";
 import ErrorPage from "../pages/error/index";
 import GenrePage from "../pages/genrepage/index";
-import GamePage from "../pages/gampepage/index";
+import GamePage from "../pages/gamepage/index";
 import SearchPage from "../pages/searchpage/index";
 import RegisterPage from "../pages/register/index";
 import LoginPage from "../pages/login/index";
@@ -11,6 +11,10 @@ import AccountPage from "../pages/account/index";
 import ProfilePage from "../pages/profile";
 import TopGamesPage from "../pages/topgamesweekpage";
 import TopGamesMonthPage from "../pages/topgamesmonthpage/index";
+import NextWeekPage from "../pages/nextweekpage/index";
+import YearGamesPage from "../pages/yeargamepage/index";
+import TopGamesLastYear from "../pages/topgameslastyear/index";
+import TopAllTimeGamesPage from "../pages/topalltimegamespage/index";
 
 export function Routing() {
   /*
@@ -23,7 +27,7 @@ export function Routing() {
     <BrowserRouter>
       <Routes>
         <Route element={<Layout />}>
-          {/* HomePage */}
+          {/* Home page */}
           <Route path="/" element={<HomePage />} />
           {/* Genre game */}
           <Route path="/games/:genre" element={<GenrePage />} />
@@ -43,6 +47,14 @@ export function Routing() {
           <Route path="/top-games" element={<TopGamesPage />} />
           {/* Top games month page */}
           <Route path="/top-games-month" element={<TopGamesMonthPage />} />
+          {/* Next week page */}
+          <Route path="/next-week" element={<NextWeekPage />} />
+          {/* Year games page */}
+          <Route path="/year-games" element={<YearGamesPage />} />
+          {/* Top games last year page */}
+          <Route path="/top-games-last-year" element={<TopGamesLastYear />} />
+          {/* Top all time games page */}
+          <Route path="/top-all-time-games" element={<TopAllTimeGamesPage />} />
           {/* Error page */}
           <Route path="*" element={<ErrorPage />} />
         </Route>

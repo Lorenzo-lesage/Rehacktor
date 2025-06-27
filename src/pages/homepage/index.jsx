@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useQuery } from "@tanstack/react-query";
-import { fetchGamesByDate } from "../../api/games";
-import LayoutGameList from "../../components/game/LayoutGameList.jsx";
+import { fetchNewAndTrendingGames } from "../../api/games";
+import LayoutGamesList from "../../components/game/LayoutGameList.jsx";
 
 function HomePage() {
   /*
@@ -11,13 +11,11 @@ function HomePage() {
   */
 
   const [page, setPage] = useState(1);
-  const startDate = "2024-01-01";
-  const endDate = "2024-12-31";
+  const [ordering, setOrdering] = useState("-released");
 
-  // Query
   const { data, isLoading, error } = useQuery({
-    queryKey: ["gamesByDate", startDate, endDate, page],
-    queryFn: () => fetchGamesByDate(startDate, endDate, page),
+    queryKey: ["newAndTrendingGames", page, ordering],
+    queryFn: () => fetchNewAndTrendingGames(page, ordering),
     staleTime: 5 * 60 * 1000,
     keepPreviousData: true,
   });
@@ -34,14 +32,12 @@ function HomePage() {
   |-----------------------------------------------------
   */
 
-  // Se andiamo oltre il massimo supportato, riportaci indietro
   useEffect(() => {
     if (!isLoading && page > lastPage) {
       setPage(lastPage);
     }
   }, [page, lastPage, isLoading]);
 
-  // Se risultati vuoti, torna indietro di 1 pagina
   useEffect(() => {
     if (!isLoading && data?.results?.length === 0 && page > 1) {
       setPage((prev) => prev - 1);
@@ -55,15 +51,23 @@ function HomePage() {
   */
 
   return (
-    <LayoutGameList
+    <LayoutGamesList
       data={data}
       loading={isLoading}
       error={error}
-      title="Home"
-      titleStyles={{ color: "secondary.main", fontWeight: 700 }}
+      title="New & Trending"
+      titleStyles={{ color: "text.primary", fontWeight: 700 }}
       currentPage={page}
       setCurrentPage={setPage}
       lastPage={lastPage}
+      ordering={ordering}
+      setOrdering={setOrdering}
+      availableOrderings={[
+        { value: "-rating", label: "Rating" },
+        { value: "-metacritic", label: "Metacritic" },
+        { value: "-added", label: "Most Added" },
+        { value: "-released", label: "Release Date" },
+      ]}
     />
   );
 }

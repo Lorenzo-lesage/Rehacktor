@@ -41,10 +41,14 @@ import "yet-another-react-lightbox/plugins/thumbnails.css";
 import { Fullscreen } from "yet-another-react-lightbox/plugins";
 import "yet-another-react-lightbox/plugins/counter.css";
 import Counter from "yet-another-react-lightbox/plugins/counter";
-import { fetchGameMovies } from "../../api/games.js";
+import {
+  fetchGameMovies,
+  fetchSimilarGamesFallback,
+} from "../../api/games.js";
 import Video from "yet-another-react-lightbox/plugins/video";
 import "yet-another-react-lightbox/styles.css";
 import YoutubeModal from "../../components/game/YoutubeDialog.jsx";
+import SimilarGamesList from "../../components/game/SimilarGamesList.jsx";
 
 function GamePage() {
   /*
@@ -115,6 +119,10 @@ function GamePage() {
     setYtModalOpen(true);
   }
 
+  // Fetch similar games con id
+  const [game, setGame] = useState(null);
+  const [similarGames, setSimilarGames] = useState([]);
+
   /*
   |------------------------------------------------
   | Props Style
@@ -161,6 +169,21 @@ function GamePage() {
       setBackgroundImage(null);
     };
   }, [data, setBackgroundImage]);
+
+  // Fetch similar games con id
+  const gameId = id;
+
+  useEffect(() => {
+    const loadGameAndSimilar = async () => {
+      const gameDetails = await fetchGameDetails(gameId);
+      setGame(gameDetails);
+
+      const similar = await fetchSimilarGamesFallback(gameDetails);
+      setSimilarGames(similar);
+    };
+
+    loadGameAndSimilar();
+  }, [gameId]);
 
   /*
   |------------------------------------------------
@@ -880,6 +903,7 @@ function GamePage() {
               </Typography>
             )}
           </Box>
+          <SimilarGamesList games={similarGames} />
         </Stack>
       </Paper>
     </Container>

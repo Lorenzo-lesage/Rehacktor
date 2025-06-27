@@ -13,6 +13,8 @@ function SearchPage() {
   */
 
   const [page, setPage] = useState(1);
+  const [ordering, setOrdering] = useState("-relevance");
+
   let [searchParams] = useSearchParams();
   const game = searchParams.get("query");
   const {
@@ -20,8 +22,8 @@ function SearchPage() {
     isLoading: loading,
     isError: error,
   } = useQuery({
-    queryKey: ["searchGames", game, page],
-    queryFn: () => searchGames(game, page),
+    queryKey: ["searchGames", game, page, ordering],
+    queryFn: () => searchGames(game, page, ordering),
     enabled: !!game,
     staleTime: 5 * 60 * 1000,
     cacheTime: 10 * 60 * 1000,
@@ -60,6 +62,14 @@ function SearchPage() {
           currentPage={page}
           setCurrentPage={setPage}
           lastPage={lastPage}
+          ordering={ordering}
+          setOrdering={setOrdering}
+          availableOrderings={[
+            { value: "-rating", label: "Rating" },
+            { value: "-metacritic", label: "Metacritic" },
+            { value: "-added", label: "Most Added" },
+            { value: "-released", label: "Release Date" },
+          ]}
         />
       ) : (
         <Box

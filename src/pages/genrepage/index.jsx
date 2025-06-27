@@ -3,6 +3,7 @@ import { useParams } from "react-router";
 import LayoutGameList from "../../components/game/LayoutGameList.jsx";
 import { useQuery } from "@tanstack/react-query";
 import { fetchGamesByGenre, fetchGenres } from "../../api/games";
+import { set } from "zod";
 
 function GenrePage() {
   /*
@@ -12,17 +13,20 @@ function GenrePage() {
   */
 
   const [page, setPage] = useState(1);
+  const [ordering, setOrdering] = useState("-relevance");
+
   const { genre } = useParams();
   const {
     data: gamesData,
     isLoading: gamesLoading,
     isError: gamesError,
   } = useQuery({
-    queryKey: ["gamesByGenre", genre, page],
-    queryFn: () => fetchGamesByGenre(genre, page),
+    queryKey: ["gamesByGenre", genre, page, ordering],
+    queryFn: () => fetchGamesByGenre(genre, page, ordering),
     keepPreviousData: true,
     staleTime: 5 * 60 * 1000,
   });
+
   const {
     data: genresData,
     isLoading: genresLoading,
@@ -57,6 +61,7 @@ function GenrePage() {
   // Reset pagina a 1 quando cambia il genere
   useEffect(() => {
     setPage(1);
+    setOrdering("-relevance");
   }, [genre]);
 
   /*
@@ -80,6 +85,14 @@ function GenrePage() {
       currentPage={page}
       setCurrentPage={setPage}
       lastPage={lastPage}
+      ordering={ordering}
+      setOrdering={setOrdering}
+      availableOrderings={[
+        { value: "-rating", label: "Rating" },
+        { value: "-metacritic", label: "Metacritic" },
+        { value: "-added", label: "Most Added" },
+        { value: "-released", label: "Release Date" },
+      ]}
     />
   );
 }

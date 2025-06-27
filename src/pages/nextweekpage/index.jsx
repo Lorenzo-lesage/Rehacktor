@@ -1,28 +1,29 @@
 import React, { useState, useEffect } from "react";
 import { useQuery } from "@tanstack/react-query";
-import { fetchTopGamesOfWeek } from "../../api/games"; // assicurati del path
-import LayoutGameList from "../../components/game/LayoutGameList";
+import { fetchNextWeekGames } from "../../api/games";
+import LayoutGamesList from "../../components/game/LayoutGameList.jsx";
+import { Box, Typography } from "@mui/material";
 
-function TopGamesPage() {
+function NextWeekPage() {
   /*
   |-----------------------------------------------------
   | Data
-  |-----------------------------------------------------
+  |-----------------------------------------------------    
   */
 
   const [page, setPage] = useState(1);
-  const [ordering, setOrdering] = useState("-relevance");
+  const [ordering, setOrdering] = useState("-added");
 
   const { data, isLoading, error } = useQuery({
-    queryKey: ["topGamesOfWeek", page, ordering],
-    queryFn: () => fetchTopGamesOfWeek(page, ordering),
+    queryKey: ["nextWeekGames", page, ordering],
+    queryFn: () => fetchNextWeekGames(page, ordering),
     staleTime: 5 * 60 * 1000,
     keepPreviousData: true,
   });
 
   const itemsPerPage = 20;
   const maxSafePage = 500;
-  const count = data?.count || 0;
+  const count = data?.count || 1;
   const realLastPage = Math.ceil(count / itemsPerPage);
   const lastPage = Math.min(realLastPage, maxSafePage);
 
@@ -44,19 +45,40 @@ function TopGamesPage() {
     }
   }, [data, isLoading, page]);
 
+  useEffect(() => {
+    console.log("DATA:", data);
+    console.log("ERROR:", error);
+  }, [data, error]);
+
   /*
   |-----------------------------------------------------
   | Return
   |-----------------------------------------------------
   */
 
+  if (!isLoading && (!data || data.results.length === 0)) {
+    return (
+      <Box
+        sx={{
+          height: "100%",
+          width: "100%",
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+        }}
+      >
+        <Typography variant="h6">No upcoming games next week.</Typography>
+      </Box>
+    );
+  }
+
   return (
-    <LayoutGameList
+    <LayoutGamesList
       data={data}
       loading={isLoading}
       error={error}
-      title="Top of The Week"
-      titleStyles={{ color: "text.primary", fontWeight: 700 }}
+      title="Coming Next Week"
+      titleStyles={{ color: "Text.Primary", fontWeight: 700 }}
       currentPage={page}
       setCurrentPage={setPage}
       lastPage={lastPage}
@@ -72,4 +94,4 @@ function TopGamesPage() {
   );
 }
 
-export default TopGamesPage;
+export default NextWeekPage;

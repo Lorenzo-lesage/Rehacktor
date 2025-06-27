@@ -4,7 +4,6 @@ import axios from "axios";
 
 /**
  * Fetch genres
- * @returns 
  */
 export const fetchGenres = async () => {
   const response = await axiosClient.get(apiConfig.endpoints.genres);
@@ -12,33 +11,21 @@ export const fetchGenres = async () => {
 };
 
 /**
- * Fetch games by date
- * @param {*} startDate 
- * @param {*} endDate 
- * @param {*} page 
- * @returns 
- */
-export const fetchGamesByDate = async (startDate, endDate, page = 1) => {
-  const response = await axiosClient.get(apiConfig.endpoints.gamesByDate(), {
-    params: {
-      dates: `${startDate},${endDate}`,
-      page,
-    },
-  });
-  return response.data;
-};
-
-/**
  * Fetch games by genre
- * @param {*} genre 
- * @param {*} page 
- * @returns 
+ * @param {string} genre
+ * @param {number} page
+ * @param {string} ordering
  */
-export const fetchGamesByGenre = async (genre, page = 1) => {
+export const fetchGamesByGenre = async (
+  genre,
+  page = 1,
+  ordering = "-relevance"
+) => {
   const response = await axiosClient.get(apiConfig.endpoints.gamesByGenre(), {
     params: {
       genres: genre,
       page,
+      ordering,
     },
   });
   return response.data;
@@ -46,8 +33,6 @@ export const fetchGamesByGenre = async (genre, page = 1) => {
 
 /**
  * Fetch game details
- * @param {*} id 
- * @returns 
  */
 export const fetchGameDetails = async (id) => {
   const response = await axiosClient.get(apiConfig.endpoints.gameDetails(id));
@@ -55,17 +40,23 @@ export const fetchGameDetails = async (id) => {
 };
 
 /**
- * Fetch game by query
- * @param {*} gameName 
- * @param {*} page 
- * @returns 
+ * Search games by name with optional ordering
+ * @param {string} gameName
+ * @param {number} page
+ * @param {string} ordering
+ * @returns {Promise}
  */
-export const searchGames = async (gameName, page = 1) => {
+export const searchGames = async (
+  gameName,
+  page = 1,
+  ordering = "-relevance"
+) => {
   const response = await axiosClient.get(apiConfig.endpoints.gameSearch(), {
     params: {
       search: gameName,
       page,
       page_size: 20,
+      ordering,
     },
   });
   return response.data;
@@ -73,8 +64,6 @@ export const searchGames = async (gameName, page = 1) => {
 
 /**
  * Fetch game screenshots
- * @param {*} gameId 
- * @returns 
  */
 export const fetchGameScreenshots = async (gameId) => {
   const response = await axiosClient.get(`/games/${gameId}/screenshots`);
@@ -82,23 +71,19 @@ export const fetchGameScreenshots = async (gameId) => {
 };
 
 /**
- * Fetch game movies
- * @param {*} gameId 
- * @param {*} gameName 
- * @returns 
+ * Fetch game movies (RAWG + fallback YouTube)
  */
 export const fetchGameMovies = async (gameId, gameName) => {
   try {
-    // RAWG
     const rawgRes = await axiosClient.get(`/games/${gameId}/movies`);
     const rawgResults = rawgRes.data.results;
 
     if (rawgResults?.length > 0) {
-      return rawgResults.map(movie => ({
+      return rawgResults.map((movie) => ({
         source: "rawg",
         name: movie.name,
         preview: movie.preview,
-        videoUrl: movie.data?.max || movie.data['480'],
+        videoUrl: movie.data?.max || movie.data["480"],
       }));
     }
 
@@ -108,12 +93,14 @@ export const fetchGameMovies = async (gameId, gameName) => {
     const ytVideo = ytRes.data.items?.[0];
 
     if (ytVideo) {
-      return [{
-        source: "youtube",
-        name: ytVideo.snippet.title,
-        preview: ytVideo.snippet.thumbnails.high.url,
-        videoUrl: `https://www.youtube.com/watch?v=${ytVideo.id.videoId}`,
-      }];
+      return [
+        {
+          source: "youtube",
+          name: ytVideo.snippet.title,
+          preview: ytVideo.snippet.thumbnails.high.url,
+          videoUrl: `https://www.youtube.com/watch?v=${ytVideo.id.videoId}`,
+        },
+      ];
     }
 
     return [];
@@ -124,21 +111,27 @@ export const fetchGameMovies = async (gameId, gameName) => {
 };
 
 /**
- * Fetch top games of the week
- * @param {*} page 
- * @returns 
+ * Utility per formattare date ISO yyyy-mm-dd
  */
-export const fetchTopGamesOfWeek = async (page = 1) => {
+const formatDate = (date) => date.toISOString().split("T")[0];
+
+/**
+ * Fetch top games of the week
+ * @param {number} page
+ * @param {string} ordering
+ */
+export const fetchTopGamesOfWeek = async (
+  page = 1,
+  ordering = "-relevance"
+) => {
   const today = new Date();
   const lastWeek = new Date();
   lastWeek.setDate(today.getDate() - 7);
 
-  const formatDate = (date) => date.toISOString().split("T")[0];
-
   const response = await axiosClient.get(apiConfig.endpoints.gamesByDate(), {
     params: {
       dates: `${formatDate(lastWeek)},${formatDate(today)}`,
-      ordering: "-rating",
+      ordering,
       page,
     },
   });
@@ -147,47 +140,156 @@ export const fetchTopGamesOfWeek = async (page = 1) => {
 
 /**
  * Fetch top games of the month
- * @param {*} page 
- * @returns 
  */
-export const fetchTopGamesOfMonth = async (page = 1) => {
+export const fetchTopGamesOfMonth = async (
+  page = 1,
+  ordering = "-relevance"
+) => {
   const today = new Date();
   const lastMonth = new Date();
   lastMonth.setMonth(today.getMonth() - 1);
 
-  const formatDate = (date) => date.toISOString().split("T")[0];
-
   const response = await axiosClient.get(apiConfig.endpoints.gamesByDate(), {
     params: {
       dates: `${formatDate(lastMonth)},${formatDate(today)}`,
-      ordering: "-rating",
+      ordering,
       page,
     },
   });
   return response.data;
 };
 
-//-------------------
-// Giochi usciti nel 2023 ordinati per rating
-export const fetchGamesOf2023 = async (page = 1) => {
+/**
+ * Fetch new and trending games
+ */
+export const fetchNewAndTrendingGames = async (
+  page = 1,
+  ordering = "-released"
+) => {
+  const today = new Date();
+  const lastWeek = new Date();
+  lastWeek.setDate(today.getDate() - 7);
+
   const response = await axiosClient.get(apiConfig.endpoints.gamesByDate(), {
     params: {
-      dates: "2023-01-01,2023-12-31",
-      ordering: "-rating",
+      dates: `${formatDate(lastWeek)},${formatDate(today)}`,
+      ordering,
       page,
+    },
+  });
+
+  return response.data;
+};
+
+/**
+ * Fetch next week games
+ */
+export const fetchNextWeekGames = async (page = 1, ordering = "-added") => {
+  const today = new Date();
+  const nextWeek = new Date();
+  nextWeek.setDate(today.getDate() + 7);
+
+  const response = await axiosClient.get(apiConfig.endpoints.gamesByDate(), {
+    params: {
+      dates: `${formatDate(today)},${formatDate(nextWeek)}`,
+      ordering,
+      page,
+    },
+  });
+
+  return response.data;
+};
+
+/**
+ * Fetch games from year start
+ */
+export const fetchGamesFromYearStart = async (
+  page = 1,
+  ordering = "-relevance"
+) => {
+  const today = new Date();
+  const yearStart = new Date(today.getFullYear(), 0, 1);
+
+  const response = await axiosClient.get(apiConfig.endpoints.gamesByDate(), {
+    params: {
+      dates: `${formatDate(yearStart)},${formatDate(today)}`,
+      ordering,
+      page,
+      page_size: 20,
+    },
+  });
+
+  return response.data;
+};
+
+/**
+ * Fetch best games of last year
+ */
+export const fetchGamesOfLastYear = async (
+  page = 1,
+  ordering = "-relevance"
+) => {
+  const now = new Date();
+  const lastYear = now.getFullYear() - 1;
+
+  const start = `${lastYear}-01-01`;
+  const end = `${lastYear}-12-31`;
+
+  const response = await axiosClient.get(apiConfig.endpoints.gamesByDate(), {
+    params: {
+      dates: `${start},${end}`,
+      ordering,
+      page,
+      page_size: 20,
+    },
+  });
+
+  return response.data;
+};
+
+/**
+ * Fetch top 250 all-time games
+ */
+export const fetchTopAllTimeGames = async (
+  page = 1,
+  ordering = "-relevance"
+) => {
+  const response = await axiosClient.get(apiConfig.endpoints.gamesByDate(), {
+    params: {
+      ordering,
+      page,
+      page_size: 20,
     },
   });
   return response.data;
 };
 
-// Giochi usciti nel 2022 ordinati per rating
-export const fetchGamesOf2022 = async (page = 1) => {
-  const response = await axiosClient.get(apiConfig.endpoints.gamesByDate(), {
-    params: {
-      dates: "2022-01-01,2022-12-31",
-      ordering: "-rating",
-      page,
-    },
-  });
-  return response.data;
+/**
+ * Fetch similar games (fallback)
+ */
+export const fetchSimilarGamesFallback = async (game) => {
+  const genre = game.genres?.[0]?.slug;
+  const tag = game.tags?.[0]?.slug;
+
+  const params = {
+    ordering: "-rating",
+    page: 1,
+    page_size: 10,
+  };
+
+  if (genre) params.genres = genre;
+  if (tag) params.tags = tag;
+
+  try {
+    const response = await axiosClient.get("/games", { params });
+
+    const filtered = response.data.results
+      .filter((g) => g.id !== game.id)
+      .slice(0, 4);
+
+    return filtered;
+  } catch (error) {
+    console.error("Errore nel fetch dei giochi simili (fallback):", error);
+    return [];
+  }
 };

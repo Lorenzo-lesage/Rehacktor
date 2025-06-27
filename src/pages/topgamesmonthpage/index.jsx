@@ -11,10 +11,11 @@ function TopGamesMonthPage() {
   */
 
   const [page, setPage] = useState(1);
+  const [ordering, setOrdering] = useState("-relevance");
 
   const { data, isLoading, error } = useQuery({
-    queryKey: ["topGamesOfMonth", page],
-    queryFn: () => fetchTopGamesOfMonth(page),
+    queryKey: ["topGamesOfMonth", page, ordering],
+    queryFn: () => fetchTopGamesOfMonth(page, ordering),
     staleTime: 5 * 60 * 1000,
     keepPreviousData: true,
   });
@@ -54,11 +55,19 @@ function TopGamesMonthPage() {
       data={data}
       loading={isLoading}
       error={error}
-      title="Top Rated Games of the Month"
+      title="Last Month"
       titleStyles={{ color: "text.primary", fontWeight: 700 }}
       currentPage={page}
       setCurrentPage={setPage}
       lastPage={lastPage}
+      ordering={ordering}
+      setOrdering={setOrdering}
+      availableOrderings={[
+        { value: "-rating", label: "Rating" },
+        { value: "-metacritic", label: "Metacritic" },
+        { value: "-added", label: "Most Added" },
+        { value: "-released", label: "Release Date" },
+      ]}
     />
   );
 }
