@@ -34,7 +34,9 @@ function SideBar({ navbarHidden }) {
       transform: "translateX(4px)",
     },
     "& svg": {
-      color: isActive ? theme.palette.primary.main : theme.palette.text.disabled,
+      color: isActive
+        ? theme.palette.primary.main
+        : theme.palette.text.disabled,
       transition: "all 0.25s ease",
     },
     "&:hover svg": {
@@ -129,13 +131,13 @@ function SideBar({ navbarHidden }) {
               </NavLink>
             </Box>
 
-            {/* Next Week */}
+            {/* Coming Soon */}
             <Box>
-              <NavLink to="/next-week">
+              <NavLink to="/coming-soon">
                 {({ isActive }) => (
                   <Typography variant="body1" sx={typographyHoverSx(isActive)}>
                     <FastForwardIcon sx={{ mr: 1 }} fontSize="small" />
-                    Next Week
+                    Coming Soon...
                   </Typography>
                 )}
               </NavLink>
@@ -201,6 +203,41 @@ function SideBar({ navbarHidden }) {
             </Box>
 
             <Divider />
+          </Box>
+
+          {/* All games section */}
+          <Box>
+            <Divider />
+
+            {/* Games*/}
+            <Box>
+              <Typography
+                variant="h5"
+                sx={{
+                  display: "flex",
+                  alignItems: "center",
+                  padding: "0.7rem 1rem",
+                  fontWeight: 600,
+                  color: "text.primary",
+                }}
+              >
+                Games
+              </Typography>
+            </Box>
+
+            {/* All games */}
+            <Box>
+              <NavLink to="/all-games">
+                {({ isActive }) => (
+                  <Typography variant="body1" sx={typographyHoverSx(isActive)}>
+                    <StarIcon sx={{ mr: 1 }} fontSize="small" />
+                    All Games
+                  </Typography>
+                )}
+              </NavLink>
+
+              <Divider />
+            </Box>
           </Box>
         </Box>
       </Box>

@@ -3,7 +3,6 @@ import { useParams } from "react-router";
 import LayoutGameList from "../../components/game/LayoutGameList.jsx";
 import { useQuery } from "@tanstack/react-query";
 import { fetchGamesByGenre, fetchGenres } from "../../api/games";
-import { set } from "zod";
 
 function GenrePage() {
   /*
@@ -13,7 +12,7 @@ function GenrePage() {
   */
 
   const [page, setPage] = useState(1);
-  const [ordering, setOrdering] = useState("-relevance");
+  const [ordering, setOrdering] = useState("relevance");
 
   const { genre } = useParams();
   const {
@@ -61,7 +60,7 @@ function GenrePage() {
   // Reset pagina a 1 quando cambia il genere
   useEffect(() => {
     setPage(1);
-    setOrdering("-relevance");
+    setOrdering("relevance");
   }, [genre]);
 
   /*

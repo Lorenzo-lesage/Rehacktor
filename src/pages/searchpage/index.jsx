@@ -13,7 +13,7 @@ function SearchPage() {
   */
 
   const [page, setPage] = useState(1);
-  const [ordering, setOrdering] = useState("-relevance");
+  const [ordering, setOrdering] = useState("relevance");
 
   let [searchParams] = useSearchParams();
   const game = searchParams.get("query");

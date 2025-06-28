@@ -182,12 +182,15 @@ export const fetchNewAndTrendingGames = async (
 };
 
 /**
- * Fetch next week games
+ * Fetch coming soon games
  */
-export const fetchNextWeekGames = async (page = 1, ordering = "-added") => {
+export const fetchComingSoonGames = async (
+  page = 1,
+  ordering = "-relevance"
+) => {
   const today = new Date();
   const nextWeek = new Date();
-  nextWeek.setDate(today.getDate() + 7);
+  nextWeek.setDate(today.getDate() + 365);
 
   const response = await axiosClient.get(apiConfig.endpoints.gamesByDate(), {
     params: {
@@ -248,11 +251,11 @@ export const fetchGamesOfLastYear = async (
 };
 
 /**
- * Fetch top 250 all-time games
+ * Fetch all games
  */
-export const fetchTopAllTimeGames = async (
+export const fetchAllGames = async (
   page = 1,
-  ordering = "-relevance"
+  ordering = "-released"
 ) => {
   const response = await axiosClient.get(apiConfig.endpoints.gamesByDate(), {
     params: {
@@ -262,6 +265,32 @@ export const fetchTopAllTimeGames = async (
     },
   });
   return response.data;
+};
+
+/**
+ * Fetch top 250 all-time games
+ * @returns
+ */
+export const fetchTopAllTimeGames = async () => {
+  const pageSize = 40;
+  const totalGames = 250;
+  const pagesNeeded = Math.ceil(totalGames / pageSize);
+  const allGames = [];
+
+  for (let page = 1; page <= pagesNeeded; page++) {
+    const { data } = await axiosClient.get("/games", {
+      params: {
+        ordering: "relevance",
+        page,
+        page_size: pageSize,
+      },
+    });
+
+    allGames.push(...data.results);
+    if (allGames.length >= totalGames) break;
+  }
+
+  return allGames.slice(0, totalGames);
 };
 
 /**

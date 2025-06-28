@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from "react";
 import { useQuery } from "@tanstack/react-query";
-import { fetchTopGamesOfWeek } from "../../api/games"; // assicurati del path
+import { fetchAllGames } from "../../api/games";
 import LayoutGameList from "../../components/game/LayoutGameList";
 
-function TopGamesPage() {
+function AllGamesPage() {
   /*
   |-----------------------------------------------------
   | Data
@@ -11,11 +11,11 @@ function TopGamesPage() {
   */
 
   const [page, setPage] = useState(1);
-  const [ordering, setOrdering] = useState("relevance");
+  const [ordering, setOrdering] = useState("-released");
 
   const { data, isLoading, error } = useQuery({
     queryKey: ["topGamesOfWeek", page, ordering],
-    queryFn: () => fetchTopGamesOfWeek(page, ordering),
+    queryFn: () => fetchAllGames(page, ordering),
     staleTime: 5 * 60 * 1000,
     keepPreviousData: true,
   });
@@ -55,7 +55,7 @@ function TopGamesPage() {
       data={data}
       loading={isLoading}
       error={error}
-      title="Top of The Week"
+      title="All Games"
       titleStyles={{ color: "text.primary", fontWeight: 700 }}
       currentPage={page}
       setCurrentPage={setPage}
@@ -72,4 +72,4 @@ function TopGamesPage() {
   );
 }
 
-export default TopGamesPage;
+export default AllGamesPage;

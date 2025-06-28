@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useMemo } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { fetchTopAllTimeGames } from "../../api/games";
 import LayoutGamesList from "../../components/game/LayoutGameList.jsx";
@@ -11,38 +11,51 @@ function TopAllTimeGamesPage() {
   */
 
   const [page, setPage] = useState(1);
-  const [ordering, setOrdering] = useState("-relevance");
+  const [ordering, setOrdering] = useState("relevance");
+  const itemsPerPage = 20;
 
   const { data, isLoading, error } = useQuery({
-    queryKey: ["topAllTimeGames", page, ordering],
-    queryFn: () => fetchTopAllTimeGames(page, ordering),
-    staleTime: 5 * 60 * 1000,
-    keepPreviousData: true,
+    queryKey: ["topAllTimeGames"],
+    queryFn: fetchTopAllTimeGames,
+    staleTime: 60 * 60 * 1000,
   });
 
-  const itemsPerPage = 20;
-  const maxSafePage = 500;
-  const count = data?.count || 0;
-  const realLastPage = Math.ceil(count / itemsPerPage);
-  const lastPage = Math.min(realLastPage, maxSafePage);
+  const orderedData = useMemo(() => {
+    if (!data) return [];
 
-  /*
-  |-----------------------------------------------------
-  | Hooks
-  |-----------------------------------------------------
-  */
-
-  useEffect(() => {
-    if (!isLoading && page > lastPage) {
-      setPage(lastPage);
+    const sorted = [...data];
+    switch (ordering) {
+      case "-rating":
+        return sorted.sort((a, b) => b.rating - a.rating);
+      case "rating":
+        return sorted.sort((a, b) => a.rating - b.rating);
+      case "-metacritic":
+        return sorted.sort((a, b) => (b.metacritic ?? 0) - (a.metacritic ?? 0));
+      case "metacritic":
+        return sorted.sort((a, b) => (a.metacritic ?? 0) - (b.metacritic ?? 0));
+      case "-released":
+        return sorted.sort(
+          (a, b) => new Date(b.released) - new Date(a.released)
+        );
+      case "released":
+        return sorted.sort(
+          (a, b) => new Date(a.released) - new Date(b.released)
+        );
+      case "name":
+        return sorted.sort((a, b) => a.name.localeCompare(b.name));
+      case "-name":
+        return sorted.sort((a, b) => b.name.localeCompare(a.name));
+      default:
+        return sorted;
     }
-  }, [page, lastPage, isLoading]);
+  }, [data, ordering]);
 
-  useEffect(() => {
-    if (!isLoading && data?.results?.length === 0 && page > 1) {
-      setPage((prev) => prev - 1);
-    }
-  }, [data, isLoading, page]);
+  const total = orderedData.length;
+  const realLastPage = Math.ceil(total / itemsPerPage);
+  const paginatedData = orderedData.slice(
+    (page - 1) * itemsPerPage,
+    page * itemsPerPage
+  );
 
   /*
   |-----------------------------------------------------
@@ -52,21 +65,26 @@ function TopAllTimeGamesPage() {
 
   return (
     <LayoutGamesList
-      data={data}
+      data={{ results: paginatedData, count: total }}
       loading={isLoading}
       error={error}
       title="Top 250 Games of All Time"
       titleStyles={{ color: "text.primary", fontWeight: 700 }}
       currentPage={page}
       setCurrentPage={setPage}
-      lastPage={lastPage}
+      lastPage={realLastPage}
       ordering={ordering}
       setOrdering={setOrdering}
       availableOrderings={[
-        { value: "-rating", label: "Rating" },
-        { value: "-metacritic", label: "Metacritic" },
-        { value: "-added", label: "Most Added" },
-        { value: "-released", label: "Release Date" },
+        { value: "relevance", label: "Relevance" },
+        { value: "-rating", label: "Rating (High → Low)" },
+        { value: "rating", label: "Rating (Low → High)" },
+        { value: "-metacritic", label: "Metacritic (High → Low)" },
+        { value: "metacritic", label: "Metacritic (Low → High)" },
+        { value: "-released", label: "Release Date (Newest)" },
+        { value: "released", label: "Release Date (Oldest)" },
+        { value: "name", label: "Name (A-Z)" },
+        { value: "-name", label: "Name (Z-A)" },
       ]}
     />
   );

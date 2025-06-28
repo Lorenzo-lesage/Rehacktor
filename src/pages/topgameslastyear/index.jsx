@@ -11,7 +11,7 @@ function TopGamesLastYear() {
   */
 
   const [page, setPage] = useState(1);
-  const [ordering, setOrdering] = useState("-relevance");
+  const [ordering, setOrdering] = useState("relevance");
   const lastYear = new Date().getFullYear() - 1;
 
   const { data, isLoading, error } = useQuery({

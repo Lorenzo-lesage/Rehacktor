@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from "react";
 import { useQuery } from "@tanstack/react-query";
-import { fetchNextWeekGames } from "../../api/games";
+import { fetchComingSoonGames } from "../../api/games.js";
 import LayoutGamesList from "../../components/game/LayoutGameList.jsx";
 import { Box, Typography } from "@mui/material";
 
-function NextWeekPage() {
+function IncomingPage() {
   /*
   |-----------------------------------------------------
   | Data
@@ -12,11 +12,11 @@ function NextWeekPage() {
   */
 
   const [page, setPage] = useState(1);
-  const [ordering, setOrdering] = useState("-added");
+  const [ordering, setOrdering] = useState("relevance");
 
   const { data, isLoading, error } = useQuery({
     queryKey: ["nextWeekGames", page, ordering],
-    queryFn: () => fetchNextWeekGames(page, ordering),
+    queryFn: () => fetchComingSoonGames(page, ordering),
     staleTime: 5 * 60 * 1000,
     keepPreviousData: true,
   });
@@ -67,7 +67,7 @@ function NextWeekPage() {
           alignItems: "center",
         }}
       >
-        <Typography variant="h6">No upcoming games next week.</Typography>
+        <Typography variant="h6">No coming soon games</Typography>
       </Box>
     );
   }
@@ -77,7 +77,7 @@ function NextWeekPage() {
       data={data}
       loading={isLoading}
       error={error}
-      title="Coming Next Week"
+      title="Coming Soon"
       titleStyles={{ color: "Text.Primary", fontWeight: 700 }}
       currentPage={page}
       setCurrentPage={setPage}
@@ -94,4 +94,4 @@ function NextWeekPage() {
   );
 }
 
-export default NextWeekPage;
+export default IncomingPage;

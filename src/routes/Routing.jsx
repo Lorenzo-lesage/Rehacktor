@@ -11,10 +11,11 @@ import AccountPage from "../pages/account/index";
 import ProfilePage from "../pages/profile";
 import TopGamesPage from "../pages/topgamesweekpage";
 import TopGamesMonthPage from "../pages/topgamesmonthpage/index";
-import NextWeekPage from "../pages/nextweekpage/index";
+import ComingSoonPage from "../pages/comingsoonpage/index";
 import YearGamesPage from "../pages/yeargamepage/index";
 import TopGamesLastYear from "../pages/topgameslastyear/index";
 import TopAllTimeGamesPage from "../pages/topalltimegamespage/index";
+import AllGamesPage from "../pages/allgamespage";
 
 export function Routing() {
   /*
@@ -47,14 +48,16 @@ export function Routing() {
           <Route path="/top-games" element={<TopGamesPage />} />
           {/* Top games month page */}
           <Route path="/top-games-month" element={<TopGamesMonthPage />} />
-          {/* Next week page */}
-          <Route path="/next-week" element={<NextWeekPage />} />
+          {/* Coming soon page */}
+          <Route path="/coming-soon" element={<ComingSoonPage />} />
           {/* Year games page */}
           <Route path="/year-games" element={<YearGamesPage />} />
           {/* Top games last year page */}
           <Route path="/top-games-last-year" element={<TopGamesLastYear />} />
           {/* Top all time games page */}
           <Route path="/top-all-time-games" element={<TopAllTimeGamesPage />} />
+          {/* All games page */}
+          <Route path="/all-games" element={<AllGamesPage />} />
           {/* Error page */}
           <Route path="*" element={<ErrorPage />} />
         </Route>

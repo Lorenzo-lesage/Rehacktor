@@ -11,7 +11,7 @@ function TopGamesMonthPage() {
   */
 
   const [page, setPage] = useState(1);
-  const [ordering, setOrdering] = useState("-relevance");
+  const [ordering, setOrdering] = useState("relevance");
 
   const { data, isLoading, error } = useQuery({
     queryKey: ["topGamesOfMonth", page, ordering],
