@@ -28,13 +28,17 @@ function CardGame({ game }) {
   |-----------------------------------------------------
   */
 
-  const { background_image: image } = game;
   const [open, setOpen] = useState(false);
 
   const { data, isLoading, isError } = useQuery({
     queryKey: ["gameDetails", game.id],
     queryFn: () => fetchGameDetails(game.id),
   });
+
+  const id = game.id || game.game_id;
+  const slug = game.slug || game.game_slug || "default-slug";
+  const name = game.name || game.game_name || "Unknown Game";
+  const image = game.background_image || game.game_image || "";
 
   /*
   |-----------------------------------------------------
@@ -75,7 +79,7 @@ function CardGame({ game }) {
   return (
     <TiltCard
       sx={{
-        width: { xs: 150, sm: 270 },
+        width: "100%",
         zIndex: open ? 200 : 1,
         position: "relative",
       }}
@@ -94,7 +98,7 @@ function CardGame({ game }) {
             borderRadius: open ? "0.2rem 0.2rem 0 0" : 1,
           }}
         >
-          <Link to={`/games/${game.slug}/${game.id}`}>
+          <Link to={`/games/${slug}/${id}`}>
             <LazyLoadGameImage image={image} />
           </Link>
 
@@ -228,7 +232,7 @@ function CardGame({ game }) {
                   color: "rgba(88,166,255)",
                 }}
               >
-                {game.name}
+                {name}
               </Typography>
             </Box>
           </Box>

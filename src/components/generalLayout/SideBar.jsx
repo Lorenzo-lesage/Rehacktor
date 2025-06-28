@@ -1,10 +1,21 @@
-import GenresDropdown from "../game/GenresDropdown";
-import { Box, Typography, Divider } from "@mui/material";
+import { Box, Typography, Divider, Avatar } from "@mui/material";
 import { NavLink } from "react-router";
-import StarIcon from "@mui/icons-material/Star";
-import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
-import FastForwardIcon from "@mui/icons-material/FastForward";
 import { useTheme } from "@mui/material/styles";
+import { useContext} from "react";
+import SessionContext from "../../context/SessionContext";
+import useAvatarUrl from "../../hooks/useAvatarUrl";
+
+// MUI Icons
+import PersonIcon from "@mui/icons-material/Person";
+import FavoriteIcon from "@mui/icons-material/Favorite";
+import NewReleasesIcon from "@mui/icons-material/NewReleases";
+import EventIcon from "@mui/icons-material/Event";
+import UpdateIcon from "@mui/icons-material/Update";
+import QueryBuilderIcon from "@mui/icons-material/QueryBuilder";
+import EmojiEventsIcon from "@mui/icons-material/EmojiEvents";
+import WorkspacePremiumIcon from "@mui/icons-material/WorkspacePremium";
+import SportsEsportsIcon from "@mui/icons-material/SportsEsports";
+import CategoryIcon from "@mui/icons-material/Category";
 
 function SideBar({ navbarHidden }) {
   /*
@@ -16,6 +27,8 @@ function SideBar({ navbarHidden }) {
   const headerHeight = 64;
   const marginTop = navbarHidden ? 0 : headerHeight;
   const lastYear = new Date().getFullYear() - 1;
+  const { userProfile } = useContext(SessionContext);
+  const { avatarUrl } = useAvatarUrl(userProfile?.avatar_url);
 
   const theme = useTheme();
 
@@ -30,7 +43,6 @@ function SideBar({ navbarHidden }) {
     fontWeight: 600,
 
     "&:hover": {
-      backgroundColor: theme.palette.action.hover,
       transform: "translateX(4px)",
     },
     "& svg": {
@@ -82,10 +94,93 @@ function SideBar({ navbarHidden }) {
             "&::-webkit-scrollbar": {
               display: "none",
             },
-            padding: "0 0.5rem 1rem 0.5rem",
+            padding: "0 0.5rem 0 0.5rem",
           }}
         >
-          <GenresDropdown />
+          {/* account section */}
+          {userProfile && (
+            <Box>
+              <Box>
+                {/* Account */}
+                <Box
+                  sx={{
+                    display: "flex",
+                    alignItems: "center",
+                    padding: "0.7rem 1rem",
+                  }}
+                >
+                  <Typography
+                    variant="h5"
+                    sx={{
+                      fontWeight: 600,
+                      color: "text.primary",
+                      whiteSpace: "nowrap",
+                      overflow: "hidden",
+                      textOverflow: "ellipsis",
+                      flexGrow: 1,
+                      minWidth: 0, // importante per l'ellipsis
+                    }}
+                  >
+                    {userProfile.username}
+                  </Typography>
+
+                  {avatarUrl ? (
+                    <Avatar
+                      src={avatarUrl}
+                      sx={{
+                        width: 40,
+                        height: 40,
+                        ml: 1,
+                      }}
+                    />
+                  ) : (
+                    <Avatar
+                      sx={{
+                        bgcolor: "text.tertiary",
+                        width: 40,
+                        height: 40,
+                        fontSize: 13,
+                        ml: 1,
+                      }}
+                    >
+                      {userProfile.first_name?.charAt(0).toUpperCase()}
+                      {userProfile.last_name?.charAt(0).toUpperCase()}
+                    </Avatar>
+                  )}
+                </Box>
+              </Box>
+
+              {/* Profile */}
+              <Box>
+                <NavLink to="/profile">
+                  {({ isActive }) => (
+                    <Typography
+                      variant="body1"
+                      sx={typographyHoverSx(isActive)}
+                    >
+                      <PersonIcon sx={{ mr: 1 }} fontSize="small" />
+                      Profile
+                    </Typography>
+                  )}
+                </NavLink>
+              </Box>
+
+              {/* Whishlist */}
+              <Box>
+                <NavLink to="/whishlist">
+                  {({ isActive }) => (
+                    <Typography
+                      variant="body1"
+                      sx={typographyHoverSx(isActive)}
+                    >
+                      <FavoriteIcon sx={{ mr: 1 }} fontSize="small" />
+                      Whishlist
+                    </Typography>
+                  )}
+                </NavLink>
+              </Box>
+            </Box>
+          )}
 
           {/* New Realeases section */}
           <Box>
@@ -112,7 +207,7 @@ function SideBar({ navbarHidden }) {
               <NavLink to="/top-games-month">
                 {({ isActive }) => (
                   <Typography variant="body1" sx={typographyHoverSx(isActive)}>
-                    <CalendarMonthIcon sx={{ mr: 1 }} fontSize="small" />
+                    <EventIcon sx={{ mr: 1 }} fontSize="small" />
                     Last Month
                   </Typography>
                 )}
@@ -124,7 +219,7 @@ function SideBar({ navbarHidden }) {
               <NavLink to="/year-games">
                 {({ isActive }) => (
                   <Typography variant="body1" sx={typographyHoverSx(isActive)}>
-                    <CalendarMonthIcon sx={{ mr: 1 }} fontSize="small" />
+                    <UpdateIcon sx={{ mr: 1 }} fontSize="small" />
                     This Year
                   </Typography>
                 )}
@@ -136,7 +231,7 @@ function SideBar({ navbarHidden }) {
               <NavLink to="/coming-soon">
                 {({ isActive }) => (
                   <Typography variant="body1" sx={typographyHoverSx(isActive)}>
-                    <FastForwardIcon sx={{ mr: 1 }} fontSize="small" />
+                    <QueryBuilderIcon sx={{ mr: 1 }} fontSize="small" />
                     Coming Soon...
                   </Typography>
                 )}
@@ -171,7 +266,7 @@ function SideBar({ navbarHidden }) {
               <NavLink to="/top-games">
                 {({ isActive }) => (
                   <Typography variant="body1" sx={typographyHoverSx(isActive)}>
-                    <StarIcon sx={{ mr: 1 }} fontSize="small" />
+                    <EmojiEventsIcon sx={{ mr: 1 }} fontSize="small" />
                     Top of The Week
                   </Typography>
                 )}
@@ -183,7 +278,7 @@ function SideBar({ navbarHidden }) {
               <NavLink to="/top-games-last-year">
                 {({ isActive }) => (
                   <Typography variant="body1" sx={typographyHoverSx(isActive)}>
-                    <StarIcon sx={{ mr: 1 }} fontSize="small" />
+                    <WorkspacePremiumIcon sx={{ mr: 1 }} fontSize="small" />
                     Best of {lastYear}
                   </Typography>
                 )}
@@ -195,7 +290,7 @@ function SideBar({ navbarHidden }) {
               <NavLink to="/top-all-time-games">
                 {({ isActive }) => (
                   <Typography variant="body1" sx={typographyHoverSx(isActive)}>
-                    <StarIcon sx={{ mr: 1 }} fontSize="small" />
+                    <WorkspacePremiumIcon sx={{ mr: 1 }} fontSize="small" />
                     Top 250 Of All Time
                   </Typography>
                 )}
@@ -230,14 +325,26 @@ function SideBar({ navbarHidden }) {
               <NavLink to="/all-games">
                 {({ isActive }) => (
                   <Typography variant="body1" sx={typographyHoverSx(isActive)}>
-                    <StarIcon sx={{ mr: 1 }} fontSize="small" />
+                    <SportsEsportsIcon sx={{ mr: 1 }} fontSize="small" />
                     All Games
                   </Typography>
                 )}
               </NavLink>
-
-              <Divider />
             </Box>
+
+            {/* All genres*/}
+            <Box>
+              <NavLink to="/genres">
+                {({ isActive }) => (
+                  <Typography variant="body1" sx={typographyHoverSx(isActive)}>
+                    <CategoryIcon sx={{ mr: 1 }} fontSize="small" />
+                    Genres
+                  </Typography>
+                )}
+              </NavLink>
+            </Box>
+
+            <Divider />
           </Box>
         </Box>
       </Box>

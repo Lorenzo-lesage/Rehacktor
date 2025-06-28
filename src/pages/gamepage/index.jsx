@@ -184,6 +184,7 @@ function GamePage() {
 
     loadGameAndSimilar();
   }, [gameId]);
+  
 
   /*
   |------------------------------------------------

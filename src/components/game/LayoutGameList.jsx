@@ -16,6 +16,7 @@ function LayoutGamesList({
   setOrdering,
   availableOrderings = [],
 }) {
+  
   /*
   |-----------------------------------------------------
   | Return
@@ -59,13 +60,13 @@ function LayoutGamesList({
   return (
     <Box
       sx={{
-        paddingTop: "2rem",
+        padding: { xs: 1, md: 4 },
         display: "flex",
         flexDirection: "column",
         alignItems: "center",
       }}
     >
-      <Box sx={{ display: "flex", alignItems: "center", justifyContent: "space-between", width: "90%", mb: 2 }}>
+      <Box sx={{ display: { xs: "block", md: "flex" }, alignItems: "center", justifyContent: "space-between", width: "90%", mb: 2 }}>
         <Typography variant="h3" gutterBottom sx={titleStyles}>
           {title}
         </Typography>
@@ -84,11 +85,11 @@ function LayoutGamesList({
       <Grid
         container
         columns={{ xs: 4, sm: 8, md: 12 }}
-        spacing={1}
+        spacing={2}
         justifyContent="center"
       >
         {data?.results?.map((game) => (
-          <Grid key={game.id}>
+          <Grid key={game.id} size={{ xs: 2, md: 3 }}>
             <CardGame game={game} />
           </Grid>
         ))}

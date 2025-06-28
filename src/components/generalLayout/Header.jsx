@@ -118,163 +118,148 @@ function Header(props) {
               <Box sx={{ display: { xs: "none", md: "flex" } }}>
                 <SearchBar />
               </Box>
-              {/* Services Button */}
-              <Button
-                sx={{
-                  borderRadius: 3,
-                  border: "none",
-                  color: "text.tertiary",
-                  textTransform: "none",
-                  display: { xs: "none", md: "flex" },
-                }}
-                label="Servicies"
-                variant="outlined"
-                size="small"
-              >
-                Services
-              </Button>
 
               {/* Hover Menu Container */}
               <Box>
                 {/* Account/Projects Buttons */}
                 {userProfile ? (
                   <>
-                    {/* Account Button */}
-                    <Button
-                      variant="outlined"
-                      size="small"
-                      onClick={handleMenuItemClick}
-                      endIcon={
-                        anchorEl ? <ArrowDropUpIcon /> : <ArrowDropDownIcon />
-                      }
-                      sx={{
-                        border: "none",
-                        borderRadius: 3,
-                        color: "text.tertiary",
-                        textTransform: "none",
-                        "& .MuiButton-endIcon, & .MuiButton-startIcon": {
+                    <Box sx={{ display: { xs: "block", md: "none" } }}>
+                      {/* Account Button */}
+                      <Button
+                        variant="outlined"
+                        size="small"
+                        onClick={handleMenuItemClick}
+                        endIcon={
+                          anchorEl ? <ArrowDropUpIcon /> : <ArrowDropDownIcon />
+                        }
+                        sx={{
+                          border: "none",
+                          borderRadius: 3,
                           color: "text.tertiary",
-                        },
-                      }}
-                    >
-                      {avatarUrl ? (
-                        <Avatar
-                          src={avatarUrl}
-                          sx={{
-                            width: 27,
-                            height: 27,
-                            border: "2px solid black",
-                            mr: 1,
-                          }}
-                        />
-                      ) : (
-                        <Avatar
-                          sx={{
-                            bgcolor: "text.tertiary",
-                            width: 27,
-                            height: 27,
-                            fontSize: 13,
-                            border: "2px solid black",
-                            mr: 1,
-                          }}
-                        >
-                          {userProfile.first_name?.charAt(0).toUpperCase()}
-                          {userProfile.last_name?.charAt(0).toUpperCase()}
-                        </Avatar>
-                      )}
-                      Account
-                    </Button>
-
-                    {/* Menu for logged-in user */}
-                    <Menu
-                      anchorEl={anchorEl}
-                      open={open}
-                      elevation={4}
-                      onClose={handleMenuClose}
-                      PaperProps={{
-                        sx: (theme) => ({
-                          width: 150,
-                          backgroundColor: theme.palette.background.paper,
-                          color: theme.palette.text.primary,
-                        }),
-                      }}
-                    >
-                      <MenuItem
-                        onClick={handleMenuClose}
-                        sx={{
-                          borderRadius: 1,
-                          ":hover": { backgroundColor: "background.paper" },
-                          transition: "background-color 0.2s ease-in-out",
+                          textTransform: "none",
+                          "& .MuiButton-endIcon, & .MuiButton-startIcon": {
+                            color: "text.tertiary",
+                          },
                         }}
                       >
-                        <Link
-                          to="/profile"
-                          style={{
-                            display: "flex",
-                            alignItems: "center",
-                            color: "inherit",
-                            textDecoration: "none",
-                          }}
-                        >
-                          <AccountBoxIcon
-                            fontSize="small"
-                            sx={{ marginRight: "0.5rem" }}
+                        {avatarUrl ? (
+                          <Avatar
+                            src={avatarUrl}
+                            sx={{
+                              width: 27,
+                              height: 27,
+                              border: "2px solid black",
+                              mr: 1,
+                            }}
                           />
-                          Profile
-                        </Link>
-                      </MenuItem>
+                        ) : (
+                          <Avatar
+                            sx={{
+                              bgcolor: "text.tertiary",
+                              width: 27,
+                              height: 27,
+                              fontSize: 13,
+                              border: "2px solid black",
+                              mr: 1,
+                            }}
+                          >
+                            {userProfile.first_name?.charAt(0).toUpperCase()}
+                            {userProfile.last_name?.charAt(0).toUpperCase()}
+                          </Avatar>
+                        )}
+                        Account
+                      </Button>
 
-                      <Divider sx={{ my: 1 }} />
+                      {/* Menu for logged-in user */}
+                      <Menu
+                        anchorEl={anchorEl}
+                        open={open}
+                        elevation={4}
+                        onClose={handleMenuClose}
+                        PaperProps={{
+                          sx: (theme) => ({
+                            width: 150,
+                            backgroundColor: theme.palette.background.paper,
+                            color: theme.palette.text.primary,
+                          }),
+                        }}
+                      >
+                        <MenuItem
+                          onClick={handleMenuClose}
+                          sx={{
+                            borderRadius: 1,
+                            ":hover": { backgroundColor: "background.paper" },
+                            transition: "background-color 0.2s ease-in-out",
+                          }}
+                        >
+                          <Link
+                            to="/profile"
+                            style={{
+                              display: "flex",
+                              alignItems: "center",
+                              color: "inherit",
+                              textDecoration: "none",
+                            }}
+                          >
+                            <AccountBoxIcon
+                              fontSize="small"
+                              sx={{ marginRight: "0.5rem" }}
+                            />
+                            Profile
+                          </Link>
+                        </MenuItem>
 
-                      <MenuItem
+                        <Divider sx={{ my: 1 }} />
+
+                        <Box>
+                          <Button
+                            onClick={signOut}
+                            variant="outlined"
+                            size="small"
+                            endIcon={<LogoutIcon color="text.tertiary" />}
+                            sx={{
+                              border: "none",
+                              borderRadius: 3,
+                              color: "text.tertiary",
+                              textTransform: "none",
+                            }}
+                          >
+                            Logout
+                          </Button>
+                        </Box>
+
+                        {/* Theme toggle on small screens */}
+                        <MenuItem
+                          sx={{
+                            display: { xs: "flex", md: "none" },
+                            justifyContent: "start",
+                          }}
+                        >
+                          <ThemeToggle />
+                        </MenuItem>
+                      </Menu>
+                    </Box>
+
+                    {/* Logout Button Desktop */}
+                    <Box sx={{ display: { xs: "none", md: "flex" } }}>
+                      <Button
                         onClick={signOut}
+                        variant="outlined"
+                        size="small"
+                        endIcon={<LogoutIcon color="text.tertiary" />}
                         sx={{
-                          borderRadius: 1,
-                          ":hover": { backgroundColor: "background.paper" },
-                          transition: "background-color 0.2s ease-in-out",
+                          border: "none",
+                          borderRadius: 3,
+                          color: "text.tertiary",
+                          textTransform: "none",
                         }}
                       >
-                        <LogoutIcon
-                          fontSize="small"
-                          sx={{ marginRight: "0.5rem" }}
-                        />
                         Logout
-                      </MenuItem>
-
-                      {/* Theme toggle on small screens */}
-                      <MenuItem
-                        sx={{
-                          display: { xs: "flex", md: "none" },
-                          justifyContent: "start",
-                        }}
-                      >
-                        <ThemeToggle />
-                      </MenuItem>
-                    </Menu>
+                      </Button>
+                    </Box>
                   </>
-                ) : (
-                  <>
-                    {/* Guest Projects Button */}
-                    <Button
-                      sx={{
-                        borderRadius: 3,
-                        border: "none",
-                        color: "text.tertiary",
-                        textTransform: "none",
-                      }}
-                      label="Servicies"
-                      variant="outlined"
-                      size="small"
-                    >
-                      <Link
-                        to="/projects"
-                        style={{ color: "inherit", textDecoration: "none" }}
-                      >
-                        Projects
-                      </Link>
-                    </Button>
-                  </>
-                )}
+                ) : null}
               </Box>
 
               {/* Sign in Button */}
@@ -306,7 +291,7 @@ function Header(props) {
               </Box>
 
               {/* Settings Button */}
-              <Box>
+              <Box sx={{ display: { xs: "block", md: "none" } }}>
                 <Tooltip title="Settings">
                   <Button
                     size="small"

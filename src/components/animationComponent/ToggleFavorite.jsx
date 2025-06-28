@@ -17,7 +17,7 @@ function ToggleFavorite({ data }) {
   const { favorites, addFavorites, removeFavorite } =
     useContext(FavoritesContext);
   const { userProfile } = useContext(SessionContext);
-  const isFavorite = () => favorites.find((el) => +el.game_id === data?.id);
+  const isFavorite = () => favorites.some((el) => +el.game_id === data?.id);
   const navigate = useNavigate();
   const location = useLocation();
   const isGamePage = /^\/games\/[^/]+\/\d+$/.test(location.pathname);

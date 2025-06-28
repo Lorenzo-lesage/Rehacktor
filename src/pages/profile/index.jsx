@@ -4,13 +4,13 @@ import FavoritesContext from "../../context/FavoritesContext";
 import {
   Box,
   Typography,
-  List,
-  ListItem,
   IconButton,
   Alert,
   Tooltip,
   Avatar,
   Divider,
+  Grid,
+  Button,
 } from "@mui/material";
 import { Link } from "react-router";
 import CardFavoriteItem from "../../components/game/CardFavoriteItem";
@@ -18,6 +18,7 @@ import useAvatarUrl from "../../hooks/useAvatarUrl";
 import PanToolAltIcon from "@mui/icons-material/PanToolAlt";
 import SportsEsportsIcon from "@mui/icons-material/SportsEsports";
 import EditNoteIcon from "@mui/icons-material/EditNote";
+import ArrowCircleRightIcon from "@mui/icons-material/ArrowCircleRight";
 
 function ProfilePage() {
   /*
@@ -201,12 +202,12 @@ function ProfilePage() {
                 There are no favorites yet. Explore our games{" "}
                 <PanToolAltIcon sx={{ transform: "rotate(90deg)" }} />
               </Typography>
-              <Tooltip title="Go ti catalog">
+              <Tooltip title="Go to catalog">
                 <Link to="/">
                   <IconButton
                     size="small"
                     sx={{ border: "1px solid" }}
-                    color="Text.primary"
+                    color="text.primary"
                   >
                     <SportsEsportsIcon />
                   </IconButton>
@@ -215,27 +216,36 @@ function ProfilePage() {
             </Box>
           </Alert>
         ) : (
-          <List
-            sx={{
-              mt: 2,
-              display: "flex",
-              flexWrap: "wrap",
-              justifyContent: "end",
-              gap: 2,
-            }}
-          >
-            {sortedFavorites.map((game) => (
-              <ListItem
-                key={game.id}
-                disableGutters
-                sx={{
-                  flex: "2",
-                }}
-              >
-                <CardFavoriteItem favorite={game} />
-              </ListItem>
-            ))}
-          </List>
+          <>
+            <Grid
+              container
+              spacing={2}
+              sx={{
+                mt: 2,
+                justifyContent: "center",
+                width: '100%',
+              }}
+            >
+              {sortedFavorites.slice(0, 2).map((game) => (
+                <Grid size={{ xs: 2, md: 3 }} key={game.id} sx={{ flexGrow: 1 }}>
+                  <CardFavoriteItem favorite={game} />
+                </Grid>
+              ))}
+            </Grid>
+
+            <Box sx={{ mt: 2 }}>
+              <Link to="/whishlist">
+                <Button
+                  variant="text"
+                  color="primary"
+                  size="small"
+                  endIcon={<ArrowCircleRightIcon />}
+                >
+                  Show all favorites
+                </Button>
+              </Link>
+            </Box>
+          </>
         )}
       </Box>
     </Box>

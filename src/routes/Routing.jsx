@@ -2,6 +2,7 @@ import { BrowserRouter, Routes, Route } from "react-router";
 import Layout from "../layout/Layout";
 import HomePage from "../pages/homepage/index";
 import ErrorPage from "../pages/error/index";
+import GenreListPage from "../pages/genrelistpage/index";
 import GenrePage from "../pages/genrepage/index";
 import GamePage from "../pages/gamepage/index";
 import SearchPage from "../pages/searchpage/index";
@@ -16,6 +17,7 @@ import YearGamesPage from "../pages/yeargamepage/index";
 import TopGamesLastYear from "../pages/topgameslastyear/index";
 import TopAllTimeGamesPage from "../pages/topalltimegamespage/index";
 import AllGamesPage from "../pages/allgamespage";
+import WhishListPage from "../pages/whishlistpage/index";
 
 export function Routing() {
   /*
@@ -30,6 +32,8 @@ export function Routing() {
         <Route element={<Layout />}>
           {/* Home page */}
           <Route path="/" element={<HomePage />} />
+          {/* Genre List page */}
+          <Route path="/genres" element={<GenreListPage />} />
           {/* Genre game */}
           <Route path="/games/:genre" element={<GenrePage />} />
           {/* Details game */}
@@ -44,6 +48,8 @@ export function Routing() {
           <Route path="/account" element={<AccountPage />} />
           {/* Profile page */}
           <Route path="/profile" element={<ProfilePage />} />
+          {/* WhishList page */}
+          <Route path="/whishlist" element={<WhishListPage />} />
           {/* Top games page */}
           <Route path="/top-games" element={<TopGamesPage />} />
           {/* Top games month page */}

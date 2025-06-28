@@ -1,10 +1,4 @@
-import {
-  Card,
-  Typography,
-  Box,
-  Tooltip,
-  IconButton,
-} from "@mui/material";
+import { Card, Typography, Box, Tooltip, IconButton } from "@mui/material";
 import LazyLoadGameImage from "../animationComponent/LazyLoadGameImage";
 import { Link } from "react-router";
 import InfoIcon from "@mui/icons-material/Info";
@@ -23,7 +17,7 @@ function CardFavoriteItem({ favorite }) {
   const { removeFavorite } = useContext(FavoritesContext);
 
   return (
-    <TiltCard sx={{ width: { xs: 150, sm: 290 } }} key={favorite.id}>
+    <TiltCard sx={{ width: '100%' }} key={favorite.id}>
       <Box
         sx={{
           height: { xs: 150, sm: "15rem" },
@@ -31,38 +25,15 @@ function CardFavoriteItem({ favorite }) {
           position: "relative",
         }}
       >
-        <LazyLoadGameImage image={game_image} />
-        <Tooltip title="Go to Detail" placement="top">
-          <IconButton
-            size="small"
-            sx={{
-              position: "absolute",
-              top: "0.5rem",
-              right: "0.5rem",
-              zIndex: 1,
-            }}
-            component={Link}
-            to={`/games/${slug}/${game_id}`}
-          >
-            <InfoIcon
-              sx={{
-                color: "yellow",
-                filter: "drop-shadow(1px 2px 2px rgba(0,0,0))",
-                ":hover": {
-                  filter: "drop-shadow(1px 2px 5px rgba(0,0,0))",
-                  transform: "scale(1.2) rotateY(720deg)",
-                },
-                transition: "all 0.3s ease-in-out",
-              }}
-            />
-          </IconButton>
-        </Tooltip>
+        <Link to={`/games/${slug}/${game_id}`}>
+          <LazyLoadGameImage image={game_image} />
+        </Link>
         <Tooltip title="Remove from Favorite" placement="top">
           <IconButton
             aria-label="remove favorite"
             size="small"
             onClick={() => removeFavorite(game_id)}
-            sx={{ ml: 1, position: "absolute", top: "0.5rem", left: "0.5rem" }}
+            sx={{ ml: 1, position: "absolute", top: "0.5rem", right: "0.5rem" }}
           >
             <RemoveCircleIcon
               sx={{
