@@ -1,7 +1,7 @@
 import { Box, Typography, Divider, Avatar } from "@mui/material";
 import { NavLink } from "react-router";
 import { useTheme } from "@mui/material/styles";
-import { useContext} from "react";
+import { useContext } from "react";
 import SessionContext from "../../context/SessionContext";
 import useAvatarUrl from "../../hooks/useAvatarUrl";
 
@@ -16,6 +16,12 @@ import EmojiEventsIcon from "@mui/icons-material/EmojiEvents";
 import WorkspacePremiumIcon from "@mui/icons-material/WorkspacePremium";
 import SportsEsportsIcon from "@mui/icons-material/SportsEsports";
 import CategoryIcon from "@mui/icons-material/Category";
+import DevicesIcon from "@mui/icons-material/Devices";
+import StorefrontIcon from "@mui/icons-material/Storefront";
+import LocalOfferOutlinedIcon from "@mui/icons-material/LocalOfferOutlined";
+import BusinessOutlinedIcon from "@mui/icons-material/BusinessOutlined";
+import CodeOutlinedIcon from "@mui/icons-material/CodeOutlined";
+import CreateOutlinedIcon from '@mui/icons-material/CreateOutlined';
 
 function SideBar({ navbarHidden }) {
   /*
@@ -94,7 +100,7 @@ function SideBar({ navbarHidden }) {
             "&::-webkit-scrollbar": {
               display: "none",
             },
-            padding: "0 0.5rem 0 0.5rem",
+            padding: "0 0.5rem 1rem 0.5rem",
           }}
         >
           {/* account section */}
@@ -345,6 +351,97 @@ function SideBar({ navbarHidden }) {
             </Box>
 
             <Divider />
+          </Box>
+
+          {/* Browse section */}
+          <Box>
+            {/* Browse */}
+            <Box>
+              <Typography
+                variant="h5"
+                sx={{
+                  display: "flex",
+                  alignItems: "center",
+                  padding: "0.7rem 1rem",
+                  fontWeight: 600,
+                  color: "text.primary",
+                }}
+              >
+                Browse
+              </Typography>
+            </Box>
+
+            {/* Platforms */}
+            <Box>
+              <NavLink to="/platforms">
+                {({ isActive }) => (
+                  <Typography variant="body1" sx={typographyHoverSx(isActive)}>
+                    <DevicesIcon sx={{ mr: 1 }} fontSize="small" />
+                    Platforms
+                  </Typography>
+                )}
+              </NavLink>
+            </Box>
+
+            {/* Stores */}
+            <Box>
+              <NavLink to="/stores">
+                {({ isActive }) => (
+                  <Typography variant="body1" sx={typographyHoverSx(isActive)}>
+                    <StorefrontIcon sx={{ mr: 1 }} fontSize="small" />
+                    Stores
+                  </Typography>
+                )}
+              </NavLink>
+            </Box>
+
+            {/* Tags */}
+            <Box>
+              <NavLink to="/tags">
+                {({ isActive }) => (
+                  <Typography variant="body1" sx={typographyHoverSx(isActive)}>
+                    <LocalOfferOutlinedIcon sx={{ mr: 1 }} fontSize="small" />
+                    Tags
+                  </Typography>
+                )}
+              </NavLink>
+            </Box>
+
+            {/* Publishers */}
+            <Box>
+              <NavLink to="/publishers">
+                {({ isActive }) => (
+                  <Typography variant="body1" sx={typographyHoverSx(isActive)}>
+                    <BusinessOutlinedIcon sx={{ mr: 1 }} fontSize="small" />
+                    Publishers
+                  </Typography>
+                )}
+              </NavLink>
+            </Box>
+
+            {/* Developers */}
+            <Box>
+              <NavLink to="/developers">
+                {({ isActive }) => (
+                  <Typography variant="body1" sx={typographyHoverSx(isActive)}>
+                    <CodeOutlinedIcon sx={{ mr: 1 }} fontSize="small" />
+                    Developers
+                  </Typography>
+                )}
+              </NavLink>
+            </Box>
+
+            {/* Creators */}
+            <Box>
+              <NavLink to="/creators">
+                {({ isActive }) => (
+                  <Typography variant="body1" sx={typographyHoverSx(isActive)}>
+                    <CreateOutlinedIcon sx={{ mr: 1 }} fontSize="small" />
+                    Creators
+                  </Typography>
+                )}
+              </NavLink>
+            </Box>
           </Box>
         </Box>
       </Box>

@@ -66,13 +66,13 @@ function LayoutGamesList({
         alignItems: "center",
       }}
     >
-      <Box sx={{ display: { xs: "block", md: "flex" }, alignItems: "center", justifyContent: "space-between", width: "90%", mb: 2 }}>
-        <Typography variant="h3" gutterBottom sx={titleStyles}>
+      <Box sx={{ display: 'flex', alignItems: "center", justifyContent: { xs: "center", md: "space-between"}, flexDirection: { xs: "column", md: "row" }, width: "90%", mb: 2, mt: 2 }}>
+        <Typography variant="h4" gutterBottom sx={titleStyles}>
           {title}
         </Typography>
 
         {availableOrderings.length > 0 && ordering && setOrdering && (
-          <Box sx={{ mb: 2, width: "100%", maxWidth: 300 }}>
+          <Box sx={{ mb: 2, width: "100%", maxWidth: { xs: "100%", md: 200 } }}>
             <GameOrderingSelect
               ordering={ordering}
               setOrdering={setOrdering}

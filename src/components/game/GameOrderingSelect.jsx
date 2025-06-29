@@ -7,8 +7,10 @@ import {
   ListItemIcon,
   ListItemText,
   useTheme,
+  Typography,
 } from "@mui/material";
 import { styled } from "@mui/material/styles";
+
 import SortIcon from "@mui/icons-material/Sort";
 import CalendarTodayIcon from "@mui/icons-material/CalendarToday";
 import StarIcon from "@mui/icons-material/Star";
@@ -18,8 +20,10 @@ import ArrowDownwardIcon from "@mui/icons-material/ArrowDownward";
 
 const ElegantFormControl = styled(FormControl)(({ theme }) => ({
   "& .MuiInputBase-root": {
-    transition: "all 0.3s cubic-bezier(0.4, 0, 0.2, 1)", 
-
+    transition: "all 0.3s",
+    fontSize: "0.8rem",
+    paddingTop: 4,
+    paddingBottom: 2,
     "&:before": {
       borderBottom: `1px solid ${theme.palette.divider}`,
     },
@@ -33,7 +37,8 @@ const ElegantFormControl = styled(FormControl)(({ theme }) => ({
 
   "& .MuiInputLabel-root": {
     color: theme.palette.text.secondary,
-    fontWeight: 600,
+    fontWeight: 500,
+    fontSize: "1.2rem",
     "&.Mui-focused": {
       color: theme.palette.primary.main,
     },
@@ -42,57 +47,54 @@ const ElegantFormControl = styled(FormControl)(({ theme }) => ({
   "& .MuiSelect-select": {
     display: "flex",
     alignItems: "center",
+    gap: "0.2rem",
     color: theme.palette.text.primary,
     fontWeight: 500,
-    paddingLeft: "1rem",
-    fontSize: "0.5rem", 
-    minHeight: "32px", 
-    lineHeight: "1.2", 
-  },
+    fontSize: "0.8rem",
 
-  "& .MuiSelect-icon": {
-    color: theme.palette.text.secondary,
-    transition: "transform 0.2s ease",
-    fontSize: "0.1rem",
+    "& .MuiListItemIcon-root": {
+      minWidth: 0,
+      marginRight: "0.2rem", 
+      display: "flex",
+      alignItems: "center",
+    },
   },
 
   "&:hover .MuiSelect-icon": {
     color: theme.palette.primary.main,
   },
+
+  "& .MuiSelect-iconOpen": {
+    transform: "rotate(180deg)",
+  },
 }));
 
 const ElegantMenuItem = styled(MenuItem)(({ theme }) => ({
-  padding: "12px 16px",
-  margin: "2px 8px",
-  borderRadius: 8,
+  padding: "8px 12px",
+  borderRadius: 6,
   transition: "all 0.2s ease",
   color: theme.palette.text.secondary,
 
   "&:hover": {
     backgroundColor: theme.palette.action.hover,
-    transform: "translateX(4px)",
+    transform: "translateX(2px)",
 
     "& .MuiListItemIcon-root": {
       color: theme.palette.primary.main,
       transform: "scale(1.1)",
     },
 
-    "& .MuiListItemText-primary": {
+    "& .MuiTypography-root": {
       color: theme.palette.text.primary,
       fontWeight: 600,
     },
   },
 
   "& .MuiListItemIcon-root": {
-    minWidth: 36,
+    minWidth: 32,
     color: theme.palette.text.disabled,
     transition: "all 0.2s ease",
-  },
-
-  "& .MuiListItemText-primary": {
-    fontSize: "0.9rem",
-    fontWeight: 500,
-    transition: "all 0.2s ease",
+    fontSize: "0.8rem",
   },
 }));
 
@@ -138,23 +140,22 @@ function GameOrderingSelect({ ordering = "relevance", setOrdering }) {
   const theme = useTheme();
 
   return (
-    <ElegantFormControl variant="standard" fullWidth>
-      <InputLabel id="elegant-order-label">Sort by</InputLabel>
+    <ElegantFormControl variant="standard" fullWidth size="small">
+      <InputLabel id="elegant-order-label">Sort by:</InputLabel>
       <Select
         labelId="elegant-order-label"
         value={ordering}
-        label="Sort by"
         onChange={(e) => setOrdering(e.target.value)}
         MenuProps={{
           PaperProps: {
             sx: {
               background: theme.palette.background.paper,
-              backdropFilter: "blur(20px)",
+              backdropFilter: "blur(12px)",
               borderRadius: 2,
-              border: `1px solid ${theme.palette.divider}80`,
-              boxShadow: `0 20px 60px ${
+              border: `1px solid ${theme.palette.divider}50`,
+              boxShadow: `0 10px 30px ${
                 theme.palette.mode === "light"
-                  ? "rgba(0, 0, 0, 0.12)"
+                  ? "rgba(0, 0, 0, 0.08)"
                   : "rgba(0, 0, 0, 0.4)"
               }`,
               mt: 1,
@@ -164,8 +165,16 @@ function GameOrderingSelect({ ordering = "relevance", setOrdering }) {
       >
         {orderingOptions.map((option) => (
           <ElegantMenuItem key={option.value} value={option.value}>
-            <ListItemIcon>{option.icon}</ListItemIcon>
-            <ListItemText primary={option.label} />
+            <ListItemIcon>
+              {React.cloneElement(option.icon, { fontSize: "small" })}
+            </ListItemIcon>
+            <ListItemText
+              primary={
+                <Typography fontSize="0.8rem" fontWeight={500}>
+                  {option.label}
+                </Typography>
+              }
+            />
           </ElegantMenuItem>
         ))}
       </Select>

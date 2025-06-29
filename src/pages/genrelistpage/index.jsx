@@ -111,8 +111,11 @@ const GenreListPage = () => {
 
   return (
     <Container sx={{ mt: 4 }}>
-      <Box sx={{ width: "90%"}}>
-        <Typography variant="h3" sx={{ fontWeight: "bold" }}>
+      <Box sx={{ width: "90%" }}>
+        <Typography
+          variant="h4"
+          sx={{ fontWeight: "bold", textAlign: { xs: "center", md: "left" } }}
+        >
           All Genres
         </Typography>
       </Box>
@@ -123,13 +126,13 @@ const GenreListPage = () => {
             <Grid
               size={{ xs: 6, md: 4 }}
               key={genre.id}
-              sx={{ overflow: "hidden" }}
+              sx={{ overflow: "hidden", borderRadius: 3 }}
             >
               <Card
                 elevation={2}
                 sx={{
                   height: 240,
-                  borderRadius: 1,
+                  borderRadius: 3,
                   boxShadow: 3,
                   position: "relative",
                   transition: "transform 0.2s ease-in-out",

@@ -18,6 +18,12 @@ import TopGamesLastYear from "../pages/topgameslastyear/index";
 import TopAllTimeGamesPage from "../pages/topalltimegamespage/index";
 import AllGamesPage from "../pages/allgamespage";
 import WhishListPage from "../pages/whishlistpage/index";
+import PlatformPage from "../pages/platformpage/index";
+import StorePage from "../pages/storespage/index";
+import TagPage from "../pages/tagpage/index";
+import PublisherPage from "../pages/publisherpage/index";
+import DevelopersPage from "../pages/developerspage/index";
+import CreatorPage from "../pages/creatorpage/index";
 
 export function Routing() {
   /*
@@ -64,6 +70,18 @@ export function Routing() {
           <Route path="/top-all-time-games" element={<TopAllTimeGamesPage />} />
           {/* All games page */}
           <Route path="/all-games" element={<AllGamesPage />} />
+          {/* Platform page */}
+          <Route path="/platforms" element={<PlatformPage />} />
+          {/* Store page */}
+          <Route path="/stores" element={<StorePage />} />
+          {/* Tag page */}
+          <Route path="/tags" element={<TagPage />} />
+          {/* Publisher page */}
+          <Route path="/publishers" element={<PublisherPage />} />
+          {/* Developer page */}
+          <Route path="/developers" element={<DevelopersPage />} />
+          {/* Creator page */}
+          <Route path="/creators" element={<CreatorPage />} />
           {/* Error page */}
           <Route path="*" element={<ErrorPage />} />
         </Route>

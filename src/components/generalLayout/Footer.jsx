@@ -116,7 +116,7 @@ function Footer({ footerRef }) {
 
           {/* Risorse */}
           <Stack spacing={1}>
-            <Typography sx={sectionTitleStyle}>Risorse</Typography>
+            <Typography sx={sectionTitleStyle}>Resources</Typography>
             <Link
               href="https://blog.rehacktor.com"
               target="_blank"
@@ -166,7 +166,7 @@ function Footer({ footerRef }) {
 
           {/* Contatti */}
           <Stack spacing={1}>
-            <Typography sx={sectionTitleStyle}>Contatti</Typography>
+            <Typography sx={sectionTitleStyle}>Contact</Typography>
             <Link href="mailto:contact@rehacktor.com" sx={linkStyle}>
               <HiOutlineMail size={16} /> Email
             </Link>

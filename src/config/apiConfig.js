@@ -2,7 +2,7 @@ const RAWG_API_KEY = import.meta.env.VITE_RAWG_API_KEY;
 const YOUTUBE_API_KEY = import.meta.env.VITE_YOUTUBE_API_KEY;
 
 const BASE_URL = "https://api.rawg.io/api";
-const YOUTUBE_BASE_URL = "https://www.googleapis.com/youtube/v3"; 
+const YOUTUBE_BASE_URL = "https://www.googleapis.com/youtube/v3";
 
 const apiConfig = {
   RAWG_API_KEY,
@@ -16,7 +16,13 @@ const apiConfig = {
     gameDetails: (id) => `/games/${id}`,
     gameSearch: () => "/games",
     similarGames: (id) => `/games/${id}/suggested`,
-
+    platforms: "/platforms",
+    stores: "/stores",
+    tags: "/tags",
+    publishers: "/publishers",
+    developers: "/developers",
+    creators: "/creators",
+    creatorRoles: "/creator-roles",
     youtubeSearch: (query) =>
       `${YOUTUBE_BASE_URL}/search?part=snippet&q=${encodeURIComponent(
         query

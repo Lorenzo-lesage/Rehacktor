@@ -253,10 +253,7 @@ export const fetchGamesOfLastYear = async (
 /**
  * Fetch all games
  */
-export const fetchAllGames = async (
-  page = 1,
-  ordering = "-released"
-) => {
+export const fetchAllGames = async (page = 1, ordering = "-released") => {
   const response = await axiosClient.get(apiConfig.endpoints.gamesByDate(), {
     params: {
       ordering,
@@ -321,4 +318,133 @@ export const fetchSimilarGamesFallback = async (game) => {
     console.error("Errore nel fetch dei giochi simili (fallback):", error);
     return [];
   }
+};
+
+/**
+ * Fetch all platforms
+ */
+export const fetchPlatforms = async () => {
+  try {
+    const response = await axiosClient.get(apiConfig.endpoints.platforms);
+    return response.data.results;
+  } catch (error) {
+    console.error("Errore nel fetch delle piattaforme:", error);
+    return [];
+  }
+};
+
+/**
+ * Fetch all stores
+ * @returns
+ */
+export const fetchStores = async () => {
+  try {
+    const response = await axiosClient.get(apiConfig.endpoints.stores);
+    return response.data.results;
+  } catch (error) {
+    console.error("Errore nel fetch delle negozi:", error);
+    return [];
+  }
+};
+
+/**
+ * Fetch paginated tags
+ * @param {number} page
+ * @param {number} pageSize
+ */
+export const fetchTagsPaginated = async (page = 1, pageSize = 20) => {
+  try {
+    const response = await axiosClient.get(apiConfig.endpoints.tags, {
+      params: {
+        page,
+        page_size: pageSize,
+      },
+    });
+
+    return {
+      results: response.data.results,
+      next: response.data.next,
+    };
+  } catch (error) {
+    console.error("Errore nel fetch dei tag:", error);
+    return {
+      results: [],
+      next: null,
+    };
+  }
+};
+
+/**
+ * Fetch all publishers
+ */
+export const fetchPublishersPaginated = async (page = 1, pageSize = 20) => {
+  try {
+    const response = await axiosClient.get(apiConfig.endpoints.publishers, {
+      params: {
+        page,
+        page_size: pageSize,
+      },
+    });
+    return {
+      results: response.data.results,
+      next: response.data.next,
+    };
+  } catch (error) {
+    console.error("Errore nel fetch dei publishers:", error);
+    return {
+      results: [],
+      next: null,
+    };
+  }
+};
+
+/**
+ * Fetch all publishers
+ */
+export const fetchDevelopersPaginated = async (page = 1, pageSize = 20) => {
+  try {
+    const response = await axiosClient.get(apiConfig.endpoints.developers, {
+      params: {
+        page,
+        page_size: pageSize,
+      },
+    });
+    return {
+      results: response.data.results,
+      next: response.data.next,
+    };
+  } catch (error) {
+    console.error("Errore nel fetch dei publishers:", error);
+    return {
+      results: [],
+      next: null,
+    };
+  }
+};
+
+/**
+ * Fetch paginated creators filtered by role 'creator'
+ * @param {number} page
+ */
+export const fetchCreatorsPaginated = async (page = 1) => {
+  try {
+    const response = await axiosClient.get(apiConfig.endpoints.creators, {
+      params: {
+        role: "creator",
+        page,
+      },
+    });
+    return response.data;
+  } catch (error) {
+    console.error("Errore nel fetch dei creators:", error);
+    return { results: [], next: null };
+  }
+};
+
+/**
+ * Fetch paginated creator roles
+ */
+export const fetchCreatorRoles = async () => {
+  const response = await axiosClient.get(apiConfig.endpoints.creatorRoles);
+  return response.data.results; 
 };
