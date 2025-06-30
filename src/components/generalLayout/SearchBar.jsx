@@ -35,7 +35,7 @@ function SearchBar() {
       <Box
         sx={{
           position: "relative",
-          width: { xs: "100%", sm: 200 },
+          width: { xs: "100%", sm: 500 },
           height: 35,
           display: "flex",
           alignItems: "center",
@@ -78,7 +78,7 @@ function SearchBar() {
             p: "0 0.5rem",
             display: "flex",
             alignItems: "center",
-            height: 30,
+            height: 40,
             borderRadius: 2,
             backgroundColor: "background.accent",
             width: "100%",

@@ -5,10 +5,8 @@ import {
   Skeleton,
   CssBaseline,
   Divider,
-  IconButton,
 } from "@mui/material";
 import HideOnScroll from "../animationComponent/HideOnScroll";
-import SettingsOutlinedIcon from "@mui/icons-material/SettingsOutlined";
 
 function HeaderSkeleton(props) {
   return (
@@ -31,19 +29,9 @@ function HeaderSkeleton(props) {
 
             <Box display="flex" alignItems="center" gap={2}>
               {/* Search bar skeleton */}
-              <Box sx={{ display: { xs: "none", md: "flex" }, width: 200 }}>
+              <Box sx={{ display: { xs: "none", md: "flex" }, width: {xs: "100%", sm: 500} }}>
                 <Skeleton variant="rounded" height={36} width="100%" />
               </Box>
-
-              {/* Services button */}
-              <Skeleton variant="rounded" height={36} width={90} />
-
-              {/* Avatar skeleton + button */}
-              <Skeleton variant="circular" width={32} height={32} />
-              <Skeleton variant="text" width={60} />
-
-              {/* Sign in or profile text skeleton */}
-              <Skeleton variant="rounded" height={36} width={80} />
 
               <Divider orientation="vertical" flexItem />
 
@@ -51,11 +39,6 @@ function HeaderSkeleton(props) {
               <Box sx={{ display: { xs: "none", md: "flex" } }}>
                 <Skeleton variant="circular" width={32} height={32} />
               </Box>
-
-              {/* Settings icon */}
-              <IconButton size="small" sx={{ borderRadius: 3 }}>
-                <SettingsOutlinedIcon fontSize="small" color="disabled" />
-              </IconButton>
             </Box>
           </Toolbar>
         </AppBar>

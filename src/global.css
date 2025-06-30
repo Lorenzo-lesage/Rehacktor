@@ -1,6 +1,5 @@
 @import "tailwindcss";
 
-
 /* effect hover card image */
 .hoverImage {
   transition: transform 0.2s ease !important;
@@ -10,6 +9,18 @@
   transform: scale(1.1);
 }
 
+.sidebar {
+  display: none; /* Nascondi di default (mobile) */
+  width: 240px;
+  /* altri stili della sidebar */
+}
+
+/* Media query per desktop: larghezza minima 960px (md in MUI) */
+@media (min-width: 960px) {
+  .sidebar {
+    display: block; /* Mostra la sidebar solo su desktop */
+  }
+}
 
 /* Marquee Animation for scrolling text "Please enter a valid search term" */
 @keyframes marqueeBounce {

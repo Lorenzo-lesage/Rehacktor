@@ -45,7 +45,14 @@ function ProfilePage() {
         borderRadius: 2,
       }}
     >
-      <Typography variant="h4" gutterBottom>
+      <Typography
+        variant="h4"
+        gutterBottom
+        sx={{
+          wordBreak: "break-word",
+          whiteSpace: "normal", 
+        }}
+      >
         Hey{" "}
         {userProfile?.username
           ? userProfile.username.charAt(0).toUpperCase() +
@@ -223,11 +230,15 @@ function ProfilePage() {
               sx={{
                 mt: 2,
                 justifyContent: "center",
-                width: '100%',
+                width: "100%",
               }}
             >
               {sortedFavorites.slice(0, 2).map((game) => (
-                <Grid size={{ xs: 2, md: 3 }} key={game.id} sx={{ flexGrow: 1 }}>
+                <Grid
+                  size={{ xs: 2, md: 3 }}
+                  key={game.id}
+                  sx={{ flexGrow: 1 }}
+                >
                   <CardFavoriteItem favorite={game} />
                 </Grid>
               ))}

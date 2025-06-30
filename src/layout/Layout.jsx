@@ -43,6 +43,7 @@ function Layout() {
 
         {/* Main layout: Sidebar + Content */}
         <Box display="flex" flex={1}>
+          
           {/* Sidebar */}
           <SideBar navbarHidden={trigger} />
 
@@ -53,9 +54,10 @@ function Layout() {
               flexGrow: 1,
               padding: 2,
               mt: 8,
+              minHeight: '100vh',
             }}
           >
-            <Box sx={{ display: { xs: "block", md: "none" } }}>
+            <Box sx={{ display: { xs: "block", sm: "none" } }}>
               <SearchBar />
             </Box>
             <Outlet />

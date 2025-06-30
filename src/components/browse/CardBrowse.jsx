@@ -6,7 +6,6 @@ import {
   Box,
   Divider,
 } from "@mui/material";
-import PersonOutlineOutlinedIcon from "@mui/icons-material/PersonOutlineOutlined";
 
 const CardBrowse = ({
   title,
@@ -95,7 +94,6 @@ const CardBrowse = ({
               </Typography>
               <Typography variant="body2" fontSize={{ xs: 10, md: 12 }}>
                 {count.toLocaleString()}{" "}
-                <PersonOutlineOutlinedIcon fontSize="10" />
               </Typography>
             </Box>
             <Divider sx={{ my: 1 }} />
