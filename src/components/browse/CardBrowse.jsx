@@ -14,6 +14,8 @@ const CardBrowse = ({
   items = [],
   image,
   icon: Icon,
+  extraContent,
+  extraimage,
 }) => (
   <Box sx={{ overflow: "hidden", borderRadius: 3 }}>
     <Card
@@ -32,7 +34,7 @@ const CardBrowse = ({
           sx={{
             position: "absolute",
             inset: 0,
-            backgroundImage: `linear-gradient(to top, rgba(0,0,0)20%, rgba(0,0,0,0.3)80%), url(${
+            backgroundImage: `linear-gradient(to top, rgba(0,0,0)20%, rgba(0,0,0,0.5)80%), url(${
               image || "https://via.placeholder.com/400x200?text=No+Image"
             })`,
             backgroundSize: "cover",
@@ -61,13 +63,30 @@ const CardBrowse = ({
             >
               {Icon && <Icon />}
             </Box>
-            <Typography
-              variant="h6"
-              fontWeight="bold"
-              fontSize={{ xs: 15, md: 20 }}
-            >
-              {title}
-            </Typography>
+            <Box display="flex" flexDirection="column" width={"100%"}>
+              {extraimage && (
+                <Box sx={{ display: "flex", justifyContent: "center" }}>
+                  {extraimage}
+                </Box>
+              )}
+              <Typography
+                variant="h6"
+                fontWeight="bold"
+                fontSize={{ xs: 15, md: 20 }}
+              >
+                {title}
+              </Typography>
+              {extraContent && (
+                <Box
+                  sx={{
+                    display: "flex",
+                    justifyContent: "center",
+                  }}
+                >
+                  {extraContent}
+                </Box>
+              )}
+            </Box>
           </Box>
           <Box padding={{ xs: 0, md: 1 }}>
             <Box display="flex" justifyContent="space-between">

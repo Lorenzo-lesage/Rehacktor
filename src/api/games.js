@@ -448,3 +448,12 @@ export const fetchCreatorRoles = async () => {
   const response = await axiosClient.get(apiConfig.endpoints.creatorRoles);
   return response.data.results; 
 };
+
+/**
+ * Fetch creator details
+ */
+export const fetchCreatorDetails = async (id) => {
+  const response = await axiosClient.get(`${apiConfig.endpoints.creators}/${id}`);
+  return response.data;
+};
+

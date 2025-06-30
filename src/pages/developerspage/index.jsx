@@ -1,11 +1,16 @@
 import { useInfiniteQuery } from "@tanstack/react-query";
 import { fetchDevelopersPaginated } from "../../api/games";
-import { useEffect, useRef } from "react";
 import BrowseLayout from "../../components/browse/BrowseLayout";
 import CardBrowse from "../../components/browse/CardBrowse";
 import { Box, Chip, CircularProgress } from "@mui/material";
 
 const DevelopersPage = () => {
+  /*
+  |----------------------------------------------------
+  | Data
+  |----------------------------------------------------
+  */
+
   const {
     data,
     fetchNextPage,
@@ -21,27 +26,13 @@ const DevelopersPage = () => {
     staleTime: Infinity,
   });
 
-  const observerRef = useRef();
-
   const allDevelopers = data?.pages.flatMap((page) => page.results) || [];
 
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      (entries) => {
-        if (entries[0].isIntersecting && hasNextPage) {
-          fetchNextPage();
-        }
-      },
-      { threshold: 1.0 }
-    );
-
-    const currentRef = observerRef.current;
-    if (currentRef) observer.observe(currentRef);
-
-    return () => {
-      if (currentRef) observer.unobserve(currentRef);
-    };
-  }, [fetchNextPage, hasNextPage]);
+  /*
+  |----------------------------------------------------
+  | Return
+  |----------------------------------------------------
+  */
 
   return (
     <BrowseLayout
@@ -59,12 +50,20 @@ const DevelopersPage = () => {
         />
       )}
       bottomContent={
-        <Box ref={observerRef} sx={{ textAlign: "center", my: 4 }}>
-          <Chip
-            label={isFetchingNextPage ? "Loading..." : "More Developers"}
-            icon={isFetchingNextPage && <CircularProgress size={16} />}
-          />
-        </Box>
+        hasNextPage && (
+          <Box sx={{ textAlign: "center", my: 4 }}>
+            <Chip
+              label={isFetchingNextPage ? "Loading..." : "Show more developers"}
+              icon={
+                isFetchingNextPage ? <CircularProgress size={16} /> : undefined
+              }
+              onClick={() => fetchNextPage()}
+              clickable={!isFetchingNextPage}
+              disabled={isFetchingNextPage}
+              sx={{ cursor: isFetchingNextPage ? "default" : "pointer" }}
+            />
+          </Box>
+        )
       }
     />
   );
