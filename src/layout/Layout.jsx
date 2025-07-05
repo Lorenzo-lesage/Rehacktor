@@ -31,7 +31,7 @@ function Layout() {
         sx={(theme) => ({
           backgroundImage: backgroundImage
             ? `linear-gradient(${theme.palette.background.default}cc 60%, ${theme.palette.background.default}), url(${backgroundImage})`
-            : `linear-gradient(${theme.palette.background.default}cc, ${theme.palette.background.default}), url('../../giochi.jpg')`,
+            : `linear-gradient(${theme.palette.background.default}cc, ${theme.palette.background.default}), url('../../primo.jpg')`,
           backgroundSize: "cover",
           backgroundPosition: "center",
           backgroundRepeat: "no-repeat",

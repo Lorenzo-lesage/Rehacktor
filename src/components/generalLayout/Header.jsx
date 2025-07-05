@@ -48,9 +48,24 @@ function Header(props) {
           }}
         >
           <Toolbar sx={{ justifyContent: "space-between" }}>
-            <Typography variant="h6" component="div" fontWeight="bold">
-              <Link to="/">Rehacktor</Link>
-            </Typography>
+            <Link to="/">
+              {" "}
+              <Box
+                component="img"
+                src="../../../logo2.png"
+                alt="Rehacktor Logo"
+                sx={{
+                  width: 50,
+                  height: 50,
+                  transform: "scale(2)",
+                  objectFit: "cover",
+                  transition: "all 0.25s ease",
+                  ":hover": {
+                    transform: "scale(2.1)",
+                  },
+                }}
+              />
+            </Link>
 
             <Box display="flex" alignItems="center" gap={2}>
               {/* Search Bar */}

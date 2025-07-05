@@ -41,10 +41,7 @@ import "yet-another-react-lightbox/plugins/thumbnails.css";
 import { Fullscreen } from "yet-another-react-lightbox/plugins";
 import "yet-another-react-lightbox/plugins/counter.css";
 import Counter from "yet-another-react-lightbox/plugins/counter";
-import {
-  fetchGameMovies,
-  fetchSimilarGamesFallback,
-} from "../../api/games.js";
+import { fetchGameMovies, fetchSimilarGamesFallback } from "../../api/games.js";
 import Video from "yet-another-react-lightbox/plugins/video";
 import "yet-another-react-lightbox/styles.css";
 import YoutubeModal from "../../components/game/YoutubeDialog.jsx";
@@ -184,7 +181,6 @@ function GamePage() {
 
     loadGameAndSimilar();
   }, [gameId]);
-  
 
   /*
   |------------------------------------------------
@@ -229,80 +225,100 @@ function GamePage() {
   if (!data) return null;
 
   return (
-    <Container sx={{ paddingBottom: 8 }}>
-      <Paper sx={{ p: 0, backgroundColor: "transparent" }} elevation={0}>
-        <Stack spacing={3}>
-          {/* Header row: release date, rating stars, favorite */}
-          <Box
-            sx={{
-              display: "flex",
-              justifyContent: "space-between",
-              alignItems: "center",
-            }}
-          >
-            <Chip
-              label={data.released ?? "Unknown release date"}
-              color="background.default"
-              variant="outlined"
-              sx={{ p: 1 }}
-            />
-
-            <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
-              <Rating
-                name="game-rating"
-                value={data.rating ?? 0}
-                precision={0.1}
-                max={5}
-                sx={{ color: "text.primary" }}
-                readOnly
-                emptyIcon={
-                  <StarIcon
-                    style={{ opacity: 1, color: "text.primary" }}
-                    fontSize="inherit"
-                  />
-                }
+    <Box sx={{ paddingBottom: 8, mt: 2 }}>
+      <Container>
+        <Paper sx={{ p: 0, backgroundColor: "transparent" }} elevation={0}>
+          <Stack spacing={3}>
+            {/* Header row: release date, rating stars, favorite */}
+            <Box
+              sx={{
+                display: "flex",
+                flexDirection: { xs: "column", md: "row" },
+                justifyContent: "space-between",
+                alignItems: { xs: "flex-start", md: "center" },
+                gap: 2, // spazio verticale su mobile
+                flexWrap: "wrap", // fallback per contenuti lunghi
+                mt: 2,
+              }}
+            >
+              {/* Release Date */}
+              <Chip
+                label={data.released ?? "Unknown release date"}
+                color="default"
+                variant="outlined"
+                sx={{ p: 1 }}
               />
-              <Typography
-                variant="body1"
-                color="text.secondary"
-                sx={{ minWidth: 32 }}
-              >
-                {data.rating?.toFixed(1) ?? "N/A"}
-              </Typography>
-            </Box>
 
-            {/* Metacritic and link */}
-            <Box sx={{ display: "flex", flexDirection: "column" }}>
-              <Box sx={{ display: "flex", gap: 1, alignItems: "center" }}>
-                <Typography variant="body1">Metacritic:</Typography>
-                <Typography variant="body2" color="text.secondary">
-                  {data.metacritic ?? "N/A"}/100
+              {/* Rating */}
+              <Box
+                sx={{
+                  display: "flex",
+                  alignItems: "center",
+                  gap: 1,
+                }}
+              >
+                <Rating
+                  name="game-rating"
+                  value={data.rating ?? 0}
+                  precision={0.1}
+                  max={5}
+                  sx={{ color: "text.primary" }}
+                  readOnly
+                  emptyIcon={
+                    <StarIcon
+                      style={{ opacity: 1, color: "text.primary" }}
+                      fontSize="inherit"
+                    />
+                  }
+                />
+                <Typography
+                  variant="body1"
+                  color="text.secondary"
+                  sx={{ minWidth: 32 }}
+                >
+                  {data.rating?.toFixed(1) ?? "N/A"}
                 </Typography>
               </Box>
-              {data.metacritic_url && (
-                <MuiLink
-                  href={data.metacritic_url}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  variant="body2"
-                >
-                  View Metacritic page
-                </MuiLink>
-              )}
+
+              {/* Metacritic */}
+              <Box
+                sx={{
+                  display: "flex",
+                  flexDirection: "column",
+                  alignItems: { xs: "flex-start", md: "flex-end" },
+                }}
+              >
+                <Box sx={{ display: "flex", gap: 1, alignItems: "center" }}>
+                  <Typography variant="body1">Metacritic:</Typography>
+                  <Typography variant="body2" color="text.secondary">
+                    {data.metacritic ?? "N/A"}/100
+                  </Typography>
+                </Box>
+                {data.metacritic_url && (
+                  <MuiLink
+                    href={data.metacritic_url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    variant="body2"
+                  >
+                    View Metacritic page
+                  </MuiLink>
+                )}
+              </Box>
+
+              {/* Favorite Toggle */}
+              <ToggleFavorite data={data} />
             </Box>
 
-            <ToggleFavorite data={data} />
-          </Box>
-
-          <Grid container spacing={2} sx={{ mt: 2 }}>
-            {/* Title & Info Section */}
-            <Grid size={8}>
-              <Typography
-                variant="h3"
-                component="h1"
-                textAlign="center"
-                color="text.primary"
-              >
+            {/* Title mobile */}
+            <Box
+              sx={{
+                display: { xs: "flex", md: "none" },
+                alignItems: "center",
+                flexDirection: "column",
+              }}
+            >
+              <Typography variant="h3" textAlign="center" color="text.primary">
                 {data.name ?? "Untitled"}
               </Typography>
 
@@ -316,181 +332,193 @@ function GamePage() {
                   ESRB Rating: {data.esrb_rating.name}
                 </Typography>
               )}
-              <Typography
-                variant="body1"
-                color="text.primary"
-                textAlign="center"
-              >
-                {data.description_raw ?? "No description available."}
-              </Typography>
-            </Grid>
+            </Box>
 
             <Grid
-              size={4}
+              container
+              spacing={1}
               sx={{
+                mt: 2,
                 display: "flex",
-                flexDirection: "column",
-                maxWidth: 300,
-                mx: "auto",
+                flexDirection: { xs: "column-reverse", md: "row" },
               }}
             >
-              <Box sx={{ mt: 2 }}>
-                {images.length > 0 ? (
-                  <>
-                    <Box sx={{ display: "flex", flexDirection: "column" }}>
-                      {/* Grid di immagini */}
-                      <Box
-                        sx={{
-                          display: "flex",
-                          flexDirection: "column",
-                          gap: 1,
-                        }}
-                      >
-                        {/* Prima immagine grande */}
-                        <Box sx={{ position: "relative" }}>
-                          <Box
-                            sx={{
-                              display: "grid",
-                              gap: 1,
-                              gridTemplateColumns: "2fr 1fr",
-                              gridTemplateRows: "1fr 1fr",
-                              height: 200,
-                              maxWidth: 400,
-                            }}
-                          >
-                            {images.slice(0, 3).map((img, index) => (
+              {/* Title & Info Section */}
+              <Grid size={{ xs: 12, md: 8 }}>
+                <Typography
+                  variant="h3"
+                  textAlign="center"
+                  color="text.primary"
+                  sx={{ display: { xs: "none", md: "block" } }}
+                >
+                  {data.name ?? "Untitled"}
+                </Typography>
+
+                {data.esrb_rating && (
+                  <Typography
+                    variant="body2"
+                    color="text.secondary"
+                    textAlign="center"
+                    sx={{
+                      fontWeight: "bold",
+                      display: { xs: "none", md: "block" },
+                    }}
+                  >
+                    ESRB Rating: {data.esrb_rating.name}
+                  </Typography>
+                )}
+                <Typography
+                  variant="body1"
+                  color="text.primary"
+                  textAlign="center"
+                >
+                  {data.description_raw ?? "No description available."}
+                </Typography>
+              </Grid>
+
+              <Grid
+                size={{ xs: 12, md: 4 }}
+                sx={{
+                  display: "flex",
+                  flexDirection: "column",
+                  width: { xs: "100%", md: 300 },
+                  mx: "auto",
+                  mb: { xs: 2, md: 0 },
+                }}
+              >
+                <Box sx={{ mt: 2 }}>
+                  {images.length > 0 ? (
+                    <>
+                      <Box sx={{ display: "flex", flexDirection: "column" }}>
+                        {/* Grid di immagini */}
+                        <Box
+                          sx={{
+                            display: "flex",
+                            flexDirection: "column",
+                            gap: 1,
+                          }}
+                        >
+                          {/* Prima immagine grande */}
+                          <Box sx={{ position: "relative" }}>
+                            <Box
+                              sx={{
+                                display: "grid",
+                                gap: 1,
+                                gridTemplateColumns: "2fr 1fr",
+                                gridTemplateRows: "1fr 1fr",
+                                height: 200,
+                                maxWidth: 400,
+                              }}
+                            >
+                              {images.slice(0, 3).map((img, index) => (
+                                <Box
+                                  key={index}
+                                  component="img"
+                                  src={img}
+                                  alt={`Screenshot ${index + 1}`}
+                                  sx={{
+                                    width: "100%",
+                                    height: "100%",
+                                    objectFit: "cover",
+                                    borderRadius: 1,
+                                    cursor: "pointer",
+                                    boxShadow: "0 0 8px rgba(0,0,0,0.3)",
+                                    transition: "transform 0.3s",
+                                    "&:hover": { transform: "scale(1.05)" },
+                                    ...(index === 0 && { gridRow: "1 / 3" }),
+                                  }}
+                                  onClick={() => {
+                                    setPhotoIndex(index);
+                                    setIsOpen(true);
+                                  }}
+                                />
+                              ))}
+                            </Box>
+
+                            <Button
+                              variant="text"
+                              size="small"
+                              startIcon={<PhotoLibraryIcon />}
+                              onClick={() => {
+                                setPhotoIndex(0);
+                                setIsOpen(true);
+                              }}
+                              sx={{
+                                color: "rgba(255, 255, 255, 0.8)",
+                                "&:hover": {
+                                  backgroundColor: "rgba(0, 0, 0, 0.8)",
+                                },
+                                position: "absolute",
+                                top: 10,
+                                right: 10,
+                                backgroundColor: "rgba(0, 0, 0, 0.4)",
+                                backdropFilter: "blur(1px)",
+                              }}
+                            >
+                              Gallery ({images.length})
+                            </Button>
+                          </Box>
+
+                          {/* Altre immagini piccole */}
+                          <Box sx={{ display: "flex", gap: 1 }}>
+                            {images.slice(1, 3).map((img, index) => (
                               <Box
-                                key={index}
+                                key={index + 1}
                                 component="img"
                                 src={img}
-                                alt={`Screenshot ${index + 1}`}
+                                alt={`Screenshot ${index + 2}`}
                                 sx={{
-                                  width: "100%",
-                                  height: "100%",
+                                  width: "50%",
+                                  height: 70,
                                   objectFit: "cover",
                                   borderRadius: 1,
                                   cursor: "pointer",
                                   boxShadow: "0 0 8px rgba(0,0,0,0.3)",
                                   transition: "transform 0.3s",
                                   "&:hover": { transform: "scale(1.05)" },
-                                  ...(index === 0 && { gridRow: "1 / 3" }), // Prima immagine occupa 2 righe
                                 }}
                                 onClick={() => {
-                                  setPhotoIndex(index);
+                                  setPhotoIndex(index + 1);
                                   setIsOpen(true);
                                 }}
                               />
                             ))}
                           </Box>
-
-                          <Button
-                            variant="text"
-                            size="small"
-                            startIcon={<PhotoLibraryIcon />}
-                            onClick={() => {
-                              setPhotoIndex(0);
-                              setIsOpen(true);
-                            }}
-                            sx={{
-                              color: "rgba(255, 255, 255, 0.8)",
-                              "&:hover": {
-                                backgroundColor: "rgba(0, 0, 0, 0.8)",
-                              },
-                              position: "absolute",
-                              top: 10,
-                              right: 10,
-                              backgroundColor: "rgba(0, 0, 0, 0.4)",
-                              backdropFilter: "blur(1px)",
-                            }}
-                          >
-                            Gallery ({images.length})
-                          </Button>
-                        </Box>
-
-                        {/* Altre immagini piccole */}
-                        <Box sx={{ display: "flex", gap: 1 }}>
-                          {images.slice(1, 3).map((img, index) => (
-                            <Box
-                              key={index + 1}
-                              component="img"
-                              src={img}
-                              alt={`Screenshot ${index + 2}`}
-                              sx={{
-                                width: "50%",
-                                height: 70,
-                                objectFit: "cover",
-                                borderRadius: 1,
-                                cursor: "pointer",
-                                boxShadow: "0 0 8px rgba(0,0,0,0.3)",
-                                transition: "transform 0.3s",
-                                "&:hover": { transform: "scale(1.05)" },
-                              }}
-                              onClick={() => {
-                                setPhotoIndex(index + 1);
-                                setIsOpen(true);
-                              }}
-                            />
-                          ))}
                         </Box>
                       </Box>
-                    </Box>
-                  </>
-                ) : (
-                  <Typography>
-                    No screenshots available for this game.
-                  </Typography>
-                )}
-              </Box>
-              <Box sx={{ mt: 2 }}>
-                {movies.length > 0 ? (
-                  <>
-                    <Box
-                      sx={{
-                        display: "flex",
-                        alignItems: "center",
-                        position: "relative",
-                      }}
-                    >
-                      {/* Preview del primo trailer */}
-                      <Box
-                        component="img"
-                        src={movies[0].preview}
-                        alt={movies[0].name || "Trailer"}
-                        sx={{
-                          width: "100%",
-                          aspectRatio: "27/16",
-                          objectFit: "cover",
-                          borderRadius: 1,
-                          cursor: "pointer",
-                          flexShrink: 0,
-                          boxShadow: "0 0 8px rgba(0,0,0,0.3)",
-                          transition: "transform 0.3s",
-                          "&:hover": { transform: "scale(1.05)" },
-                        }}
-                        onClick={() => {
-                          if (videoSlides.length > 0) {
-                            setPhotoIndex(images.length);
-                            setIsOpen(true);
-                          } else if (youtubeVideos.length > 0) {
-                            openYouTube(youtubeVideos[0].videoUrl);
-                          }
-                        }}
-                      />
+                    </>
+                  ) : (
+                    <Typography>
+                      No screenshots available for this game.
+                    </Typography>
+                  )}
+                </Box>
+                <Box sx={{ mt: 2 }}>
+                  {movies.length > 0 ? (
+                    <>
                       <Box
                         sx={{
                           display: "flex",
-                          flexDirection: "column",
-                          alignItems: "flex-end",
-                          gap: 1,
-                          position: "absolute",
-                          top: 10,
-                          right: 10,
+                          alignItems: "center",
+                          position: "relative",
                         }}
                       >
-                        <Button
-                          variant="text"
-                          size="small"
-                          startIcon={<PlayArrowIcon />}
+                        {/* Preview del primo trailer */}
+                        <Box
+                          component="img"
+                          src={movies[0].preview}
+                          alt={movies[0].name || "Trailer"}
+                          sx={{
+                            width: "100%",
+                            aspectRatio: "27/16",
+                            objectFit: "cover",
+                            borderRadius: 1,
+                            cursor: "pointer",
+                            flexShrink: 0,
+                            boxShadow: "0 0 8px rgba(0,0,0,0.3)",
+                            transition: "transform 0.3s",
+                            "&:hover": { transform: "scale(1.05)" },
+                          }}
                           onClick={() => {
                             if (videoSlides.length > 0) {
                               setPhotoIndex(images.length);
@@ -499,415 +527,442 @@ function GamePage() {
                               openYouTube(youtubeVideos[0].videoUrl);
                             }
                           }}
+                        />
+                        <Box
                           sx={{
-                            color: "rgba(255, 255, 255, 0.8)",
-                            "&:hover": {
-                              backgroundColor: "rgba(0, 0, 0, 0.8)",
-                            },
-                            backgroundColor: "rgba(0, 0, 0, 0.2)",
-                            backdropFilter: "blur(1px)",
+                            display: "flex",
+                            flexDirection: "column",
+                            alignItems: "flex-end",
+                            gap: 1,
+                            position: "absolute",
+                            top: 10,
+                            right: 10,
                           }}
                         >
-                          Trailer
-                        </Button>
-
-                        {movies.length > 1 && (
-                          <Typography
-                            variant="caption"
-                            sx={{ color: "rgba(255, 255, 255, 0.8)" }}
+                          <Button
+                            variant="text"
+                            size="small"
+                            startIcon={<PlayArrowIcon />}
+                            onClick={() => {
+                              if (videoSlides.length > 0) {
+                                setPhotoIndex(images.length);
+                                setIsOpen(true);
+                              } else if (youtubeVideos.length > 0) {
+                                openYouTube(youtubeVideos[0].videoUrl);
+                              }
+                            }}
+                            sx={{
+                              color: "rgba(255, 255, 255, 0.8)",
+                              "&:hover": {
+                                backgroundColor: "rgba(0, 0, 0, 0.8)",
+                              },
+                              backgroundColor: "rgba(0, 0, 0, 0.2)",
+                              backdropFilter: "blur(1px)",
+                            }}
                           >
-                            {movies.length} trailer
-                            {movies.length > 1 ? "s" : ""} available
-                          </Typography>
-                        )}
+                            Trailer
+                          </Button>
+
+                          {movies.length > 1 && (
+                            <Typography
+                              variant="caption"
+                              sx={{ color: "rgba(255, 255, 255, 0.8)" }}
+                            >
+                              {movies.length} trailer
+                              {movies.length > 1 ? "s" : ""} available
+                            </Typography>
+                          )}
+                        </Box>
+
+                        {/* Bottone per aprire tutti i trailer */}
                       </Box>
-
-                      {/* Bottone per aprire tutti i trailer */}
-                    </Box>
-                  </>
-                ) : (
-                  <Typography>No trailers available for this game.</Typography>
+                    </>
+                  ) : (
+                    <Typography>
+                      No trailers available for this game.
+                    </Typography>
+                  )}
+                </Box>
+                {isOpen && (
+                  <Lightbox
+                    open={isOpen}
+                    close={() => setIsOpen(false)}
+                    slides={slides}
+                    index={photoIndex}
+                    onIndexChange={setPhotoIndex}
+                    plugins={[Thumbnails, Fullscreen, Counter, Video]}
+                    thumbnails={{ showToggle: true }}
+                  />
                 )}
-              </Box>
-              {isOpen && (
-                <Lightbox
-                  open={isOpen}
-                  close={() => setIsOpen(false)}
-                  slides={slides}
-                  index={photoIndex}
-                  onIndexChange={setPhotoIndex}
-                  plugins={[Thumbnails, Fullscreen, Counter, Video]}
-                  thumbnails={{ showToggle: true }}
+                <YoutubeModal
+                  open={ytModalOpen}
+                  onClose={() => setYtModalOpen(false)}
+                  videoId={ytVideoId}
                 />
-              )}
-              <YoutubeModal
-                open={ytModalOpen}
-                onClose={() => setYtModalOpen(false)}
-                videoId={ytVideoId}
-              />
+              </Grid>
             </Grid>
-          </Grid>
 
-          {/* Added By Status */}
-          <Box
-            sx={{
-              width: "100%",
-              display: "flex",
-              gap: 1,
-              justifyContent: "space-between",
-            }}
-          >
-            <GameUserEngagement data={data.added_by_status} />
-            {/* Additional stats in chips */}
+            {/* Added By Status */}
             <Box
               sx={{
-                textAlign: "end",
+                width: "100%",
+                display: { xs: "block", md: "flex" },
+                gap: 1,
+                justifyContent: "space-between",
               }}
             >
-              <Typography variant="h6" gutterBottom>
-                Additional Stats:
-              </Typography>
-
+              <GameUserEngagement data={data.added_by_status} />
+              {/* Additional stats in chips */}
               <Box
                 sx={{
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "flex-end",
-                  gap: 1,
-                  mb: 0.5,
+                  textAlign: "end",
                 }}
               >
-                <Typography color="text.primary">
-                  <strong>Games in the Series:</strong>{" "}
+                <Typography variant="h6" gutterBottom>
+                  Additional Stats:
                 </Typography>
-                <Typography color="text.secondary">
-                  {data.game_series_count ?? "N/A"}
-                </Typography>
-                <FormatListNumberedIcon fontSize="small" />
-              </Box>
 
-              <Box
-                sx={{
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "flex-end",
-                  gap: 1,
-                  mb: 0.5,
-                }}
-              >
-                <Typography color="text.primary">
-                  <strong>Parent Achievements:</strong>{" "}
-                </Typography>
-                <Typography color="text.secondary">
-                  {data.parent_achievements_count ?? "N/A"}
-                </Typography>
-                <MilitaryTechIcon fontSize="small" />
-              </Box>
-
-              <Box
-                sx={{
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "flex-end",
-                  gap: 1,
-                  mb: 0.5,
-                }}
-              >
-                <Typography color="text.primary">
-                  <strong>Average Playtime:</strong>
-                </Typography>
-                <Typography color="text.secondary">
-                  {data.playtime ?? "N/A"} hours
-                </Typography>
-                <AccessTimeIcon fontSize="small" />
-              </Box>
-
-              <Box
-                sx={{
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "flex-end",
-                  gap: 1,
-                  mb: 0.5,
-                }}
-              >
-                <Typography color="text.primary">
-                  <strong>Total Ratings Count:</strong>{" "}
-                </Typography>
-                <Typography color="text.secondary">
-                  {data.ratings_count ?? "N/A"}
-                </Typography>
-                <StarRateIcon fontSize="small" />
-              </Box>
-
-              <Box
-                sx={{
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "flex-end",
-                  gap: 1,
-                  mb: 0.5,
-                }}
-              >
-                <Typography color="text.primary">
-                  <strong>Achievements:</strong>{" "}
-                </Typography>
-                <Typography color="text.secondary">
-                  {data.achievements_count ?? "N/A"}
-                </Typography>
-                <EmojiEventsIcon fontSize="small" />
-              </Box>
-
-              <Box
-                sx={{
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "flex-end",
-                  gap: 1,
-                }}
-              >
-                <Typography color="text.primary">
-                  <strong>Users Who Added the Game:</strong>{" "}
-                </Typography>
-                <Typography color="text.secondary">
-                  {data.added ?? "N/A"}
-                </Typography>
-                <GroupAddIcon fontSize="small" />
-              </Box>
-            </Box>
-          </Box>
-
-          {/* Genres */}
-          <Box
-            sx={{
-              display: "flex",
-              justifyContent: "space-between",
-              alignItems: "center",
-            }}
-          >
-            <GenreTags genres={data.genres} styleGenre={styleGenre} />
-
-            {/* Stores */}
-            <StoreIcons
-              stores={data.stores}
-              styleStores={styleStores}
-              styleIconStores={styleIconStores}
-            />
-
-            {/* Platforms */}
-            <PlatformIcons
-              platforms={data.parent_platforms}
-              styleIconPlatform={styleIconPlatform}
-            />
-          </Box>
-
-          <Grid container spacing={2}>
-            <Grid size={8}>
-              <Box
-                sx={{
-                  display: "flex",
-                  flexDirection: "column",
-                  justifyContent: "space-between",
-                  height: "100%",
-                }}
-              >
-                {/* Reviews */}
                 <Box
                   sx={{
                     display: "flex",
-                    gap: 2,
-                    width: "100%",
-                    flexDirection: "column",
+                    alignItems: "center",
+                    justifyContent: "flex-end",
+                    gap: 1,
+                    mb: 0.5,
                   }}
                 >
-                  {/* Ratings */}
-                  <Box sx={{ width: "100%" }}>
-                    {data.ratings?.length > 0 ? (
-                      <Box
-                        sx={{
-                          display: "flex",
-                          flexDirection: "column",
-                          gap: 1,
-                        }}
-                      >
-                        {data.ratings.map((rating, index) => (
-                          <Box key={index}>
-                            <Box
-                              sx={{
-                                display: "flex",
-                                justifyContent: "space-between",
-                              }}
-                            >
-                              <Typography
-                                variant="body2"
-                                sx={{ color: "text.primary" }}
-                              >
-                                {rating.title}
-                              </Typography>
-                              <Typography
-                                variant="body2"
-                                sx={{ color: "text.secondary" }}
-                              >
-                                {rating.count} votes
-                              </Typography>
-                            </Box>
-                            <LinearProgress
-                              variant="determinate"
-                              value={rating.percent}
-                              sx={{
-                                height: 8,
-                                borderRadius: 5,
-                                backgroundColor: "#background.default",
-                                "& .MuiLinearProgress-bar": {
-                                  backgroundColor: "#background.paper",
-                                },
-                              }}
-                            />
-                          </Box>
-                        ))}
-                      </Box>
-                    ) : (
-                      <Typography color="text.secondary">
-                        No ratings available
-                      </Typography>
-                    )}
-                  </Box>
+                  <Typography color="text.primary">
+                    <strong>Games in the Series:</strong>{" "}
+                  </Typography>
+                  <Typography color="text.secondary">
+                    {data.game_series_count ?? "N/A"}
+                  </Typography>
+                  <FormatListNumberedIcon fontSize="small" />
+                </Box>
 
+                <Box
+                  sx={{
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "flex-end",
+                    gap: 1,
+                    mb: 0.5,
+                  }}
+                >
+                  <Typography color="text.primary">
+                    <strong>Parent Achievements:</strong>{" "}
+                  </Typography>
+                  <Typography color="text.secondary">
+                    {data.parent_achievements_count ?? "N/A"}
+                  </Typography>
+                  <MilitaryTechIcon fontSize="small" />
+                </Box>
+
+                <Box
+                  sx={{
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "flex-end",
+                    gap: 1,
+                    mb: 0.5,
+                  }}
+                >
+                  <Typography color="text.primary">
+                    <strong>Average Playtime:</strong>
+                  </Typography>
+                  <Typography color="text.secondary">
+                    {data.playtime ?? "N/A"} hours
+                  </Typography>
+                  <AccessTimeIcon fontSize="small" />
+                </Box>
+
+                <Box
+                  sx={{
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "flex-end",
+                    gap: 1,
+                    mb: 0.5,
+                  }}
+                >
+                  <Typography color="text.primary">
+                    <strong>Total Ratings Count:</strong>{" "}
+                  </Typography>
+                  <Typography color="text.secondary">
+                    {data.ratings_count ?? "N/A"}
+                  </Typography>
+                  <StarRateIcon fontSize="small" />
+                </Box>
+
+                <Box
+                  sx={{
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "flex-end",
+                    gap: 1,
+                    mb: 0.5,
+                  }}
+                >
+                  <Typography color="text.primary">
+                    <strong>Achievements:</strong>{" "}
+                  </Typography>
+                  <Typography color="text.secondary">
+                    {data.achievements_count ?? "N/A"}
+                  </Typography>
+                  <EmojiEventsIcon fontSize="small" />
+                </Box>
+
+                <Box
+                  sx={{
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "flex-end",
+                    gap: 1,
+                  }}
+                >
+                  <Typography color="text.primary">
+                    <strong>Users Who Added the Game:</strong>{" "}
+                  </Typography>
+                  <Typography color="text.secondary">
+                    {data.added ?? "N/A"}
+                  </Typography>
+                  <GroupAddIcon fontSize="small" />
+                </Box>
+              </Box>
+            </Box>
+
+            {/* Genres */}
+            <Box
+              sx={{
+                display: "flex",
+                justifyContent: "space-between",
+                alignItems: "center",
+              }}
+            >
+              <GenreTags genres={data.genres} styleGenre={styleGenre} />
+
+              {/* Stores */}
+              <StoreIcons
+                stores={data.stores}
+                styleStores={styleStores}
+                styleIconStores={styleIconStores}
+              />
+
+              {/* Platforms */}
+              <PlatformIcons
+                platforms={data.parent_platforms}
+                styleIconPlatform={styleIconPlatform}
+              />
+            </Box>
+
+            <Grid container spacing={2}>
+              <Grid size={{ xs: 12, md: 8 }}>
+                <Box
+                  sx={{
+                    display: "flex",
+                    flexDirection: "column",
+                    justifyContent: "space-between",
+                    height: "100%",
+                  }}
+                >
+                  {/* Reviews */}
                   <Box
                     sx={{
                       display: "flex",
-                      justifyContent: "end",
+                      gap: 2,
+                      width: "100%",
+                      flexDirection: "column",
                     }}
                   >
-                    <Typography
-                      variant="body1"
-                      color="text.secondary"
-                      sx={{ whiteSpace: "nowrap" }}
-                    >
-                      Total: {data.reviews_count ?? 0}
-                    </Typography>
-                  </Box>
-                </Box>
+                    {/* Ratings */}
+                    <Box sx={{ width: "100%" }}>
+                      {data.ratings?.length > 0 ? (
+                        <Box
+                          sx={{
+                            display: "flex",
+                            flexDirection: "column",
+                            gap: 1,
+                          }}
+                        >
+                          {data.ratings.map((rating, index) => (
+                            <Box key={index}>
+                              <Box
+                                sx={{
+                                  display: "flex",
+                                  justifyContent: "space-between",
+                                }}
+                              >
+                                <Typography
+                                  variant="body2"
+                                  sx={{ color: "text.primary" }}
+                                >
+                                  {rating.title}
+                                </Typography>
+                                <Typography
+                                  variant="body2"
+                                  sx={{ color: "text.secondary" }}
+                                >
+                                  {rating.count} votes
+                                </Typography>
+                              </Box>
+                              <LinearProgress
+                                variant="determinate"
+                                value={rating.percent}
+                                sx={{
+                                  height: 8,
+                                  borderRadius: 5,
+                                  backgroundColor: "#background.default",
+                                  "& .MuiLinearProgress-bar": {
+                                    backgroundColor: "#background.paper",
+                                  },
+                                }}
+                              />
+                            </Box>
+                          ))}
+                        </Box>
+                      ) : (
+                        <Typography color="text.secondary">
+                          No ratings available
+                        </Typography>
+                      )}
+                    </Box>
 
-                {/* Reddit Description */}
-                {data.reddit_description && (
+                    <Box
+                      sx={{
+                        display: "flex",
+                        justifyContent: "end",
+                      }}
+                    >
+                      <Typography
+                        variant="body1"
+                        color="text.secondary"
+                        sx={{ whiteSpace: "nowrap" }}
+                      >
+                        Total: {data.reviews_count ?? 0}
+                      </Typography>
+                    </Box>
+                  </Box>
+
+                  {/* Reddit Description */}
+                  {data.reddit_description && (
+                    <Box
+                      sx={{
+                        display: "flex",
+                        flexDirection: "column",
+                        alignItems: "flex-end",
+                      }}
+                    >
+                      <Typography variant="h6">Reddit Description:</Typography>
+                      <Typography
+                        variant="body2"
+                        color="text.secondary"
+                        sx={{ whiteSpace: "pre-line" }}
+                      >
+                        {data.reddit_description}
+                      </Typography>
+                    </Box>
+                  )}
+
+                  {/* Publishers and Developers */}
+
+                  <Box>
+                    <Typography variant="h6" gutterBottom>
+                      Publishers:
+                    </Typography>
+                    <Box sx={{ display: "flex", flexWrap: "wrap", gap: 1 }}>
+                      {data.publishers?.map((pub) => (
+                        <DeveloperIcon
+                          developers={data.publishers}
+                          stylePublisher={stylePublisher}
+                          styleIconPublisher={styleIconPublisher}
+                          name={pub.name}
+                          key={pub.id}
+                          type="publisher"
+                          showTooltip={false}
+                        />
+                      )) || <Typography color="text.secondary">N/A</Typography>}
+                    </Box>
+                  </Box>
+
                   <Box
                     sx={{
+                      justifyContent: "end",
                       display: "flex",
                       flexDirection: "column",
                       alignItems: "flex-end",
                     }}
                   >
-                    <Typography variant="h6">Reddit Description:</Typography>
-                    <Typography
-                      variant="body2"
-                      color="text.secondary"
-                      sx={{ whiteSpace: "pre-line" }}
-                    >
-                      {data.reddit_description}
+                    <Typography variant="h6" gutterBottom>
+                      Developers:
                     </Typography>
+                    <Box sx={{ display: "flex", flexWrap: "wrap", gap: 1 }}>
+                      {data.developers?.map((dev) => (
+                        <DeveloperIcon
+                          developers={data.developers}
+                          stylePublisher={stylePublisher}
+                          styleIconPublisher={styleIconPublisher}
+                          name={dev.name}
+                          key={dev.id}
+                          type="publisher"
+                          showTooltip={false}
+                        />
+                      )) || <Typography color="text.secondary">N/A</Typography>}
+                    </Box>
                   </Box>
+                </Box>
+              </Grid>
+
+              <Grid size={{ xs: 12, md: 4 }}>
+                {/* Chatbox */}
+                <Box sx={{ height: "100%" }}>
+                  <Chatbox data={data && data} />
+                </Box>
+              </Grid>
+            </Grid>
+
+            {/* Tags */}
+            <Box sx={{ my: 2 }}>
+              <Typography variant="h6" gutterBottom>
+                Tags:
+              </Typography>
+              <Box sx={{ display: "flex", flexWrap: "wrap", gap: 1 }}>
+                {data.tags?.length > 0 ? (
+                  data.tags.map((tag, i) => (
+                    <Typography key={tag.id || i} component="span">
+                      #{tag.name}
+                      {i < data.tags.length - 1 ? ", " : ""}
+                    </Typography>
+                  ))
+                ) : (
+                  <Typography color="text.secondary">No tags</Typography>
                 )}
+              </Box>
+            </Box>
 
-                {/* Publishers and Developers */}
-
-                <Box>
-                  <Typography variant="h6" gutterBottom>
-                    Publishers:
-                  </Typography>
-                  <Box sx={{ display: "flex", flexWrap: "wrap", gap: 1 }}>
-                    {data.publishers?.map((pub) => (
-                      <DeveloperIcon
-                        developers={data.publishers}
-                        stylePublisher={stylePublisher}
-                        styleIconPublisher={styleIconPublisher}
-                        name={pub.name}
-                        key={pub.id}
-                        type="publisher"
-                        showTooltip={false}
-                      />
-                    )) || <Typography color="text.secondary">N/A</Typography>}
-                  </Box>
-                </Box>
-
-                <Box
-                  sx={{
-                    justifyContent: "end",
-                    display: "flex",
-                    flexDirection: "column",
-                    alignItems: "flex-end",
-                  }}
+            {/* Website */}
+            <Box textAlign="center" sx={{ my: 2 }}>
+              {data.website ? (
+                <MuiLink
+                  href={data.website}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  variant="body1"
+                  color="secondary"
+                  underline="hover"
                 >
-                  <Typography variant="h6" gutterBottom>
-                    Developers:
-                  </Typography>
-                  <Box sx={{ display: "flex", flexWrap: "wrap", gap: 1 }}>
-                    {data.developers?.map((dev) => (
-                      <DeveloperIcon
-                        developers={data.developers}
-                        stylePublisher={stylePublisher}
-                        styleIconPublisher={styleIconPublisher}
-                        name={dev.name}
-                        key={dev.id}
-                        type="publisher"
-                        showTooltip={false}
-                      />
-                    )) || <Typography color="text.secondary">N/A</Typography>}
-                  </Box>
-                </Box>
-              </Box>
-            </Grid>
-
-            <Grid size={4}>
-              {/* Chatbox */}
-              <Box sx={{ height: "100%" }}>
-                <Chatbox data={data && data} />
-              </Box>
-            </Grid>
-          </Grid>
-
-          {/* Tags */}
-          <Box sx={{ my: 2 }}>
-            <Typography variant="h6" gutterBottom>
-              Tags:
-            </Typography>
-            <Box sx={{ display: "flex", flexWrap: "wrap", gap: 1 }}>
-              {data.tags?.length > 0 ? (
-                data.tags.map((tag, i) => (
-                  <Typography key={tag.id || i} component="span">
-                    #{tag.name}
-                    {i < data.tags.length - 1 ? ", " : ""}
-                  </Typography>
-                ))
+                  {data.website}
+                </MuiLink>
               ) : (
-                <Typography color="text.secondary">No tags</Typography>
+                <Typography variant="body1" color="text.secondary">
+                  No website available
+                </Typography>
               )}
             </Box>
-          </Box>
-
-          {/* Website */}
-          <Box textAlign="center" sx={{ my: 2 }}>
-            {data.website ? (
-              <MuiLink
-                href={data.website}
-                target="_blank"
-                rel="noopener noreferrer"
-                variant="body1"
-                color="secondary"
-                underline="hover"
-              >
-                {data.website}
-              </MuiLink>
-            ) : (
-              <Typography variant="body1" color="text.secondary">
-                No website available
-              </Typography>
-            )}
-          </Box>
-          <SimilarGamesList games={similarGames} />
-        </Stack>
-      </Paper>
-    </Container>
+          </Stack>
+        </Paper>
+      </Container>
+      <SimilarGamesList games={similarGames} />
+    </Box>
   );
 }
 
