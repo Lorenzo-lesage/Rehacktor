@@ -29,7 +29,6 @@ function FavoritesProvider({ children }) {
       .eq("user_id", userProfile?.id);
     if (error) {
       console.log(error);
-      console.log("Errore in console");
     } else {
       setFavorites(favourites);
     }

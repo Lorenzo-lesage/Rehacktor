@@ -22,7 +22,6 @@ function AvatarAccount({ url, size, onUpload, firstName, lastName }) {
   */
 
   useEffect(() => {
-    console.log("Avatar URL received:", url);
     if (typeof url === "string" && url.length > 0) {
       downloadImage(url);
     } else {

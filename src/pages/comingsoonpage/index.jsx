@@ -45,11 +45,6 @@ function IncomingPage() {
     }
   }, [data, isLoading, page]);
 
-  useEffect(() => {
-    console.log("DATA:", data);
-    console.log("ERROR:", error);
-  }, [data, error]);
-
   /*
   |-----------------------------------------------------
   | Return
