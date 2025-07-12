@@ -29,8 +29,18 @@ function SessionProvider({ children }) {
   }, []);
 
   // Usa la hook qui per fetchare il profilo
-  const { data: userProfile, isLoading: loadingProfile } =
+  const { data: userProfileData, isLoading: loadingProfile } =
     useUserProfile(session);
+
+  // Qui introduci un useState per userProfile con i dati caricati
+  const [userProfile, setUserProfile] = useState(null);
+
+  // Aggiorna userProfile ogni volta che userProfileData cambia
+  useEffect(() => {
+    if (userProfileData) {
+      setUserProfile(userProfileData);
+    }
+  }, [userProfileData]);
 
   if (loadingSession || loadingProfile) {
     return <LayoutSkeleton />;
@@ -38,7 +48,7 @@ function SessionProvider({ children }) {
 
   return (
     <SessionContext.Provider
-      value={{ session, userProfile, setUserProfile: () => {} }}
+      value={{ session, userProfile, setUserProfile }}
     >
       {children}
     </SessionContext.Provider>

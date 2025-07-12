@@ -77,6 +77,10 @@ function AccountPage() {
    * Method to update profile
    * @param {*} event
    */
+  /**
+   * Method to update profile
+   * @param {*} event
+   */
   const updateProfile = async () => {
     setLoading(true);
     const { user } = session;
@@ -87,7 +91,7 @@ function AccountPage() {
       first_name,
       last_name,
       avatar_url,
-      updated_at: new Date(),
+      updated_at: new Date().toISOString(),
     };
 
     const { error } = await supabase.from("profiles").upsert(updates);
@@ -101,7 +105,11 @@ function AccountPage() {
     } else {
       showToast("success", "Profile updated successfully!");
 
-      setUserProfile(updates);
+      // Aggiorna il contesto con i dati completi
+      setUserProfile((prev) => ({
+        ...prev,
+        ...updates,
+      }));
 
       navigate("/profile");
     }
@@ -125,7 +133,6 @@ function AccountPage() {
 
   return (
     <Box className="container" maxWidth="sm" mx="auto" mt={4}>
-
       <Typography variant="h5" gutterBottom>
         Profile Settings
       </Typography>
