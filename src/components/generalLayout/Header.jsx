@@ -52,16 +52,16 @@ function Header(props) {
               {" "}
               <Box
                 component="img"
-                src="../../../logo2.png"
+                src="../../../icon2.png"
                 alt="Rehacktor Logo"
                 sx={{
-                  width: 50,
-                  height: 50,
-                  transform: "scale(2)",
+                  width: 65,
+                  aspectRatio: 1,
+                  filter: "drop-shadow(2px 3px 4px rgba(0,0,0))",
                   objectFit: "cover",
                   transition: "all 0.25s ease",
                   ":hover": {
-                    transform: "scale(2.1)",
+                    transform: "scale(1.1)",
                   },
                 }}
               />

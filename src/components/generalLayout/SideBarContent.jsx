@@ -1,11 +1,5 @@
 import React, { useContext } from "react";
-import {
-  Box,
-  Typography,
-  Divider,
-  Avatar,
-  useTheme,
-} from "@mui/material";
+import { Box, Typography, Divider, Avatar, useTheme } from "@mui/material";
 import { NavLink } from "react-router";
 import SessionContext from "../../context/SessionContext";
 import useAvatarUrl from "../../hooks/useAvatarUrl";
@@ -52,7 +46,9 @@ function SideBarContent({ navbarHidden }) {
       transform: "translateX(4px)",
     },
     "& svg": {
-      color: isActive ? theme.palette.primary.main : theme.palette.text.disabled,
+      color: isActive
+        ? theme.palette.primary.main
+        : theme.palette.text.disabled,
       transition: "all 0.25s ease",
     },
     "&:hover svg": {
@@ -74,7 +70,7 @@ function SideBarContent({ navbarHidden }) {
       }}
     >
       {userProfile && (
-        <Box>
+        <Box sx={{ mb: 2 }}>
           <Box
             sx={{
               display: "flex",
@@ -101,7 +97,13 @@ function SideBarContent({ navbarHidden }) {
               <Avatar src={avatarUrl} sx={{ width: 40, height: 40, ml: 1 }} />
             ) : (
               <Avatar
-                sx={{ bgcolor: "text.tertiary", width: 40, height: 40, fontSize: 13, ml: 1 }}
+                sx={{
+                  bgcolor: "text.tertiary",
+                  width: 40,
+                  height: 40,
+                  fontSize: 13,
+                  ml: 1,
+                }}
               >
                 {userProfile.first_name?.charAt(0).toUpperCase()}
                 {userProfile.last_name?.charAt(0).toUpperCase()}
@@ -138,7 +140,7 @@ function SideBarContent({ navbarHidden }) {
       )}
 
       {/* New Releases */}
-      <Box>
+      <Box sx={{ mb: 2 }}>
         <Divider />
         <Typography
           variant="h5"
@@ -185,12 +187,10 @@ function SideBarContent({ navbarHidden }) {
             )}
           </NavLink>
         </Box>
-
-        <Divider />
       </Box>
 
       {/* Top games */}
-      <Box>
+      <Box sx={{ mb: 2 }}>
         <Divider />
         <Typography
           variant="h5"
@@ -237,11 +237,10 @@ function SideBarContent({ navbarHidden }) {
             )}
           </NavLink>
         </Box>
-        <Divider />
       </Box>
 
       {/* Games section */}
-      <Box>
+      <Box sx={{ mb: 2 }}>
         <Divider />
         <Typography
           variant="h5"
@@ -277,11 +276,11 @@ function SideBarContent({ navbarHidden }) {
             )}
           </NavLink>
         </Box>
-        <Divider />
       </Box>
 
       {/* Browse section */}
       <Box>
+        <Divider />
         <Typography
           variant="h5"
           sx={{
