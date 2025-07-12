@@ -63,13 +63,14 @@ function Footer({ footerRef }) {
         mt: "auto",
         position: "relative",
         overflow: "hidden",
+        backgroundColor: theme.palette.background.paper,
         "&::before": {
           content: '""',
           position: "absolute",
           top: 0,
           left: 0,
           right: 0,
-          height: "4px",
+          height: "2px",
           background: `linear-gradient(90deg, ${theme.palette.primary.main} 0%, ${theme.palette.secondary.main} 50%, ${theme.palette.primary.main} 100%)`,
         },
       }}
