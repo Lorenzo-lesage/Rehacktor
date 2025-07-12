@@ -263,7 +263,7 @@ function ProfilePage() {
             </Grid>
 
             {/* Info Section */}
-            <Grid item xs={12} lg={4}>
+            <Grid size={{ xs: 12, md: 6 }}>
               <Card
                 elevation={3}
                 sx={{

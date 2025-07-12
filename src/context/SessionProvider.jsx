@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect} from "react";
 import { supabase } from "../supabase/supabase-client";
 import SessionContext from "./SessionContext";
 import useUserProfile from "../hooks/useUserProfile";
@@ -39,6 +39,12 @@ function SessionProvider({ children }) {
   useEffect(() => {
     if (userProfileData) {
       setUserProfile(userProfileData);
+    }
+  }, [userProfileData]);
+
+  useEffect(() => {
+    if (!userProfileData) {
+      setUserProfile(null);
     }
   }, [userProfileData]);
 

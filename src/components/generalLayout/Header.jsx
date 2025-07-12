@@ -49,7 +49,6 @@ function Header(props) {
         >
           <Toolbar sx={{ justifyContent: "space-between" }}>
             <Link to="/">
-              {" "}
               <Box
                 component="img"
                 src="../../../icon2.png"
