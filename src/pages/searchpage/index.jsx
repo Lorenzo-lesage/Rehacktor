@@ -50,6 +50,7 @@ function SearchPage() {
   | Return
   |-----------------------------------------------------
   */
+ 
   return (
     <>
       {data?.results?.length !== 0 ? (
