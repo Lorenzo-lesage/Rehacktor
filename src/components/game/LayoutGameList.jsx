@@ -16,7 +16,6 @@ function LayoutGamesList({
   setOrdering,
   availableOrderings = [],
 }) {
-  
   /*
   |-----------------------------------------------------
   | Return
@@ -64,9 +63,21 @@ function LayoutGamesList({
         display: "flex",
         flexDirection: "column",
         alignItems: "center",
+        overflow: "hidden",
+        width: "100%",
+        maxWidth: '100%',
       }}
     >
-      <Box sx={{ display: 'flex', alignItems: "center", justifyContent: { xs: "center", md: "space-between"}, flexDirection: { xs: "column", md: "row" }, width: "90%", mb: 2, mt: 2 }}>
+      <Box
+        sx={{
+          display: "flex",
+          alignItems: "center",
+          justifyContent: { xs: "center", md: "space-between" },
+          flexDirection: { xs: "column", md: "row" },
+          width: "90%",
+          my: 2,
+        }}
+      >
         <Typography variant="h4" gutterBottom sx={titleStyles}>
           {title}
         </Typography>

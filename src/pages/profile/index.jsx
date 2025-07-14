@@ -263,7 +263,7 @@ function ProfilePage() {
             </Grid>
 
             {/* Info Section */}
-            <Grid size={{ xs: 12, md: 6 }}>
+            <Grid size={12}>
               <Card
                 elevation={3}
                 sx={{
@@ -408,8 +408,6 @@ function ProfilePage() {
                       sx={{
                         borderRadius: 3,
                         textTransform: "none",
-                        px: 4,
-                        py: 1.5,
                         fontSize: "1rem",
                         fontWeight: 500,
                         transition: "all 0.3s ease",
