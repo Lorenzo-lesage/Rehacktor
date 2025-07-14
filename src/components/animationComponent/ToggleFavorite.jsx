@@ -5,7 +5,7 @@ import FavoriteIcon from "@mui/icons-material/Favorite";
 import { Box, IconButton, Tooltip } from "@mui/material";
 import SessionContext from "../../context/SessionContext";
 import { useNavigate, useLocation } from "react-router";
-import { showToast } from "../toast/toastHelper";
+import { showToast } from "../../utils/snackbarUtils";
 
 function ToggleFavorite({ data }) {
   /*

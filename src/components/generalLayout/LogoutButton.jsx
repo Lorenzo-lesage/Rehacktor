@@ -10,7 +10,7 @@ import {
 } from "@mui/material";
 import { useNavigate } from "react-router";
 import supabase from "../../supabase/supabase-client";
-import { showToast } from "../toast/toastHelper";
+import { showToast } from "../../utils/snackbarUtils";
 import LogoutIcon from "@mui/icons-material/Logout";
 import { useTheme } from "@mui/material/styles";
 
@@ -33,7 +33,7 @@ function LogoutButton() {
       showToast("error", "Oops! Something went wrong");
       return;
     }
-    showToast("success", "You have been signed out");
+    showToast("default", "You have been signed out");
     navigate("/");
   };
 

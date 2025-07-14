@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import supabase from "../../supabase/supabase-client";
 import { Box, IconButton, Avatar, CircularProgress } from "@mui/material";
 import PhotoCamera from "@mui/icons-material/PhotoCamera";
-import { showToast } from "../../components/toast/toastHelper.jsx";
+import { showToast } from "../../utils/snackbarUtils";
 
 function AvatarAccount({ url, size, onUpload, firstName, lastName }) {
   /*

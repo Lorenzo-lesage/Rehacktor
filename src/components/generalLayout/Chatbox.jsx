@@ -2,7 +2,7 @@ import { useContext } from "react";
 import supabase from "../../supabase/supabase-client";
 import SessionContext from "../../context/SessionContext";
 import { Box, TextField, Button, Typography } from "@mui/material";
-import { showToast } from "../toast/toastHelper";
+import { showToast } from "../../utils/snackbarUtils";
 import RealtimeChat from "./RealtimeChat";
 import { useNavigate } from "react-router";
 

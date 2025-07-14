@@ -18,7 +18,7 @@ import {
   OutlinedInput,
   FormHelperText,
 } from "@mui/material";
-import { showToast } from "../../components/toast/toastHelper.jsx";
+import { showToast } from "../../utils/snackbarUtils.js";
 import InputAdornment from "@mui/material/InputAdornment";
 import Visibility from "@mui/icons-material/Visibility";
 import VisibilityOff from "@mui/icons-material/VisibilityOff";

@@ -1,7 +1,7 @@
 import { useState, useEffect, useContext } from "react";
 import { supabase } from "../../supabase/supabase-client";
 import SessionContext from "../../context/SessionContext";
-import { showToast } from "../../components/toast/toastHelper";
+import { showToast } from "../../utils/snackbarUtils";
 import {
   Box,
   Stack,
@@ -67,7 +67,6 @@ function AccountPage() {
     };
   }, [session]);
 
-  
   /*
   |-----------------------------------------------------
   | Methods
@@ -170,7 +169,6 @@ function AccountPage() {
               },
             }}
           />
-
           {/* Username */}
           <TextField
             label="Username"
@@ -188,7 +186,6 @@ function AccountPage() {
               },
             }}
           />
-
           {/* First Name */}
           <TextField
             label="First Name"
@@ -206,7 +203,6 @@ function AccountPage() {
               },
             }}
           />
-
           {/* Last Name */}
           <TextField
             label="Last Name"
