@@ -1,5 +1,4 @@
 import { Routing } from "./routes/Routing";
-import "react-toastify/dist/ReactToastify.css";
 import SessionProvider from "./context/SessionProvider";
 import FavoritesProvider from "./context/FavoritesProvider";
 import BackgroundProvider from "./context/BackgroundProvider";
