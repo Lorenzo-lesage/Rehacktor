@@ -40,9 +40,11 @@ function RegisterPage() {
     lastName: "",
     username: "",
     password: "",
+    confirmPassword: "",
   });
   const navigate = useNavigate();
   const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
   /*
   |-----------------------------------------------------
@@ -51,37 +53,90 @@ function RegisterPage() {
   */
 
   /**
-   * Function to submit the form
+   * Method to check if the fields are unique
+   * @param {*} param0
+   * @returns
+   */
+  const checkUniqueFields = async ({ email, username }) => {
+    // Cerchiamo email e username nella tabella 'profiles'
+    const { data: emailData } = await supabase
+      .from("profiles")
+      .select("id")
+      .eq("email", email);
+
+    const { data: usernameData } = await supabase
+      .from("profiles")
+      .select("id")
+      .eq("username", username);
+
+    return {
+      emailExists: emailData && emailData.length > 0,
+      usernameExists: usernameData && usernameData.length > 0,
+    };
+  };
+
+  /**
+   * Method to handle the form submit
    * @param {*} event
+   * @returns
    */
   const onSubmit = async (event) => {
     event.preventDefault();
     setFormSubmitted(true);
+
     const { error, data } = ConfirmSchema.safeParse(formState);
+
     if (error) {
       const errors = getErrors(error);
       setFormErrors(errors);
-      console.log(errors);
-    } else {
-      let { error } = await supabase.auth.signUp({
-        email: data.email,
-        password: data.password,
-        options: {
-          data: {
-            first_name: data.firstName,
-            last_name: data.lastName,
-            username: data.username,
-          },
+      return;
+    }
+
+    // Controllo unicità email e username
+    const { emailExists, usernameExists } = await checkUniqueFields({
+      email: data.email.toLowerCase(), // attenzione al lowercase
+      username: data.username,
+    });
+
+    if (emailExists || usernameExists) {
+      setFormErrors((prev) => ({
+        ...prev,
+        ...(emailExists && { email: "Email is already in use" }),
+        ...(usernameExists && { username: "Username is already taken" }),
+      }));
+      return;
+    }
+
+    // Procedo con la registrazione
+    const { error: signUpError } = await supabase.auth.signUp({
+      email: data.email,
+      password: data.password,
+      options: {
+        data: {
+          first_name: data.firstName,
+          last_name: data.lastName,
+          username: data.username,
+          email: data.email,
         },
-      });
-      if (error) {
-        showToast("error", "Something went wrong");
+      },
+    });
+
+    if (signUpError) {
+      // Controllo se l'errore è specifico di email già registrata
+      if (
+        signUpError.message.includes("already registered") ||
+        signUpError.message.includes("duplicate") // dipende dal messaggio di Supabase
+      ) {
+        setFormErrors((prev) => ({
+          ...prev,
+          email: "Email is already in use",
+        }));
       } else {
-        setTimeout(() => {
-          showToast("success", "Signed up successfully!");
-        }, 200);
-        navigate("/");
+        showToast("error", "Something went wrong");
       }
+    } else {
+      showToast("success", "Signed up successfully!");
+      navigate("/");
     }
   };
 
@@ -141,7 +196,14 @@ function RegisterPage() {
    * Method to show the password
    * @returns
    */
-  const handleClickShowPassword = () => setShowPassword((show) => !show);
+  const handleClickShowPassword = () => setShowPassword((prev) => !prev);
+
+  /**
+   * Method to show the confirm password
+   * @returns
+   */
+  const handleClickShowConfirmPassword = () =>
+    setShowConfirmPassword((prev) => !prev);
 
   /**
    * Method to handle the mouse down
@@ -302,6 +364,56 @@ function RegisterPage() {
             />
             {formErrors.password && (
               <FormHelperText>{formErrors.password}</FormHelperText>
+            )}
+          </FormControl>
+
+          <FormControl
+            variant="outlined"
+            fullWidth
+            size="small"
+            required
+            error={isInvalid("confirmPassword")}
+            sx={{
+              "& .MuiOutlinedInput-root": {
+                borderRadius: 3,
+              },
+            }}
+          >
+            <InputLabel htmlFor="outlined-confirm-password">
+              Confirm Password
+            </InputLabel>
+            <OutlinedInput
+              id="outlined-confirm-password"
+              type={showConfirmPassword ? "text" : "password"}
+              name="confirmPassword"
+              value={formState.confirmPassword}
+              onChange={setField("confirmPassword")}
+              onBlur={onBlur("confirmPassword")}
+              endAdornment={
+                <InputAdornment position="end">
+                  <IconButton
+                    aria-label={
+                      showConfirmPassword
+                        ? "Hide confirm password"
+                        : "Show confirm password"
+                    }
+                    onClick={handleClickShowConfirmPassword}
+                    onMouseDown={handleMouseDownPassword}
+                    onMouseUp={handleMouseUpPassword}
+                    edge="end"
+                  >
+                    {showConfirmPassword ? (
+                      <VisibilityOff fontSize="small" />
+                    ) : (
+                      <Visibility fontSize="small" />
+                    )}
+                  </IconButton>
+                </InputAdornment>
+              }
+              label="Confirm Password"
+            />
+            {formErrors.confirmPassword && (
+              <FormHelperText>{formErrors.confirmPassword}</FormHelperText>
             )}
           </FormControl>
 

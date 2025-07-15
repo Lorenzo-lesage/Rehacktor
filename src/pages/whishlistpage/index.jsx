@@ -162,13 +162,11 @@ const FavoritesPage = () => {
                       component={Link}
                       to="/"
                       variant="contained"
-                      size="large"
+                      size="small"
                       startIcon={<SportsEsportsIcon />}
                       sx={{
                         borderRadius: 3,
                         textTransform: "none",
-                        px: 4,
-                        py: 1.5,
                         fontSize: "1rem",
                         fontWeight: 500,
                         boxShadow: theme.shadows[4],

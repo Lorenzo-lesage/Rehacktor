@@ -97,15 +97,21 @@ function AccountPage() {
     const { error } = await supabase.from("profiles").upsert(updates);
 
     if (error) {
-      showToast("error", {
-        message: "Error updating profile",
-        description: error.message,
-      });
+      if (
+        error.message.includes("duplicate") &&
+        error.message.includes("username")
+      ) {
+        showToast("error", "Username is already taken");
+      } else {
+        showToast("error", {
+          message: "Error updating profile",
+          description: error.message,
+        });
+      }
       console.warn(error);
     } else {
       showToast("success", "Profile updated successfully!");
 
-      // Aggiorna il contesto con i dati completi
       setUserProfile((prev) => ({
         ...prev,
         ...updates,
