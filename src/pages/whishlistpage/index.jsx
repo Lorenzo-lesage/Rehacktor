@@ -232,7 +232,7 @@ const FavoritesPage = () => {
               >
                 {sortedFavorites.map((game, index) => (
                   <Grid
-                    size={{ xs: 6, md: 3 }}
+                    size={{ xs: 12, md: 9 }}
                     key={game.id}
                     sx={{
                       display: "flex",
@@ -254,13 +254,11 @@ const FavoritesPage = () => {
                   component={Link}
                   to="/"
                   variant="outlined"
-                  size="large"
+                  size="small"
                   startIcon={<SportsEsportsIcon />}
                   sx={{
                     borderRadius: 3,
                     textTransform: "none",
-                    px: 4,
-                    py: 1.5,
                     fontSize: "1rem",
                     fontWeight: 500,
                     transition: "all 0.3s ease",

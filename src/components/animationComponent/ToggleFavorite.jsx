@@ -45,7 +45,13 @@ function ToggleFavorite({ data }) {
       navigate("/login");
       showToast("error", "You need to sign in to add to favorites");
     } else {
-      isFavorite() ? removeFavorite(data.id) : addFavorites(data);
+      if (isFavorite()) {
+        removeFavorite(data.id);
+        showToast("default", `Removed ${data.name} from favorites`);
+      } else {
+        addFavorites(data);
+        showToast("success", `Added ${data.name} to favorites`);
+      }
     }
   };
 
@@ -62,7 +68,14 @@ function ToggleFavorite({ data }) {
           <IconButton onClick={handleClick} size="small">
             <FavoriteBorderIcon
               color={iconColor === "default" ? "action" : undefined}
-              sx={iconColor !== "default" ? { color: iconColor, filter: "drop-shadow(2px 2px 3px rgba(0,0,0))", } : {}}
+              sx={
+                iconColor !== "default"
+                  ? {
+                      color: iconColor,
+                      filter: "drop-shadow(2px 2px 3px rgba(0,0,0))",
+                    }
+                  : {}
+              }
             />
           </IconButton>
         </Tooltip>
@@ -79,7 +92,7 @@ function ToggleFavorite({ data }) {
             <FavoriteIcon
               color={iconColor === "default" ? "action" : undefined}
               sx={{
-                 filter: "drop-shadow(2px 2px 3px rgba(0,0,0))",
+                filter: "drop-shadow(2px 2px 3px rgba(0,0,0))",
                 ...(iconColor !== "default" && { color: iconColor }),
                 ...sxStyles,
               }}

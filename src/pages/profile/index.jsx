@@ -305,7 +305,7 @@ function ProfilePage() {
               },
             }}
           >
-            <CardContent sx={{ p: 4 }}>
+            <CardContent sx={{ p: { xs: 1, md: 4 } }}>
               <Box sx={{ display: "flex", alignItems: "center", mb: 3 }}>
                 <FavoriteIcon
                   sx={{
@@ -386,12 +386,8 @@ function ProfilePage() {
                   >
                     {sortedFavorites.slice(0, 2).map((game) => (
                       <Grid
-                        size={{ xs: 6, md: 3 }}
+                        size={{ xs: 13, md: 9 }}
                         key={game.id}
-                        sx={{ 
-                          display: "flex",
-                          justifyContent: "center",
-                        }}
                       >
                         <CardFavoriteItem favorite={game} />
                       </Grid>
