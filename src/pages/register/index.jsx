@@ -17,8 +17,12 @@ import {
   InputLabel,
   OutlinedInput,
   FormHelperText,
+  Divider,
+  alpha,
+  Fade,
 } from "@mui/material";
 import { showToast } from "../../utils/snackbarUtils.js";
+import { useTheme } from "@mui/material/styles";
 import InputAdornment from "@mui/material/InputAdornment";
 import Visibility from "@mui/icons-material/Visibility";
 import VisibilityOff from "@mui/icons-material/VisibilityOff";
@@ -45,6 +49,7 @@ function RegisterPage() {
   const navigate = useNavigate();
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const theme = useTheme();
 
   /*
   |-----------------------------------------------------
@@ -228,211 +233,258 @@ function RegisterPage() {
   */
 
   return (
-    <Box maxWidth="sm" mx="auto" mt={4}>
-      <Typography variant="h4" mb={3}>
-        Register
+    <Box maxWidth="sm" mx="auto" my={4}>
+      <Typography variant="h4" fontWeight="bold" textAlign="center" mb={1}>
+        Join our community
       </Typography>
 
-      {/* Form */}
-      <Box component="form" onSubmit={onSubmit} noValidate>
-        <Stack spacing={2}>
-          {/* Email field */}
-          <TextField
-            label="Email"
-            type="email"
-            name="email"
-            value={formState.email}
-            onChange={setField("email")}
-            onBlur={onBlur("email")}
-            error={isInvalid("email")}
-            helperText={formErrors.email}
-            required
-            fullWidth
-            size="small"
-            sx={{
-              "& .MuiOutlinedInput-root": {
-                borderRadius: 3,
-              },
-            }}
-          />
+      <Typography
+        variant="body1"
+        color="text.secondary"
+        textAlign="center"
+        mb={3}
+      >
+        Let's get you started! creating an account takes just a moment.
+      </Typography>
 
-          {/* First name field */}
-          <TextField
-            label="First Name"
-            type="text"
-            name="firstName"
-            value={formState.firstName}
-            onChange={setField("firstName")}
-            onBlur={onBlur("firstName")}
-            error={isInvalid("firstName")}
-            helperText={formErrors.firstName}
-            required
-            fullWidth
-            size="small"
-            sx={{
-              "& .MuiOutlinedInput-root": {
-                borderRadius: 3,
-              },
-            }}
-          />
-
-          {/* Last name field */}
-          <TextField
-            label="Last Name"
-            type="text"
-            name="lastName"
-            value={formState.lastName}
-            onChange={setField("lastName")}
-            onBlur={onBlur("lastName")}
-            error={isInvalid("lastName")}
-            helperText={formErrors.lastName}
-            required
-            fullWidth
-            size="small"
-            sx={{
-              "& .MuiOutlinedInput-root": {
-                borderRadius: 3,
-              },
-            }}
-          />
-
-          {/* Username field */}
-          <TextField
-            label="Username"
-            type="text"
-            name="username"
-            value={formState.username}
-            onChange={setField("username")}
-            onBlur={onBlur("username")}
-            error={isInvalid("username")}
-            helperText={formErrors.username}
-            required
-            fullWidth
-            size="small"
-            sx={{
-              "& .MuiOutlinedInput-root": {
-                borderRadius: 3,
-              },
-            }}
-          />
-
-          {/* Password field */}
-          <FormControl
-            variant="outlined"
-            fullWidth
-            size="small"
-            required
-            error={isInvalid("password")}
-            sx={{
-              "& .MuiOutlinedInput-root": {
-                borderRadius: 3,
-              },
-            }}
-          >
-            <InputLabel htmlFor="outlined-adornment-password">
-              Password
-            </InputLabel>
-            <OutlinedInput
-              id="outlined-adornment-password"
-              type={showPassword ? "text" : "password"}
-              name="password"
-              value={formState.password}
-              onChange={setField("password")}
-              onBlur={onBlur("password")}
-              endAdornment={
-                <InputAdornment position="end">
-                  <IconButton
-                    aria-label={
-                      showPassword
-                        ? "hide the password"
-                        : "display the password"
-                    }
-                    onClick={handleClickShowPassword}
-                    onMouseDown={handleMouseDownPassword}
-                    onMouseUp={handleMouseUpPassword}
-                    edge="end"
-                  >
-                    {showPassword ? (
-                      <VisibilityOff fontSize="small" />
-                    ) : (
-                      <Visibility fontSize="small" />
-                    )}
-                  </IconButton>
-                </InputAdornment>
-              }
-              label="Password"
-            />
-            {formErrors.password && (
-              <FormHelperText>{formErrors.password}</FormHelperText>
-            )}
-          </FormControl>
-
-          <FormControl
-            variant="outlined"
-            fullWidth
-            size="small"
-            required
-            error={isInvalid("confirmPassword")}
-            sx={{
-              "& .MuiOutlinedInput-root": {
-                borderRadius: 3,
-              },
-            }}
-          >
-            <InputLabel htmlFor="outlined-confirm-password">
-              Confirm Password
-            </InputLabel>
-            <OutlinedInput
-              id="outlined-confirm-password"
-              type={showConfirmPassword ? "text" : "password"}
-              name="confirmPassword"
-              value={formState.confirmPassword}
-              onChange={setField("confirmPassword")}
-              onBlur={onBlur("confirmPassword")}
-              endAdornment={
-                <InputAdornment position="end">
-                  <IconButton
-                    aria-label={
-                      showConfirmPassword
-                        ? "Hide confirm password"
-                        : "Show confirm password"
-                    }
-                    onClick={handleClickShowConfirmPassword}
-                    onMouseDown={handleMouseDownPassword}
-                    onMouseUp={handleMouseUpPassword}
-                    edge="end"
-                  >
-                    {showConfirmPassword ? (
-                      <VisibilityOff fontSize="small" />
-                    ) : (
-                      <Visibility fontSize="small" />
-                    )}
-                  </IconButton>
-                </InputAdornment>
-              }
-              label="Confirm Password"
-            />
-            {formErrors.confirmPassword && (
-              <FormHelperText>{formErrors.confirmPassword}</FormHelperText>
-            )}
-          </FormControl>
-
-          {/* Submit and reset buttons */}
-          <Stack direction="row" spacing={2}>
-            <Button variant="contained" type="submit" size="small">
-              Register
-            </Button>
-            <Button
-              variant="outlined"
-              type="reset"
-              onClick={handleReset}
-              size="small"
-            >
-              Reset
-            </Button>
-          </Stack>
+      <Box mb={3}>
+        <Typography variant="subtitle2" color="text.primary" fontWeight={600}>
+          Why join us?
+        </Typography>
+        <Stack spacing={0.5} mt={1}>
+          <Typography variant="body2" color="text.secondary">
+            • Create and manage your personal wishlist
+          </Typography>
+          <Typography variant="body2" color="text.secondary">
+            • Join live chats and connect with other users
+          </Typography>
+          <Typography variant="body2" color="text.secondary">
+            • Take part in a rich and interactive experience
+          </Typography>
         </Stack>
       </Box>
+
+      {/* Form */}
+      <Fade in={true} timeout={1000}>
+        <Box
+          component="form"
+          onSubmit={onSubmit}
+          noValidate
+          p={4}
+          borderRadius={1}
+          sx={{
+            background: `linear-gradient(345deg, ${alpha(
+              theme.palette.background.paper,
+              0.8
+            )} 20%, ${alpha(theme.palette.background.paper, 0.4)} 100%)`,
+          }}
+        >
+          <Stack spacing={2}>
+            {/* Email field */}
+            <TextField
+              label="Email"
+              type="email"
+              name="email"
+              value={formState.email}
+              onChange={setField("email")}
+              onBlur={onBlur("email")}
+              error={isInvalid("email")}
+              helperText={formErrors.email}
+              required
+              fullWidth
+              size="small"
+              sx={{
+                "& .MuiOutlinedInput-root": {
+                  borderRadius: 3,
+                },
+              }}
+            />
+
+            <Divider></Divider>
+
+            {/* Name fields */}
+            <Box display="flex" gap={2}>
+              {/* First name field */}
+              <TextField
+                label="First Name"
+                type="text"
+                name="firstName"
+                value={formState.firstName}
+                onChange={setField("firstName")}
+                onBlur={onBlur("firstName")}
+                error={isInvalid("firstName")}
+                helperText={formErrors.firstName}
+                required
+                fullWidth
+                size="small"
+                sx={{
+                  "& .MuiOutlinedInput-root": {
+                    borderRadius: 3,
+                  },
+                }}
+              />
+
+              {/* Last name field */}
+              <TextField
+                label="Last Name"
+                type="text"
+                name="lastName"
+                value={formState.lastName}
+                onChange={setField("lastName")}
+                onBlur={onBlur("lastName")}
+                error={isInvalid("lastName")}
+                helperText={formErrors.lastName}
+                required
+                fullWidth
+                size="small"
+                sx={{
+                  "& .MuiOutlinedInput-root": {
+                    borderRadius: 3,
+                  },
+                }}
+              />
+            </Box>
+
+            {/* Username field */}
+            <TextField
+              label="Username"
+              type="text"
+              name="username"
+              value={formState.username}
+              onChange={setField("username")}
+              onBlur={onBlur("username")}
+              error={isInvalid("username")}
+              helperText={formErrors.username}
+              required
+              fullWidth
+              size="small"
+              sx={{
+                "& .MuiOutlinedInput-root": {
+                  borderRadius: 3,
+                },
+              }}
+            />
+
+            <Divider variant="middle" />
+
+            {/* Password field */}
+            <FormControl
+              variant="outlined"
+              fullWidth
+              size="small"
+              required
+              error={isInvalid("password")}
+              sx={{
+                "& .MuiOutlinedInput-root": {
+                  borderRadius: 3,
+                },
+              }}
+            >
+              <InputLabel htmlFor="outlined-adornment-password">
+                Password
+              </InputLabel>
+              <OutlinedInput
+                id="outlined-adornment-password"
+                type={showPassword ? "text" : "password"}
+                name="password"
+                value={formState.password}
+                onChange={setField("password")}
+                onBlur={onBlur("password")}
+                endAdornment={
+                  <InputAdornment position="end">
+                    <IconButton
+                      aria-label={
+                        showPassword
+                          ? "hide the password"
+                          : "display the password"
+                      }
+                      onClick={handleClickShowPassword}
+                      onMouseDown={handleMouseDownPassword}
+                      onMouseUp={handleMouseUpPassword}
+                      edge="end"
+                    >
+                      {showPassword ? (
+                        <VisibilityOff fontSize="small" />
+                      ) : (
+                        <Visibility fontSize="small" />
+                      )}
+                    </IconButton>
+                  </InputAdornment>
+                }
+                label="Password"
+              />
+              {formErrors.password && (
+                <FormHelperText>{formErrors.password}</FormHelperText>
+              )}
+            </FormControl>
+
+            <FormControl
+              variant="outlined"
+              fullWidth
+              size="small"
+              required
+              error={isInvalid("confirmPassword")}
+              sx={{
+                "& .MuiOutlinedInput-root": {
+                  borderRadius: 3,
+                },
+              }}
+            >
+              <InputLabel htmlFor="outlined-confirm-password">
+                Confirm Password
+              </InputLabel>
+              <OutlinedInput
+                id="outlined-confirm-password"
+                type={showConfirmPassword ? "text" : "password"}
+                name="confirmPassword"
+                value={formState.confirmPassword}
+                onChange={setField("confirmPassword")}
+                onBlur={onBlur("confirmPassword")}
+                endAdornment={
+                  <InputAdornment position="end">
+                    <IconButton
+                      aria-label={
+                        showConfirmPassword
+                          ? "Hide confirm password"
+                          : "Show confirm password"
+                      }
+                      onClick={handleClickShowConfirmPassword}
+                      onMouseDown={handleMouseDownPassword}
+                      onMouseUp={handleMouseUpPassword}
+                      edge="end"
+                    >
+                      {showConfirmPassword ? (
+                        <VisibilityOff fontSize="small" />
+                      ) : (
+                        <Visibility fontSize="small" />
+                      )}
+                    </IconButton>
+                  </InputAdornment>
+                }
+                label="Confirm Password"
+              />
+              {formErrors.confirmPassword && (
+                <FormHelperText>{formErrors.confirmPassword}</FormHelperText>
+              )}
+            </FormControl>
+
+            {/* Submit and reset buttons */}
+            <Stack direction="row" spacing={2}>
+              <Button variant="contained" type="submit" size="small">
+                Register
+              </Button>
+              <Button
+                variant="outlined"
+                type="reset"
+                onClick={handleReset}
+                size="small"
+              >
+                Reset
+              </Button>
+            </Stack>
+          </Stack>
+        </Box>
+      </Fade>
 
       {/*Register link */}
       <Box sx={{ mt: 2, textAlign: "center" }}>
@@ -452,6 +504,42 @@ function RegisterPage() {
             Sign in!
           </Link>
         </Typography>
+      </Box>
+
+      {/* Terms of service and privacy policy */}
+      <Box>
+        <Box mt={1} textAlign="center">
+          <Typography variant="caption" color="text.secondary">
+            By registering, you agree to our{" "}
+            <Link
+              to="/terms"
+              style={{ color: "#1976d2", textDecoration: "none" }}
+            >
+              Terms of Service
+            </Link>{" "}
+            and{" "}
+            <Link
+              to="/privacy"
+              style={{ color: "#1976d2", textDecoration: "none" }}
+            >
+              Privacy Policy
+            </Link>
+            .
+          </Typography>
+        </Box>
+
+        <Box textAlign="center">
+          <Typography variant="body2" color="text.secondary">
+            Need help?{" "}
+            <Link
+              to="/support"
+              style={{ color: "#1976d2", textDecoration: "none" }}
+            >
+              Contact support
+            </Link>
+            .
+          </Typography>
+        </Box>
       </Box>
     </Box>
   );

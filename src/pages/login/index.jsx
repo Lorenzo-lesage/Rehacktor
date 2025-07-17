@@ -17,7 +17,10 @@ import {
   InputLabel,
   OutlinedInput,
   FormHelperText,
+  Fade,
+  alpha,
 } from "@mui/material";
+import { useTheme } from "@mui/material/styles";
 import { showToast } from "../../utils/snackbarUtils.js";
 import InputAdornment from "@mui/material/InputAdornment";
 import Visibility from "@mui/icons-material/Visibility";
@@ -40,6 +43,7 @@ function LoginPage() {
   });
   const navigate = useNavigate();
   const [showPassword, setShowPassword] = useState(false);
+  const theme = useTheme();
 
   /*
   |-----------------------------------------------------
@@ -158,101 +162,124 @@ function LoginPage() {
 
   return (
     <Box maxWidth="sm" mx="auto" mt={4}>
-      <Typography variant="h4" mb={3}>
-        Sign in
+      <Typography variant="h4" fontWeight="bold" textAlign="center" mb={1}>
+        Welcome back
+      </Typography>
+
+      <Typography
+        variant="body1"
+        color="text.secondary"
+        textAlign="center"
+        mb={3}
+      >
+        Log in to continue your journey with us.
       </Typography>
 
       {/*Form */}
-      <Box component="form" onSubmit={onSubmit} noValidate>
-        <Stack spacing={2}>
-          {/*Email field */}
-          <TextField
-            label="Email"
-            type="email"
-            name="email"
-            value={formState.email}
-            onChange={setField("email")}
-            onBlur={onBlur("email")}
-            error={isInvalid("email")}
-            helperText={formErrors.email}
-            required
-            fullWidth
-            size="small"
-            variant="outlined"
-            sx={{
-              "& .MuiOutlinedInput-root": {
-                borderRadius: 3,
-              },
-            }}
-          />
-
-          {/*Password field */}
-          <FormControl
-            variant="outlined"
-            fullWidth
-            size="small"
-            required
-            error={isInvalid("password")}
-            sx={{
-              "& .MuiOutlinedInput-root": {
-                borderRadius: 3,
-              },
-            }}
-          >
-            <InputLabel htmlFor="outlined-adornment-password">
-              Password
-            </InputLabel>
-            <OutlinedInput
-              id="outlined-adornment-password"
-              type={showPassword ? "text" : "password"}
-              name="password"
-              value={formState.password}
-              onChange={setField("password")}
-              onBlur={onBlur("password")}
-              endAdornment={
-                <InputAdornment position="end">
-                  <IconButton
-                    aria-label={
-                      showPassword
-                        ? "hide the password"
-                        : "display the password"
-                    }
-                    onClick={handleClickShowPassword}
-                    onMouseDown={handleMouseDownPassword}
-                    onMouseUp={handleMouseUpPassword}
-                    edge="end"
-                  >
-                    {showPassword ? (
-                      <VisibilityOff fontSize="small" />
-                    ) : (
-                      <Visibility fontSize="small" />
-                    )}
-                  </IconButton>
-                </InputAdornment>
-              }
-              label="Password"
-            />
-            {formErrors.password && (
-              <FormHelperText>{formErrors.password}</FormHelperText>
-            )}
-          </FormControl>
-
-          {/*Submit and reset buttons */}
-          <Stack direction="row" spacing={2}>
-            <Button variant="contained" type="submit" size="small">
-              Sign in
-            </Button>
-            <Button
-              variant="outlined"
-              type="reset"
-              onClick={handleReset}
+      <Fade in={true} timeout={1000}>
+        <Box
+          component="form"
+          onSubmit={onSubmit}
+          noValidate
+          p={4}
+          borderRadius={1}
+          sx={{
+            background: `linear-gradient(345deg, ${alpha(
+              theme.palette.background.paper,
+              0.8
+            )} 20%, ${alpha(theme.palette.background.paper, 0.2)} 100%)`,
+          }}
+        >
+          <Stack spacing={2}>
+            {/*Email field */}
+            <TextField
+              label="Email"
+              type="email"
+              name="email"
+              value={formState.email}
+              onChange={setField("email")}
+              onBlur={onBlur("email")}
+              error={isInvalid("email")}
+              helperText={formErrors.email}
+              required
+              fullWidth
               size="small"
+              variant="outlined"
+              sx={{
+                "& .MuiOutlinedInput-root": {
+                  borderRadius: 3,
+                },
+              }}
+            />
+
+            {/*Password field */}
+            <FormControl
+              variant="outlined"
+              fullWidth
+              size="small"
+              required
+              error={isInvalid("password")}
+              sx={{
+                "& .MuiOutlinedInput-root": {
+                  borderRadius: 3,
+                },
+              }}
             >
-              Reset
-            </Button>
+              <InputLabel htmlFor="outlined-adornment-password">
+                Password
+              </InputLabel>
+              <OutlinedInput
+                id="outlined-adornment-password"
+                type={showPassword ? "text" : "password"}
+                name="password"
+                value={formState.password}
+                onChange={setField("password")}
+                onBlur={onBlur("password")}
+                endAdornment={
+                  <InputAdornment position="end">
+                    <IconButton
+                      aria-label={
+                        showPassword
+                          ? "hide the password"
+                          : "display the password"
+                      }
+                      onClick={handleClickShowPassword}
+                      onMouseDown={handleMouseDownPassword}
+                      onMouseUp={handleMouseUpPassword}
+                      edge="end"
+                    >
+                      {showPassword ? (
+                        <VisibilityOff fontSize="small" />
+                      ) : (
+                        <Visibility fontSize="small" />
+                      )}
+                    </IconButton>
+                  </InputAdornment>
+                }
+                label="Password"
+              />
+              {formErrors.password && (
+                <FormHelperText>{formErrors.password}</FormHelperText>
+              )}
+            </FormControl>
+
+            {/*Submit and reset buttons */}
+            <Stack direction="row" spacing={2}>
+              <Button variant="contained" type="submit" size="small">
+                Sign in
+              </Button>
+              <Button
+                variant="outlined"
+                type="reset"
+                onClick={handleReset}
+                size="small"
+              >
+                Reset
+              </Button>
+            </Stack>
           </Stack>
-        </Stack>
-      </Box>
+        </Box>
+      </Fade>
 
       {/*Register link */}
       <Box sx={{ mt: 2, textAlign: "center" }}>
