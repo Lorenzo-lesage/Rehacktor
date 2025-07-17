@@ -24,6 +24,7 @@ import TagPage from "../pages/tagpage/index";
 import PublisherPage from "../pages/publisherpage/index";
 import DevelopersPage from "../pages/developerspage/index";
 import CreatorPage from "../pages/creatorpage/index";
+import AuthCallback from "../pages/AuthCallback";
 
 export function Routing() {
   /*
@@ -82,6 +83,8 @@ export function Routing() {
           <Route path="/developers" element={<DevelopersPage />} />
           {/* Creator page */}
           <Route path="/creators" element={<CreatorPage />} />
+          {/* Auth callback page */}
+          <Route path="/auth/callback" element={<AuthCallback />} />
           {/* Error page */}
           <Route path="*" element={<ErrorPage />} />
         </Route>

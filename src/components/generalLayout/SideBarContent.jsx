@@ -71,45 +71,47 @@ function SideBarContent({ navbarHidden }) {
     >
       {userProfile && (
         <Box sx={{ mb: 2 }}>
-          <Box
-            sx={{
-              display: "flex",
-              alignItems: "center",
-              padding: "0.7rem 1rem",
-            }}
-          >
-            <Typography
-              variant="h5"
+          {userProfile.username && (
+            <Box
               sx={{
-                fontWeight: 600,
-                color: "text.primary",
-                whiteSpace: "nowrap",
-                overflow: "hidden",
-                textOverflow: "ellipsis",
-                flexGrow: 1,
-                minWidth: 0,
+                display: "flex",
+                alignItems: "center",
+                padding: "0.7rem 1rem",
               }}
             >
-              {userProfile.username}
-            </Typography>
-
-            {avatarUrl ? (
-              <Avatar src={avatarUrl} sx={{ width: 40, height: 40, ml: 1 }} />
-            ) : (
-              <Avatar
+              <Typography
+                variant="h5"
                 sx={{
-                  bgcolor: "text.tertiary",
-                  width: 40,
-                  height: 40,
-                  fontSize: 13,
-                  ml: 1,
+                  fontWeight: 600,
+                  color: "text.primary",
+                  whiteSpace: "nowrap",
+                  overflow: "hidden",
+                  textOverflow: "ellipsis",
+                  flexGrow: 1,
+                  minWidth: 0,
                 }}
               >
-                {userProfile.first_name?.charAt(0).toUpperCase()}
-                {userProfile.last_name?.charAt(0).toUpperCase()}
-              </Avatar>
-            )}
-          </Box>
+                {userProfile.username}
+              </Typography>
+
+              {avatarUrl ? (
+                <Avatar src={avatarUrl} sx={{ width: 40, height: 40, ml: 1 }} />
+              ) : (
+                <Avatar
+                  sx={{
+                    bgcolor: "text.tertiary",
+                    width: 40,
+                    height: 40,
+                    fontSize: 13,
+                    ml: 1,
+                  }}
+                >
+                  {userProfile.first_name?.charAt(0).toUpperCase()}
+                  {userProfile.last_name?.charAt(0).toUpperCase()}
+                </Avatar>
+              )}
+            </Box>
+          )}
 
           <Box>
             <NavLink to="/profile">

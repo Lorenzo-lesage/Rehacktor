@@ -19,6 +19,7 @@ import {
   FormHelperText,
   Fade,
   alpha,
+  Divider,
 } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
 import { showToast } from "../../utils/snackbarUtils.js";
@@ -26,6 +27,7 @@ import InputAdornment from "@mui/material/InputAdornment";
 import Visibility from "@mui/icons-material/Visibility";
 import VisibilityOff from "@mui/icons-material/VisibilityOff";
 import IconButton from "@mui/material/IconButton";
+import { FcGoogle } from "react-icons/fc";
 
 function LoginPage() {
   /*
@@ -154,6 +156,28 @@ function LoginPage() {
     event.preventDefault();
   };
 
+  /**
+   * Method to handle the google login
+   */
+  const handleGoogleLogin = async () => {
+    const { error } = await supabase.auth.signInWithOAuth({
+      provider: "google",
+      options: {
+        redirectTo: window.location.origin + "/auth/callback",
+      },
+    });
+
+    if (error) {
+      console.error("Google login error:", error.message);
+      showToast(
+        "error",
+        `Google login failed: ${
+          error.message || "An unexpected error occurred"
+        }`
+      );
+    }
+  };
+
   /*
   |-----------------------------------------------------
   | Return
@@ -278,6 +302,20 @@ function LoginPage() {
               </Button>
             </Stack>
           </Stack>
+
+          {/*Google button */}
+          <Box sx={{ my: 2, textAlign: "center" }}>
+            <Divider sx={{ mb: 2 }}>or</Divider>
+
+            <Button
+              variant="text"
+              size="small"
+              onClick={handleGoogleLogin}
+              startIcon={<FcGoogle />}
+            >
+              Sign in with Google
+            </Button>
+          </Box>
         </Box>
       </Fade>
 
