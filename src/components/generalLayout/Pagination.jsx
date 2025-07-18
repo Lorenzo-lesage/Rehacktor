@@ -38,7 +38,6 @@ function PaginationMui({ currentPage, setPage, lastPage }) {
         display: "flex",
         justifyContent: "center",
         alignItems: "center",
-        marginY: 4,
         gap: 1,
         maxWidth: "100%",
         overflow: "hidden", 

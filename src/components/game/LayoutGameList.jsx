@@ -65,7 +65,7 @@ function LayoutGamesList({
         alignItems: "center",
         overflow: "hidden",
         width: "100%",
-        maxWidth: '100%',
+        maxWidth: "100%",
       }}
     >
       <Box
@@ -78,9 +78,29 @@ function LayoutGamesList({
           my: 2,
         }}
       >
-        <Typography variant="h4" gutterBottom sx={titleStyles}>
-          {title}
-        </Typography>
+        <Box display={"flex"} alignItems={"center"} flexDirection={"column"}>
+          <Typography variant="h4" sx={titleStyles}>
+            {title}
+          </Typography>
+
+          {data?.count > 0 && (
+            <Box
+              sx={{
+                textAlign: "center",
+              }}
+            >
+              <Typography
+                variant="body2"
+                sx={{
+                  color: "text.secondary",
+                  fontStyle: "italic",
+                }}
+              >
+                {data.count} Games available
+              </Typography>
+            </Box>
+          )}
+        </Box>
 
         {availableOrderings.length > 0 && ordering && setOrdering && (
           <Box sx={{ mb: 2, width: "100%", maxWidth: { xs: "100%", md: 200 } }}>

@@ -112,7 +112,7 @@ const GenreListPage = () => {
     );
 
   return (
-    <Container sx={{ mt: 4 }}>
+    <Container sx={{ mt: 4, paddingBottom: 7 }}>
       <Box sx={{ width: "90%" }}>
         <Typography
           variant="h4"
