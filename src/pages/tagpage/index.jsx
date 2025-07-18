@@ -74,12 +74,20 @@ const TagPage = () => {
         />
       )}
       bottomContent={
-        <Box ref={observerRef} sx={{ textAlign: "center", my: 4 }}>
-          <Chip
-            label={isFetchingNextPage ? "Loading..." : "More Tags"}
-            icon={isFetchingNextPage && <CircularProgress size={16} />}
-          />
-        </Box>
+        hasNextPage && (
+          <Box sx={{ textAlign: "center", my: 4 }}>
+            <Chip
+              label={isFetchingNextPage ? "Loading..." : "Show more tags"}
+              icon={
+                isFetchingNextPage ? <CircularProgress size={16} /> : undefined
+              }
+              onClick={() => fetchNextPage()}
+              clickable={!isFetchingNextPage}
+              disabled={isFetchingNextPage}
+              sx={{ cursor: isFetchingNextPage ? "default" : "pointer" }}
+            />
+          </Box>
+        )
       }
     />
   );

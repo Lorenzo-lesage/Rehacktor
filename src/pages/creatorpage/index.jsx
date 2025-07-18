@@ -1,7 +1,6 @@
 import { useInfiniteQuery } from "@tanstack/react-query";
 import { fetchCreatorsPaginated } from "../../api/games";
 import BrowseLayout from "../../components/browse/BrowseLayout";
-import CardBrowse from "../../components/browse/CardBrowse";
 import { Box, Chip, CircularProgress, Typography } from "@mui/material";
 import CreatorCardWithRoles from "../../components/browse/CreatorCardWithRoles";
 

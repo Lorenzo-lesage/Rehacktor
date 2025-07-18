@@ -1,6 +1,8 @@
 import { useQuery } from "@tanstack/react-query";
 import { fetchGenres } from "../../api/games";
 import { useNavigate } from "react-router";
+import { LazyLoadImage } from "react-lazy-load-image-component";
+import "react-lazy-load-image-component/src/effects/blur.css";
 import {
   Grid,
   Card,
@@ -143,22 +145,37 @@ const GenreListPage = () => {
               >
                 <CardActionArea
                   onClick={() => navigate(`/games/${genre.slug}`)}
-                  sx={{ height: "100%" }}
+                  sx={{ height: "100%", position: "relative" }}
                 >
-                  <Box
-                    sx={{
-                      position: "absolute",
-                      inset: 0,
-                      backgroundImage: `linear-gradient(to top, rgba(0,0,0,0.6), rgba(0,0,0,0.2)), url(${
+                  {/* Immagine Lazy con gradient */}
+                  <Box sx={{ position: "absolute", inset: 0, zIndex: 1 }}>
+                    <LazyLoadImage
+                      src={
                         genre.image_background ||
                         "https://via.placeholder.com/400x200?text=No+Image"
-                      })`,
-                      backgroundSize: "cover",
-                      backgroundPosition: "center",
-                      zIndex: 1,
-                    }}
-                  />
+                      }
+                      alt={`${genre.name} background`}
+                      effect="blur"
+                      width="100%"
+                      height="100%"
+                      style={{
+                        objectFit: "cover",
+                        width: "100%",
+                        height: "100%",
+                      }}
+                    />
+                    {/* Gradient overlay */}
+                    <Box
+                      sx={{
+                        position: "absolute",
+                        inset: 0,
+                        background:
+                          "linear-gradient(to top, rgba(0,0,0,0.6), rgba(0,0,0,0.2))",
+                      }}
+                    />
+                  </Box>
 
+                  {/* Contenuto */}
                   <CardContent
                     sx={{
                       position: "relative",
@@ -171,7 +188,7 @@ const GenreListPage = () => {
                     }}
                   >
                     <Box display="flex" alignItems="center" gap={1}>
-                      {Icon && <Icon size={24} />} {/* Icona dinamica */}
+                      {Icon && <Icon size={24} />}
                       <Typography variant="h6" sx={{ fontWeight: "bold" }}>
                         {genre.name}
                       </Typography>

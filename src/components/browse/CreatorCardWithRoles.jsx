@@ -2,6 +2,8 @@ import { useQuery } from "@tanstack/react-query";
 import CardBrowse from "./CardBrowse";
 import { Typography, Box, Avatar } from "@mui/material";
 import { fetchCreatorDetails } from "../../api/games";
+import { LazyLoadImage } from "react-lazy-load-image-component";
+import "react-lazy-load-image-component/src/effects/blur.css";
 
 const CreatorCardWithRoles = ({ creator }) => {
   /*
@@ -40,15 +42,24 @@ const CreatorCardWithRoles = ({ creator }) => {
       extraimage={
         <Box display="flex" alignItems="center" gap={1}>
           {imageAvatar && (
-            <Avatar
-              src={imageAvatar}
-              alt={title}
+            <Box
               sx={{
                 width: { xs: 80, md: 105 },
                 height: { xs: 80, md: 105 },
+                borderRadius: "50%",
+                overflow: "hidden",
                 boxShadow: 16,
               }}
-            />
+            >
+              <LazyLoadImage
+                src={imageAvatar}
+                alt={title}
+                effect="blur"
+                width="100%"
+                height="100%"
+                style={{ objectFit: "cover", borderRadius: "50%" }}
+              />
+            </Box>
           )}
         </Box>
       }

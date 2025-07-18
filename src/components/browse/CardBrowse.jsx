@@ -6,6 +6,8 @@ import {
   Box,
   Divider,
 } from "@mui/material";
+import { LazyLoadImage } from "react-lazy-load-image-component";
+import "react-lazy-load-image-component/src/effects/blur.css";
 
 const CardBrowse = ({
   title,
@@ -29,18 +31,30 @@ const CardBrowse = ({
       }}
     >
       <CardActionArea sx={{ height: "100%", cursor: "default" }}>
-        <Box
-          sx={{
-            position: "absolute",
-            inset: 0,
-            backgroundImage: `linear-gradient(to top, rgba(0,0,0)20%, rgba(0,0,0,0.5)80%), url(${
-              image || "https://via.placeholder.com/400x200?text=No+Image"
-            })`,
-            backgroundSize: "cover",
-            backgroundPosition: "center",
-            zIndex: 1,
-          }}
-        />
+        <Box sx={{ position: "absolute", inset: 0, zIndex: 1 }}>
+          <LazyLoadImage
+            src={image || "https://via.placeholder.com/400x200?text=No+Image"}
+            alt={`${title} background`}
+            effect="blur"
+            width="100%"
+            height="100%"
+            style={{
+              objectFit: "cover",
+              width: "100%",
+              height: "100%",
+            }}
+          />
+          {/* Gradient Overlay */}
+          <Box
+            sx={{
+              position: "absolute",
+              inset: 0,
+              background:
+                "linear-gradient(to top, rgba(0,0,0,0.6), rgba(0,0,0,0.2))",
+            }}
+          />
+        </Box>
+
         <CardContent
           sx={{
             position: "relative",
