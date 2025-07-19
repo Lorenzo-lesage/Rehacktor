@@ -4,6 +4,7 @@ import {
   KeyboardDoubleArrowRight,
 } from "@mui/icons-material";
 import { useTheme } from "@mui/material/styles";
+import { useEffect } from "react";
 
 function PaginationMui({ currentPage, setPage, lastPage }) {
   /*
@@ -13,11 +14,26 @@ function PaginationMui({ currentPage, setPage, lastPage }) {
   */
 
   const theme = useTheme();
-  const isSmallScreen = useMediaQuery(theme.breakpoints.down("sm")); 
+  const isSmallScreen = useMediaQuery(theme.breakpoints.down("sm"));
+
+  /*
+  |-----------------------------------------------------
+  | Hooks
+  |-----------------------------------------------------
+  */
+
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }, [currentPage]);
+
+  /*
+  |-----------------------------------------------------
+  | Methods
+  |-----------------------------------------------------
+  */
 
   const handleChange = (event, value) => {
     setPage(value);
-    window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
   const handleJumpBack = () => {
@@ -41,7 +57,7 @@ function PaginationMui({ currentPage, setPage, lastPage }) {
         alignItems: "center",
         gap: 1,
         maxWidth: "100%",
-        overflow: "hidden", 
+        overflow: "hidden",
         whiteSpace: "nowrap",
       }}
     >
@@ -69,7 +85,7 @@ function PaginationMui({ currentPage, setPage, lastPage }) {
         boundaryCount={isSmallScreen ? 1 : 1}
         sx={{
           ".MuiPagination-ul": {
-            flexWrap: "nowrap", 
+            flexWrap: "nowrap",
           },
         }}
       />
