@@ -7,6 +7,7 @@ function SideBarSkeleton({ navbarHidden, open }) {
   return (
     <Box
       sx={{
+        display: { xs: "none", lg: "block" },
         marginTop: { md: 0, lg: `${marginTop}px` },
         height: { xs: "100vh", lg: `calc(100vh - ${marginTop}px)` },
         overflowY: "auto",

@@ -5,10 +5,15 @@ import {
   Skeleton,
   CssBaseline,
   Divider,
+  useMediaQuery,
 } from "@mui/material";
 import HideOnScroll from "../animationComponent/HideOnScroll";
+import { useTheme } from "@mui/material/styles";
 
 function HeaderSkeleton(props) {
+  const theme = useTheme();
+  const isSmallScreen = useMediaQuery(theme.breakpoints.down("sm"));
+
   return (
     <>
       <CssBaseline />
@@ -19,26 +24,49 @@ function HeaderSkeleton(props) {
           elevation={0}
           sx={{
             display: "flex",
+            flexWrap: "wrap",
             backgroundColor: "transparent",
             backdropFilter: "blur(0.5rem)",
           }}
         >
           <Toolbar sx={{ justifyContent: "space-between" }}>
-            {/* Title Skeleton */}
-            <Skeleton variant="text" width={120} height={30} />
+            {/* Logo Skeleton */}
+            <Skeleton
+              variant="rectangular"
+              sx={{
+                width: 65,
+                height: 65,
+                borderRadius: "10%",
+              }}
+            />
 
             <Box display="flex" alignItems="center" gap={2}>
-              {/* Search bar skeleton */}
-              <Box sx={{ display: { xs: "none", md: "flex" }, width: {xs: "100%", sm: 500} }}>
-                <Skeleton variant="rounded" height={36} width="100%" />
-              </Box>
+              {/* Search Bar Skeleton */}
+              {!isSmallScreen && (
+                <Box sx={{ width: 250 }}>
+                  <Skeleton variant="rounded" height={36} width="100%" />
+                </Box>
+              )}
+
+              {/* Sign In Button Skeleton (if not logged in) */}
+              {!isSmallScreen && (
+                <Skeleton
+                  variant="rounded"
+                  height={36}
+                  width={80}
+                  sx={{ borderRadius: 20 }}
+                />
+              )}
 
               <Divider orientation="vertical" flexItem />
 
-              {/* Theme toggle skeleton */}
-              <Box sx={{ display: { xs: "none", md: "flex" } }}>
-                <Skeleton variant="circular" width={32} height={32} />
-              </Box>
+              {/* Theme Toggle Skeleton */}
+              <Skeleton variant="circular" width={32} height={32} />
+
+              {/* Mobile Drawer Skeleton (Hamburger icon) */}
+              {isSmallScreen && (
+                <Skeleton variant="circular" width={36} height={36} />
+              )}
             </Box>
           </Toolbar>
         </AppBar>
