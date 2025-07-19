@@ -77,25 +77,36 @@ function LogoutButton({ open }) {
           gap: 1,
           "&:hover": {
             transform: "translateX(4px)",
-            backgroundColor: theme.palette.background.paper,
           },
           "& svg": {
             transition: "all 0.25s ease",
-            fontSize: "1.6rem",
+            fontSize: "2rem",
           },
           "&:hover svg": {
-            color: theme.palette.primary.main,
-            transform: "scale(1.15)",
+            backgroundColor: theme.palette.background.iconHover,
           },
         }}
       >
-        <LogoutIcon fontSize="small" />
+        <LogoutIcon
+          fontSize="small"
+          sx={{
+            fontSize: "2rem",
+            padding: "0.3rem",
+            color: theme.palette.text.disabled,
+            backgroundColor: theme.palette.background.icon,
+            borderRadius: 1,
+            transition: "all 0.25s ease",
+          }}
+        />
         <Typography
           variant="body1"
           sx={{
             display: {
               xs: "block",
               lg: open ? "block" : "none",
+            },
+            ":hover": {
+              color: theme.palette.primary.main,
             },
           }}
         >

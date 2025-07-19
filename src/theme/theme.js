@@ -8,7 +8,9 @@ const theme = createTheme({
         background: {
           default: "#E2E8F0",
           paper: "#E0E0E0",
-          sidebar: "#BDC5D2"
+          sidebar: "#BDC5D2",
+          icon: "#d1d2d3ff",
+          iconHover: "#f1f2f3ff",
         },
         text: {
           primary: "#1a237e",
@@ -26,7 +28,9 @@ const theme = createTheme({
           default: "#111827",
           paper: "#000000",
           accent: "#1f2937",
-          sidebar: "#111827"
+          sidebar: "#111827",
+          icon: "#243352ff",
+          iconHover: "#2b426fff",
         },
         text: {
           primary: "#c9d1d9",
