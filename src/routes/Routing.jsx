@@ -25,6 +25,7 @@ import PublisherPage from "../pages/publisherpage/index";
 import DevelopersPage from "../pages/developerspage/index";
 import CreatorPage from "../pages/creatorpage/index";
 import AuthCallback from "../pages/AuthCallback";
+import ScrollToTop from "../components/ScrollToTop";
 
 export function Routing() {
   /*
@@ -35,6 +36,7 @@ export function Routing() {
 
   return (
     <BrowserRouter>
+      <ScrollToTop />
       <Routes>
         <Route element={<Layout />}>
           {/* Home page */}

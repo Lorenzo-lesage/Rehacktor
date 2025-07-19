@@ -23,14 +23,26 @@ import BusinessOutlinedIcon from "@mui/icons-material/BusinessOutlined";
 import CodeOutlinedIcon from "@mui/icons-material/CodeOutlined";
 import CreateOutlinedIcon from "@mui/icons-material/CreateOutlined";
 
-function SideBarContent({ navbarHidden }) {
-  const theme = useTheme();
+function SideBarContent({ navbarHidden, open }) {
+  /*
+  |--------------------------------------------------------
+  | Data
+  |--------------------------------------------------------
+   */
+
   const lastYear = new Date().getFullYear() - 1;
   const { userProfile } = useContext(SessionContext);
   const { avatarUrl } = useAvatarUrl(userProfile?.avatar_url);
+  const theme = useTheme();
 
   const headerHeight = 64;
   const marginTop = navbarHidden ? 0 : headerHeight;
+
+  /*
+  |--------------------------------------------------------
+  | Style
+  |--------------------------------------------------------
+   */
 
   const typographyHoverSx = (isActive) => ({
     display: "flex",
@@ -38,18 +50,21 @@ function SideBarContent({ navbarHidden }) {
     padding: "0.3rem 1rem",
     cursor: "pointer",
     borderRadius: 2,
-    transition: "all 0.25s ease",
     color: isActive ? theme.palette.text.secondary : theme.palette.text.primary,
     fontWeight: 600,
-
+    transition: "color 0.25s ease, transform 0.25s ease",
+    justifyContent: "flex-start",
+    gap: 1,
     "&:hover": {
       transform: "translateX(4px)",
+      backgroundColor: theme.palette.background.paper,
     },
     "& svg": {
       color: isActive
         ? theme.palette.primary.main
         : theme.palette.text.disabled,
-      transition: "all 0.25s ease",
+      transition: "color 0.25s ease, transform 0.25s ease",
+      fontSize: "1.6rem",
     },
     "&:hover svg": {
       color: theme.palette.primary.main,
@@ -57,16 +72,24 @@ function SideBarContent({ navbarHidden }) {
     },
   });
 
+  /*
+  |--------------------------------------------------------
+  | Return
+  |--------------------------------------------------------
+   */
+
   return (
     <Box
       sx={{
-        marginTop: { lg: 0, xl: `${marginTop}px`},
-        height: {xs: "100vh", xl: `calc(100vh - ${marginTop}px)`},
-        transition: "margin-top 0.3s ease",
+        marginTop: { md: 0, lg: `${marginTop}px` },
+        height: { xs: "100vh", lg: `calc(100vh - ${marginTop}px)` },
+        transition: "all 0.2s ease-in-out",
         overflowY: "auto",
         scrollbarWidth: "none",
         "&::-webkit-scrollbar": { display: "none" },
         padding: "0 0.5rem 1rem 0.5rem",
+        backgroundColor: open ? "background.sidebar" : "transparent",
+        borderRadius: { xs: 0, xl: "0 0.3rem 0.3rem 0" },
       }}
     >
       {userProfile && (
@@ -77,6 +100,8 @@ function SideBarContent({ navbarHidden }) {
                 display: "flex",
                 alignItems: "center",
                 padding: "0.7rem 1rem",
+                justifyContent: "flex-start",
+                transition: "all 0.3s ease-in-out",
               }}
             >
               <Typography
@@ -88,14 +113,27 @@ function SideBarContent({ navbarHidden }) {
                   overflow: "hidden",
                   textOverflow: "ellipsis",
                   flexGrow: 1,
+                  marginRight: 1,
                   minWidth: 0,
+                  display: {
+                    xs: "block",
+                    lg: open ? "block" : "none",
+                  },
                 }}
               >
-                {userProfile.username}
+                {userProfile.username &&
+                  userProfile.username.charAt(0).toUpperCase() +
+                    userProfile.username.slice(1).toLowerCase()}
               </Typography>
 
               {avatarUrl ? (
-                <Avatar src={avatarUrl} sx={{ width: 40, height: 40, ml: 1 }} />
+                <Avatar
+                  src={avatarUrl}
+                  sx={{
+                    width: 40,
+                    height: 40,
+                  }}
+                />
               ) : (
                 <Avatar
                   sx={{
@@ -103,7 +141,6 @@ function SideBarContent({ navbarHidden }) {
                     width: 40,
                     height: 40,
                     fontSize: 13,
-                    ml: 1,
                   }}
                 >
                   {userProfile.first_name?.charAt(0).toUpperCase()}
@@ -116,10 +153,21 @@ function SideBarContent({ navbarHidden }) {
           <Box>
             <NavLink to="/profile">
               {({ isActive }) => (
-                <Typography variant="body1" sx={typographyHoverSx(isActive)}>
-                  <PersonIcon sx={{ mr: 1 }} fontSize="small" />
-                  Profile
-                </Typography>
+                <Box sx={typographyHoverSx(isActive)}>
+                  <PersonIcon fontSize="small" />
+                  <Typography
+                    variant="body1"
+                    sx={{
+                      display: {
+                        xs: "block",
+                        lg: open ? "block" : "none",
+                      },
+                      whiteSpace: "nowrap",
+                    }}
+                  >
+                    Profile
+                  </Typography>
+                </Box>
               )}
             </NavLink>
           </Box>
@@ -127,16 +175,27 @@ function SideBarContent({ navbarHidden }) {
           <Box>
             <NavLink to="/whishlist">
               {({ isActive }) => (
-                <Typography variant="body1" sx={typographyHoverSx(isActive)}>
-                  <FavoriteIcon sx={{ mr: 1 }} fontSize="small" />
-                  Whishlist
-                </Typography>
+                <Box sx={typographyHoverSx(isActive)}>
+                  <FavoriteIcon fontSize="small" />
+                  <Typography
+                    variant="body1"
+                    sx={{
+                      display: {
+                        xs: "block",
+                        lg: open ? "block" : "none",
+                      },
+                      whiteSpace: "nowrap",
+                    }}
+                  >
+                    Whishlist
+                  </Typography>
+                </Box>
               )}
             </NavLink>
           </Box>
 
           <Box sx={{ mb: 2 }}>
-            <LogoutButton />
+            <LogoutButton open={open} />
           </Box>
           <Divider />
         </Box>
@@ -147,7 +206,10 @@ function SideBarContent({ navbarHidden }) {
         <Typography
           variant="h5"
           sx={{
-            display: "flex",
+            display: {
+              xs: "flex",
+              lg: "none",
+            },
             alignItems: "center",
             padding: "0.7rem 1rem",
             fontWeight: 600,
@@ -157,24 +219,65 @@ function SideBarContent({ navbarHidden }) {
           New Realeases
         </Typography>
 
+        <Typography
+          variant="h5"
+          sx={{
+            display: {
+              xs: "none",
+              lg: "flex",
+            },
+            alignItems: "center",
+            padding: "0.7rem 1rem",
+            fontWeight: 600,
+            color: "text.primary",
+            whiteSpace: "nowrap",
+          }}
+        >
+          {open ? "New Realeases" : "New"}
+        </Typography>
+
+        {/* Last Month */}
         <Box>
           <NavLink to="/top-games-month">
             {({ isActive }) => (
-              <Typography variant="body1" sx={typographyHoverSx(isActive)}>
-                <EventIcon sx={{ mr: 1 }} fontSize="small" />
-                Last Month
-              </Typography>
+              <Box sx={typographyHoverSx(isActive)}>
+                <EventIcon fontSize="small" />
+                <Typography
+                  variant="body1"
+                  sx={{
+                    display: {
+                      xs: "block",
+                      lg: open ? "block" : "none",
+                    },
+                    whiteSpace: "nowrap",
+                  }}
+                >
+                  Last Month
+                </Typography>
+              </Box>
             )}
           </NavLink>
         </Box>
 
+        {/* This Year */}
         <Box>
           <NavLink to="/year-games">
             {({ isActive }) => (
-              <Typography variant="body1" sx={typographyHoverSx(isActive)}>
-                <UpdateIcon sx={{ mr: 1 }} fontSize="small" />
-                This Year
-              </Typography>
+              <Box sx={typographyHoverSx(isActive)}>
+                <UpdateIcon fontSize="small" />
+                <Typography
+                  variant="body1"
+                  sx={{
+                    display: {
+                      xs: "block",
+                      lg: open ? "block" : "none",
+                      whiteSpace: "nowrap",
+                    },
+                  }}
+                >
+                  This Year
+                </Typography>
+              </Box>
             )}
           </NavLink>
         </Box>
@@ -182,10 +285,21 @@ function SideBarContent({ navbarHidden }) {
         <Box>
           <NavLink to="/coming-soon">
             {({ isActive }) => (
-              <Typography variant="body1" sx={typographyHoverSx(isActive)}>
-                <QueryBuilderIcon sx={{ mr: 1 }} fontSize="small" />
-                Coming Soon...
-              </Typography>
+              <Box variant="body1" sx={typographyHoverSx(isActive)}>
+                <QueryBuilderIcon fontSize="small" />
+                <Typography
+                  variant="body1"
+                  sx={{
+                    display: {
+                      xs: "block",
+                      lg: open ? "block" : "none",
+                    },
+                    whiteSpace: "nowrap",
+                  }}
+                >
+                  Coming Soon...
+                </Typography>
+              </Box>
             )}
           </NavLink>
         </Box>
@@ -194,6 +308,7 @@ function SideBarContent({ navbarHidden }) {
       {/* Top games */}
       <Box sx={{ mb: 2 }}>
         <Divider />
+
         <Typography
           variant="h5"
           sx={{
@@ -210,10 +325,21 @@ function SideBarContent({ navbarHidden }) {
         <Box>
           <NavLink to="/top-games">
             {({ isActive }) => (
-              <Typography variant="body1" sx={typographyHoverSx(isActive)}>
-                <EmojiEventsIcon sx={{ mr: 1 }} fontSize="small" />
-                Top of The Week
-              </Typography>
+              <Box sx={typographyHoverSx(isActive)}>
+                <EmojiEventsIcon fontSize="small" />
+                <Typography
+                  variant="body1"
+                  sx={{
+                    display: {
+                      xs: "block",
+                      lg: open ? "block" : "none",
+                    },
+                    whiteSpace: "nowrap",
+                  }}
+                >
+                  Top of The Week
+                </Typography>
+              </Box>
             )}
           </NavLink>
         </Box>
@@ -221,10 +347,21 @@ function SideBarContent({ navbarHidden }) {
         <Box>
           <NavLink to="/top-games-last-year">
             {({ isActive }) => (
-              <Typography variant="body1" sx={typographyHoverSx(isActive)}>
-                <WorkspacePremiumIcon sx={{ mr: 1 }} fontSize="small" />
-                Best of {lastYear}
-              </Typography>
+              <Box sx={typographyHoverSx(isActive)}>
+                <WorkspacePremiumIcon fontSize="small" />
+                <Typography
+                  variant="body1"
+                  sx={{
+                    display: {
+                      xs: "block",
+                      lg: open ? "block" : "none",
+                    },
+                    whiteSpace: "nowrap",
+                  }}
+                >
+                  Best of {lastYear}
+                </Typography>
+              </Box>
             )}
           </NavLink>
         </Box>
@@ -232,10 +369,21 @@ function SideBarContent({ navbarHidden }) {
         <Box>
           <NavLink to="/top-all-time-games">
             {({ isActive }) => (
-              <Typography variant="body1" sx={typographyHoverSx(isActive)}>
-                <WorkspacePremiumIcon sx={{ mr: 1 }} fontSize="small" />
-                Top 250 Of All Time
-              </Typography>
+              <Box sx={typographyHoverSx(isActive)}>
+                <WorkspacePremiumIcon fontSize="small" />
+                <Typography
+                  variant="body1"
+                  sx={{
+                    display: {
+                      xs: "block",
+                      lg: open ? "block" : "none",
+                    },
+                    whiteSpace: "nowrap",
+                  }}
+                >
+                  Top 250 Of All Time
+                </Typography>
+              </Box>
             )}
           </NavLink>
         </Box>
@@ -244,6 +392,7 @@ function SideBarContent({ navbarHidden }) {
       {/* Games section */}
       <Box sx={{ mb: 2 }}>
         <Divider />
+
         <Typography
           variant="h5"
           sx={{
@@ -260,10 +409,21 @@ function SideBarContent({ navbarHidden }) {
         <Box>
           <NavLink to="/all-games">
             {({ isActive }) => (
-              <Typography variant="body1" sx={typographyHoverSx(isActive)}>
-                <SportsEsportsIcon sx={{ mr: 1 }} fontSize="small" />
-                All Games
-              </Typography>
+              <Box sx={typographyHoverSx(isActive)}>
+                <SportsEsportsIcon fontSize="small" />
+                <Typography
+                  variant="body1"
+                  sx={{
+                    display: {
+                      xs: "block",
+                      lg: open ? "block" : "none",
+                    },
+                    whiteSpace: "nowrap",
+                  }}
+                >
+                  All Games
+                </Typography>
+              </Box>
             )}
           </NavLink>
         </Box>
@@ -271,10 +431,21 @@ function SideBarContent({ navbarHidden }) {
         <Box>
           <NavLink to="/genres">
             {({ isActive }) => (
-              <Typography variant="body1" sx={typographyHoverSx(isActive)}>
-                <CategoryIcon sx={{ mr: 1 }} fontSize="small" />
-                Genres
-              </Typography>
+              <Box variant="body1" sx={typographyHoverSx(isActive)}>
+                <CategoryIcon fontSize="small" />
+                <Typography
+                  variant="body1"
+                  sx={{
+                    display: {
+                      xs: "block",
+                      lg: open ? "block" : "none",
+                    },
+                    whiteSpace: "nowrap",
+                  }}
+                >
+                  Genres
+                </Typography>
+              </Box>
             )}
           </NavLink>
         </Box>
@@ -283,6 +454,7 @@ function SideBarContent({ navbarHidden }) {
       {/* Browse section */}
       <Box>
         <Divider />
+
         <Typography
           variant="h5"
           sx={{
@@ -299,10 +471,21 @@ function SideBarContent({ navbarHidden }) {
         <Box>
           <NavLink to="/platforms">
             {({ isActive }) => (
-              <Typography variant="body1" sx={typographyHoverSx(isActive)}>
-                <DevicesIcon sx={{ mr: 1 }} fontSize="small" />
-                Platforms
-              </Typography>
+              <Box sx={typographyHoverSx(isActive)}>
+                <DevicesIcon fontSize="small" />
+                <Typography
+                  variant="body1"
+                  sx={{
+                    display: {
+                      xs: "block",
+                      lg: open ? "block" : "none",
+                    },
+                    whiteSpace: "nowrap",
+                  }}
+                >
+                  Platforms
+                </Typography>
+              </Box>
             )}
           </NavLink>
         </Box>
@@ -310,10 +493,21 @@ function SideBarContent({ navbarHidden }) {
         <Box>
           <NavLink to="/stores">
             {({ isActive }) => (
-              <Typography variant="body1" sx={typographyHoverSx(isActive)}>
-                <StorefrontIcon sx={{ mr: 1 }} fontSize="small" />
-                Stores
-              </Typography>
+              <Box sx={typographyHoverSx(isActive)}>
+                <StorefrontIcon fontSize="small" />
+                <Typography
+                  variant="body1"
+                  sx={{
+                    display: {
+                      xs: "block",
+                      lg: open ? "block" : "none",
+                    },
+                    whiteSpace: "nowrap",
+                  }}
+                >
+                  Stores
+                </Typography>
+              </Box>
             )}
           </NavLink>
         </Box>
@@ -321,10 +515,21 @@ function SideBarContent({ navbarHidden }) {
         <Box>
           <NavLink to="/tags">
             {({ isActive }) => (
-              <Typography variant="body1" sx={typographyHoverSx(isActive)}>
-                <LocalOfferOutlinedIcon sx={{ mr: 1 }} fontSize="small" />
-                Tags
-              </Typography>
+              <Box sx={typographyHoverSx(isActive)}>
+                <LocalOfferOutlinedIcon fontSize="small" />
+                <Typography
+                  variant="body1"
+                  sx={{
+                    display: {
+                      xs: "block",
+                      lg: open ? "block" : "none",
+                    },
+                    whiteSpace: "nowrap",
+                  }}
+                >
+                  Tags
+                </Typography>
+              </Box>
             )}
           </NavLink>
         </Box>
@@ -332,10 +537,21 @@ function SideBarContent({ navbarHidden }) {
         <Box>
           <NavLink to="/publishers">
             {({ isActive }) => (
-              <Typography variant="body1" sx={typographyHoverSx(isActive)}>
-                <BusinessOutlinedIcon sx={{ mr: 1 }} fontSize="small" />
-                Publishers
-              </Typography>
+              <Box sx={typographyHoverSx(isActive)}>
+                <BusinessOutlinedIcon fontSize="small" />
+                <Typography
+                  variant="body1"
+                  sx={{
+                    display: {
+                      xs: "block",
+                      lg: open ? "block" : "none",
+                    },
+                    whiteSpace: "nowrap",
+                  }}
+                >
+                  Publishers
+                </Typography>
+              </Box>
             )}
           </NavLink>
         </Box>
@@ -343,10 +559,21 @@ function SideBarContent({ navbarHidden }) {
         <Box>
           <NavLink to="/developers">
             {({ isActive }) => (
-              <Typography variant="body1" sx={typographyHoverSx(isActive)}>
-                <CodeOutlinedIcon sx={{ mr: 1 }} fontSize="small" />
-                Developers
-              </Typography>
+              <Box sx={typographyHoverSx(isActive)}>
+                <CodeOutlinedIcon fontSize="small" />
+                <Typography
+                  variant="body1"
+                  sx={{
+                    display: {
+                      xs: "block",
+                      lg: open ? "block" : "none",
+                    },
+                    whiteSpace: "nowrap",
+                  }}
+                >
+                  Developers
+                </Typography>
+              </Box>
             )}
           </NavLink>
         </Box>
@@ -354,10 +581,21 @@ function SideBarContent({ navbarHidden }) {
         <Box>
           <NavLink to="/creators">
             {({ isActive }) => (
-              <Typography variant="body1" sx={typographyHoverSx(isActive)}>
-                <CreateOutlinedIcon sx={{ mr: 1 }} fontSize="small" />
-                Creators
-              </Typography>
+              <Box sx={typographyHoverSx(isActive)}>
+                <CreateOutlinedIcon fontSize="small" />
+                <Typography
+                  variant="body1"
+                  sx={{
+                    display: {
+                      xs: "block",
+                      lg: open ? "block" : "none",
+                    },
+                    whiteSpace: "nowrap",
+                  }}
+                >
+                  Creators
+                </Typography>
+              </Box>
             )}
           </NavLink>
         </Box>

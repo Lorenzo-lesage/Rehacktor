@@ -5,7 +5,7 @@ const SimilarGamesList = ({ games }) => {
   if (!games || games.length === 0) return null;
 
   return (
-    <Box sx={{ mt: 6, minHeight: "50vh" }}>
+    <Box sx={{ mt: 6, minHeight: "50vh", px: { xs: 0, md: 10 } }}>
       <Typography variant="h5" gutterBottom>
         Similar games
       </Typography>

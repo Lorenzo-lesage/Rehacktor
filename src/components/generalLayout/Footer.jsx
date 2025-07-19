@@ -63,6 +63,7 @@ function Footer({ footerRef }) {
         mt: "auto",
         position: "relative",
         overflow: "hidden",
+        zIndex: 202,
         backgroundColor: theme.palette.background.paper,
         "&::before": {
           content: '""',

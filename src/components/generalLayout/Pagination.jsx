@@ -17,6 +17,7 @@ function PaginationMui({ currentPage, setPage, lastPage }) {
 
   const handleChange = (event, value) => {
     setPage(value);
+    window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
   const handleJumpBack = () => {

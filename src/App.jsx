@@ -5,6 +5,7 @@ import BackgroundProvider from "./context/BackgroundProvider";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import SnackbarProviderWrapper from "./components/toast/SnackbarProviderWrapper";
+import ScrollToTop from "./components/ScrollToTop";
 
 if (typeof global === "undefined") {
   window.global = window;

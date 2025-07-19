@@ -55,6 +55,7 @@ function Layout() {
               padding: 2,
               mt: 8,
               minHeight: '100vh',
+              ml: { xs: 0, lg: 10, xl: 10 },
             }}
           >
             <Box sx={{ display: { xs: "block", sm: "none" } }}>

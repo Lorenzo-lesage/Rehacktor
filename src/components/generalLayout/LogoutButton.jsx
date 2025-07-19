@@ -7,24 +7,36 @@ import {
   DialogTitle,
   Slide,
   Typography,
+  useTheme,
 } from "@mui/material";
 import { useNavigate } from "react-router";
 import supabase from "../../supabase/supabase-client";
 import { showToast } from "../../utils/snackbarUtils";
 import LogoutIcon from "@mui/icons-material/Logout";
-import { useTheme } from "@mui/material/styles";
 
 const Transition = forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
 });
 
-function LogoutButton() {
-  const [open, setOpen] = useState(false);
+function LogoutButton({ open }) {
+  /*
+  |--------------------------------------------------------
+  | Data
+  |--------------------------------------------------------
+ */
+
+  const [openLogout, setOpLogouten] = useState(false);
   const navigate = useNavigate();
   const theme = useTheme();
 
-  const handleOpenDialog = () => setOpen(true);
-  const handleCloseDialog = () => setOpen(false);
+  const handleOpenDialog = () => setOpLogouten(true);
+  const handleCloseDialog = () => setOpLogouten(false);
+
+  /*
+  |--------------------------------------------------------
+  | Methods
+  |--------------------------------------------------------
+ */
 
   const signOut = async () => {
     const { error } = await supabase.auth.signOut();
@@ -38,29 +50,38 @@ function LogoutButton() {
   };
 
   const handleConfirmLogout = () => {
-    setOpen(false);
+    setOpLogouten(false);
     signOut();
   };
 
+  /*
+  |--------------------------------------------------------
+  | Return
+  |--------------------------------------------------------
+ */
+
   return (
     <>
-      <Typography
+      <Box
         variant="body1"
         onClick={handleOpenDialog}
         sx={{
           display: "flex",
           alignItems: "center",
+          justifyContent: "flex-start",
           padding: "0.3rem 1rem",
           cursor: "pointer",
           borderRadius: 2,
           transition: "all 0.25s ease",
           fontWeight: 600,
-
+          gap: 1,
           "&:hover": {
             transform: "translateX(4px)",
+            backgroundColor: theme.palette.background.paper,
           },
           "& svg": {
             transition: "all 0.25s ease",
+            fontSize: "1.6rem",
           },
           "&:hover svg": {
             color: theme.palette.primary.main,
@@ -68,12 +89,22 @@ function LogoutButton() {
           },
         }}
       >
-        <LogoutIcon sx={{ mr: 1 }} fontSize="small" />
-        Logout
-      </Typography>
+        <LogoutIcon fontSize="small" />
+        <Typography
+          variant="body1"
+          sx={{
+            display: {
+              xs: "block",
+              lg: open ? "block" : "none",
+            },
+          }}
+        >
+          Logout
+        </Typography>
+      </Box>
 
       <Dialog
-        open={open}
+        open={openLogout}
         onClose={handleCloseDialog}
         slots={{ transition: Transition }}
       >

@@ -126,19 +126,17 @@ function LayoutGamesList({
           const fromLeft = index % 2 === 0;
 
           return (
-            <Grid key={game.id} size={{ xs: 2, sm: 4, md: 4, lg: 4, xl: 3 }}>
+            <Grid key={game.id} size={{ xs: 2, sm: 3.3, md: 3.5, lg: 3, xl: 2.6 }}>
               <motion.div
                 initial={{
                   opacity: 0,
                   x: fromLeft ? -50 : 50,
-                  scale: 0.9,
                 }}
                 animate={{
                   opacity: 1,
                   x: 0,
-                  scale: 1,
                 }}
-                transition={{ duration: 0.5, delay: index * 0.15 }}
+                transition={{ duration: 0.5, delay: Math.min(index, 10) * 0.15 }}
                 style={{
                   width: "100%",
                   display: "flex",

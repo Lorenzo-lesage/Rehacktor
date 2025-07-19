@@ -16,10 +16,10 @@ const MobileDrawer = () => {
   |--------------------------------------------------------
  */
 
-  const [open, setOpen] = useState(false);
+  const [openDrawer, setOpenDrawer] = useState(false);
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("lg"));
-  const toggleDrawer = (state) => () => setOpen(state);
+  const toggleDrawer = (state) => () => setOpenDrawer(state);
 
   /*
   |--------------------------------------------------------
@@ -37,7 +37,7 @@ const MobileDrawer = () => {
 
       <Drawer
         anchor="left"
-        open={open}
+        open={openDrawer}
         onClose={toggleDrawer(false)}
         ModalProps={{ keepMounted: true }}
         slotProps={{

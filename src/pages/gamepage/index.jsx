@@ -341,10 +341,11 @@ function GamePage() {
                 mt: 2,
                 display: "flex",
                 flexDirection: { xs: "column-reverse", md: "row" },
+                alignItems: { xs: "end", md: "flex-start" },
               }}
             >
               {/* Title & Info Section */}
-              <Grid size={{ xs: 12, md: 8 }}>
+              <Grid size={{ xs: 12, md: 7, lg: 8 }}>
                 <Typography
                   variant="h3"
                   textAlign="center"
@@ -377,7 +378,7 @@ function GamePage() {
               </Grid>
 
               <Grid
-                size={{ xs: 12, md: 4 }}
+                size={{ xs: 12, md: 5, lg: 4 }}
                 sx={{
                   display: "flex",
                   flexDirection: "column",
@@ -386,163 +387,140 @@ function GamePage() {
                   mb: { xs: 2, md: 0 },
                 }}
               >
-                <Box sx={{ mt: 2 }}>
-                  {images.length > 0 ? (
-                    <>
-                      <Box sx={{ display: "flex", flexDirection: "column" }}>
-                        {/* Grid di immagini */}
-                        <Box
-                          sx={{
-                            display: "flex",
-                            flexDirection: "column",
-                            gap: 1,
-                          }}
-                        >
-                          {/* Prima immagine grande */}
-                          <Box sx={{ position: "relative" }}>
-                            <Box
-                              sx={{
-                                display: "grid",
-                                gap: 1,
-                                gridTemplateColumns: "2fr 1fr",
-                                gridTemplateRows: "1fr 1fr",
-                                height: 200,
-                                maxWidth: 400,
-                              }}
-                            >
-                              {images.slice(0, 3).map((img, index) => (
+                <Grid container spacing={2} sx={{ mt: 2 }}>
+                  <Grid size={{ xs: 12, sm: 6, md: 12 }}>
+                    {images.length > 0 ? (
+                      <>
+                        <Box sx={{ display: "flex", flexDirection: "column" }}>
+                          {/* Grid di immagini */}
+                          <Box
+                            sx={{
+                              display: "flex",
+                              flexDirection: "column",
+                              gap: 1,
+                            }}
+                          >
+                            {/* Prima immagine grande */}
+                            <Box sx={{ position: "relative"}}>
+                              <Box
+                                sx={{
+                                  display: "grid",
+                                  gap: 1,
+                                  gridTemplateColumns: "2fr 1fr",
+                                  gridTemplateRows: "1fr 1fr",
+                                  height: 200,
+                                  width: "100%",
+                                }}
+                              >
+                                {images.slice(0, 3).map((img, index) => (
+                                  <Box
+                                    key={index}
+                                    component="img"
+                                    src={img}
+                                    alt={`Screenshot ${index + 1}`}
+                                    sx={{
+                                      width: "100%",
+                                      height: "100%",
+                                      objectFit: "cover",
+                                      borderRadius: 1,
+                                      cursor: "pointer",
+                                      boxShadow: "0 0 8px rgba(0,0,0,0.3)",
+                                      transition: "transform 0.3s",
+                                      "&:hover": { transform: "scale(1.05)" },
+                                      ...(index === 0 && { gridRow: "1 / 3" }),
+                                    }}
+                                    onClick={() => {
+                                      setPhotoIndex(index);
+                                      setIsOpen(true);
+                                    }}
+                                  />
+                                ))}
+                              </Box>
+
+                              <Button
+                                variant="text"
+                                size="small"
+                                startIcon={<PhotoLibraryIcon />}
+                                onClick={() => {
+                                  setPhotoIndex(0);
+                                  setIsOpen(true);
+                                }}
+                                sx={{
+                                  color: "rgba(255, 255, 255, 0.8)",
+                                  "&:hover": {
+                                    backgroundColor: "rgba(0, 0, 0, 0.8)",
+                                  },
+                                  position: "absolute",
+                                  top: 10,
+                                  right: 10,
+                                  backgroundColor: "rgba(0, 0, 0, 0.4)",
+                                  backdropFilter: "blur(1px)",
+                                }}
+                              >
+                                Gallery ({images.length})
+                              </Button>
+                            </Box>
+
+                            {/* Altre immagini piccole */}
+                            <Box sx={{ display: "flex", gap: 1 }}>
+                              {images.slice(1, 3).map((img, index) => (
                                 <Box
-                                  key={index}
+                                  key={index + 1}
                                   component="img"
                                   src={img}
-                                  alt={`Screenshot ${index + 1}`}
+                                  alt={`Screenshot ${index + 2}`}
                                   sx={{
-                                    width: "100%",
-                                    height: "100%",
+                                    width: "50%",
+                                    height: 70,
                                     objectFit: "cover",
                                     borderRadius: 1,
                                     cursor: "pointer",
                                     boxShadow: "0 0 8px rgba(0,0,0,0.3)",
                                     transition: "transform 0.3s",
                                     "&:hover": { transform: "scale(1.05)" },
-                                    ...(index === 0 && { gridRow: "1 / 3" }),
                                   }}
                                   onClick={() => {
-                                    setPhotoIndex(index);
+                                    setPhotoIndex(index + 1);
                                     setIsOpen(true);
                                   }}
                                 />
                               ))}
                             </Box>
-
-                            <Button
-                              variant="text"
-                              size="small"
-                              startIcon={<PhotoLibraryIcon />}
-                              onClick={() => {
-                                setPhotoIndex(0);
-                                setIsOpen(true);
-                              }}
-                              sx={{
-                                color: "rgba(255, 255, 255, 0.8)",
-                                "&:hover": {
-                                  backgroundColor: "rgba(0, 0, 0, 0.8)",
-                                },
-                                position: "absolute",
-                                top: 10,
-                                right: 10,
-                                backgroundColor: "rgba(0, 0, 0, 0.4)",
-                                backdropFilter: "blur(1px)",
-                              }}
-                            >
-                              Gallery ({images.length})
-                            </Button>
-                          </Box>
-
-                          {/* Altre immagini piccole */}
-                          <Box sx={{ display: "flex", gap: 1 }}>
-                            {images.slice(1, 3).map((img, index) => (
-                              <Box
-                                key={index + 1}
-                                component="img"
-                                src={img}
-                                alt={`Screenshot ${index + 2}`}
-                                sx={{
-                                  width: "50%",
-                                  height: 70,
-                                  objectFit: "cover",
-                                  borderRadius: 1,
-                                  cursor: "pointer",
-                                  boxShadow: "0 0 8px rgba(0,0,0,0.3)",
-                                  transition: "transform 0.3s",
-                                  "&:hover": { transform: "scale(1.05)" },
-                                }}
-                                onClick={() => {
-                                  setPhotoIndex(index + 1);
-                                  setIsOpen(true);
-                                }}
-                              />
-                            ))}
                           </Box>
                         </Box>
-                      </Box>
-                    </>
-                  ) : (
-                    <Typography>
-                      No screenshots available for this game.
-                    </Typography>
-                  )}
-                </Box>
-                <Box sx={{ mt: 2 }}>
-                  {movies.length > 0 ? (
-                    <>
-                      <Box
-                        sx={{
-                          display: "flex",
-                          alignItems: "center",
-                          position: "relative",
-                        }}
-                      >
-                        {/* Preview del primo trailer */}
-                        <Box
-                          component="img"
-                          src={movies[0].preview}
-                          alt={movies[0].name || "Trailer"}
-                          sx={{
-                            width: "100%",
-                            aspectRatio: "27/16",
-                            objectFit: "cover",
-                            borderRadius: 1,
-                            cursor: "pointer",
-                            flexShrink: 0,
-                            boxShadow: "0 0 8px rgba(0,0,0,0.3)",
-                            transition: "transform 0.3s",
-                            "&:hover": { transform: "scale(1.05)" },
-                          }}
-                          onClick={() => {
-                            if (videoSlides.length > 0) {
-                              setPhotoIndex(images.length);
-                              setIsOpen(true);
-                            } else if (youtubeVideos.length > 0) {
-                              openYouTube(youtubeVideos[0].videoUrl);
-                            }
-                          }}
-                        />
+                      </>
+                    ) : (
+                      <Typography>
+                        No screenshots available for this game.
+                      </Typography>
+                    )}
+                  </Grid>
+                  <Grid sx={{ mt: { xs: 1, sm: 0 } }} size={{ xs: 12, sm: 6, md: 12 }}>
+                    {movies.length > 0 ? (
+                      <>
                         <Box
                           sx={{
                             display: "flex",
-                            flexDirection: "column",
-                            alignItems: "flex-end",
-                            gap: 1,
-                            position: "absolute",
-                            top: 10,
-                            right: 10,
+                            alignItems: "center",
+                            position: "relative",
                           }}
                         >
-                          <Button
-                            variant="text"
-                            size="small"
-                            startIcon={<PlayArrowIcon />}
+                          {/* Preview del primo trailer */}
+                          <Box
+                            component="img"
+                            src={movies[0].preview}
+                            alt={movies[0].name || "Trailer"}
+                            sx={{
+                              width: "100%",
+                              aspectRatio: "27/16",
+                              objectFit: "cover",
+                              borderRadius: 1,
+                              cursor: "pointer",
+                              flexShrink: 0,
+                              boxShadow: "0 0 8px rgba(0,0,0,0.3)",
+                              transition: "transform 0.3s",
+                              "&:hover": { transform: "scale(1.05)" },
+                            }}
                             onClick={() => {
                               if (videoSlides.length > 0) {
                                 setPhotoIndex(images.length);
@@ -551,38 +529,63 @@ function GamePage() {
                                 openYouTube(youtubeVideos[0].videoUrl);
                               }
                             }}
+                          />
+                          <Box
                             sx={{
-                              color: "rgba(255, 255, 255, 0.8)",
-                              "&:hover": {
-                                backgroundColor: "rgba(0, 0, 0, 0.8)",
-                              },
-                              backgroundColor: "rgba(0, 0, 0, 0.2)",
-                              backdropFilter: "blur(1px)",
+                              display: "flex",
+                              flexDirection: "column",
+                              alignItems: "flex-end",
+                              gap: 1,
+                              position: "absolute",
+                              top: 10,
+                              right: 10,
                             }}
                           >
-                            Trailer
-                          </Button>
-
-                          {movies.length > 1 && (
-                            <Typography
-                              variant="caption"
-                              sx={{ color: "rgba(255, 255, 255, 0.8)" }}
+                            <Button
+                              variant="text"
+                              size="small"
+                              startIcon={<PlayArrowIcon />}
+                              onClick={() => {
+                                if (videoSlides.length > 0) {
+                                  setPhotoIndex(images.length);
+                                  setIsOpen(true);
+                                } else if (youtubeVideos.length > 0) {
+                                  openYouTube(youtubeVideos[0].videoUrl);
+                                }
+                              }}
+                              sx={{
+                                color: "rgba(255, 255, 255, 0.8)",
+                                "&:hover": {
+                                  backgroundColor: "rgba(0, 0, 0, 0.8)",
+                                },
+                                backgroundColor: "rgba(0, 0, 0, 0.2)",
+                                backdropFilter: "blur(1px)",
+                              }}
                             >
-                              {movies.length} trailer
-                              {movies.length > 1 ? "s" : ""} available
-                            </Typography>
-                          )}
-                        </Box>
+                              Trailer
+                            </Button>
 
-                        {/* Bottone per aprire tutti i trailer */}
-                      </Box>
-                    </>
-                  ) : (
-                    <Typography>
-                      No trailers available for this game.
-                    </Typography>
-                  )}
-                </Box>
+                            {movies.length > 1 && (
+                              <Typography
+                                variant="caption"
+                                sx={{ color: "rgba(255, 255, 255, 0.8)" }}
+                              >
+                                {movies.length} trailer
+                                {movies.length > 1 ? "s" : ""} available
+                              </Typography>
+                            )}
+                          </Box>
+
+                          {/* Bottone per aprire tutti i trailer */}
+                        </Box>
+                      </>
+                    ) : (
+                      <Typography>
+                        No trailers available for this game.
+                      </Typography>
+                    )}
+                  </Grid>
+                </Grid>
                 {isOpen && (
                   <Lightbox
                     open={isOpen}
