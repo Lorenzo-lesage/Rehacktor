@@ -5,7 +5,7 @@ Permette agli utenti di chattare, esplorare, cercare e salvare titoli, visualizz
 
 Il progetto è sviluppato con **Vite** e **React**, utilizzando **MUI** per l'interfaccia utente, **React Router** per la navigazione (incluse rotte dinamiche), e **Tailwind CSS** in piccola parte per personalizzazioni rapide.  
 Il backend è gestito interamente tramite **Supabase**, mentre il deploy è effettuato su **Vercel**.  
-L'interfaccia è **100% responsive**, ottimizzata per mobile.
+L'interfaccia è **100% responsive**, ottimizzata per mobile, tablet e desktop.
 
 ---
 
@@ -23,6 +23,7 @@ L'interfaccia è **100% responsive**, ottimizzata per mobile.
 - **react-lazy-load-image-component** per lazy loading delle immagini delle card
 - **react-image-lightbox** per la visualizzazione a tutto schermo di immagini e trailer nella sezione dettagli gioco
 - **notistack** per notifiche e toast UX
+- **framer-motion** per animazioni
 - **react-icons** + **@mui/icons-material** mappati per rappresentare console, negozi, aziende, ecc.
 - **Tema Light / Dark** dinamico
 - **Favicon personalizzata**
@@ -74,7 +75,7 @@ L'interfaccia è **100% responsive**, ottimizzata per mobile.
 
 ### Tema e UI moderna
 - Modalità **chiaro/scuro** dinamica
-- Design responsive, pensato per mobile e desktop
+- Design responsive, pensato per mobile, tablet e desktop
 - Interfaccia coerente e curata con MUI
 
 ---

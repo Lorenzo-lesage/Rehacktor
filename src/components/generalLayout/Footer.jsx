@@ -143,7 +143,7 @@ function Footer({ footerRef }) {
                     Discord
                   </Link>
                   <Link
-                    href="https://github.com/yourrepo"
+                    href="https://github.com/Lorenzo-lesage"
                     target="_blank"
                     rel="noopener"
                     sx={linkStyle}
@@ -194,7 +194,7 @@ function Footer({ footerRef }) {
                 <Typography sx={sectionTitleStyle}>Resources</Typography>
                 <Stack spacing={0.5}>
                   <Link
-                    href="https://blog.rehacktor.com"
+                    href="/"
                     target="_blank"
                     rel="noopener"
                     sx={linkStyle}
@@ -263,7 +263,7 @@ function Footer({ footerRef }) {
                 <Typography sx={sectionTitleStyle}>Contact</Typography>
                 <Stack spacing={0.5}>
                   <Link 
-                    href="mailto:contact@rehacktor.com" 
+                    href="mailto:lorenzo.lesage99@gmail.com" 
                     sx={linkStyle}
                   >
                     <Box sx={iconWrapperStyle}>
@@ -283,7 +283,7 @@ function Footer({ footerRef }) {
                     Twitter / X
                   </Link>
                   <Link
-                    href="https://linkedin.com/company/rehacktor"
+                    href="https://www.linkedin.com/in/lorenzo-lesage-developer/"
                     target="_blank"
                     rel="noopener"
                     sx={linkStyle}

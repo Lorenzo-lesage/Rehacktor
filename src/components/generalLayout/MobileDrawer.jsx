@@ -10,11 +10,22 @@ import MenuIcon from "@mui/icons-material/Menu";
 import SideBarContent from "./SideBarContent";
 
 const MobileDrawer = () => {
+  /*
+  |--------------------------------------------------------
+  | Data
+  |--------------------------------------------------------
+ */
+
   const [open, setOpen] = useState(false);
   const theme = useTheme();
-  const isMobile = useMediaQuery(theme.breakpoints.down("md"));
-
+  const isMobile = useMediaQuery(theme.breakpoints.down("lg"));
   const toggleDrawer = (state) => () => setOpen(state);
+
+  /*
+  |--------------------------------------------------------
+  | Return
+  |--------------------------------------------------------
+ */
 
   if (!isMobile) return null;
 
@@ -29,7 +40,11 @@ const MobileDrawer = () => {
         open={open}
         onClose={toggleDrawer(false)}
         ModalProps={{ keepMounted: true }}
-        PaperProps={{ sx: { width: 250 } }}
+        slotProps={{
+          sx: {
+            width: 250,
+          },
+        }}
       >
         <Box
           role="presentation"

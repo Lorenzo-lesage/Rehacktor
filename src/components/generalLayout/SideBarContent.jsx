@@ -60,8 +60,8 @@ function SideBarContent({ navbarHidden }) {
   return (
     <Box
       sx={{
-        marginTop: `${marginTop}px`,
-        height: `calc(100vh - ${marginTop}px)`,
+        marginTop: { lg: 0, xl: `${marginTop}px`},
+        height: {xs: "100vh", xl: `calc(100vh - ${marginTop}px)`},
         transition: "margin-top 0.3s ease",
         overflowY: "auto",
         scrollbarWidth: "none",
@@ -135,15 +135,15 @@ function SideBarContent({ navbarHidden }) {
             </NavLink>
           </Box>
 
-          <Box>
+          <Box sx={{ mb: 2 }}>
             <LogoutButton />
           </Box>
+          <Divider />
         </Box>
       )}
 
       {/* New Releases */}
       <Box sx={{ mb: 2 }}>
-        <Divider />
         <Typography
           variant="h5"
           sx={{

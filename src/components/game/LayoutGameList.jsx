@@ -1,4 +1,5 @@
-import { Box, Typography, Grid, CircularProgress } from "@mui/material";
+import { Box, Typography, Grid, CircularProgress, Fade } from "@mui/material";
+import { motion } from "framer-motion";
 import CardGame from "./CardGame.jsx";
 import PaginationMui from "../generalLayout/Pagination";
 import GameOrderingSelect from "./GameOrderingSelect.jsx";
@@ -66,6 +67,7 @@ function LayoutGamesList({
         overflow: "hidden",
         width: "100%",
         maxWidth: "100%",
+        pb: 10,
       }}
     >
       <Box
@@ -116,14 +118,38 @@ function LayoutGamesList({
       <Grid
         container
         columns={{ xs: 4, sm: 8, md: 12 }}
-        spacing={2}
+        spacing={1}
+        display={"flex"}
         justifyContent="center"
       >
-        {data?.results?.map((game) => (
-          <Grid key={game.id} size={{ xs: 2, md: 3 }}>
-            <CardGame game={game} />
-          </Grid>
-        ))}
+        {data?.results?.map((game, index) => {
+          const fromLeft = index % 2 === 0;
+
+          return (
+            <Grid key={game.id} size={{ xs: 2, sm: 4, md: 4, lg: 4, xl: 3 }}>
+              <motion.div
+                initial={{
+                  opacity: 0,
+                  x: fromLeft ? -50 : 50,
+                  scale: 0.9,
+                }}
+                animate={{
+                  opacity: 1,
+                  x: 0,
+                  scale: 1,
+                }}
+                transition={{ duration: 0.5, delay: index * 0.15 }}
+                style={{
+                  width: "100%",
+                  display: "flex",
+                  justifyContent: "center",
+                }}
+              >
+                <CardGame game={game} />
+              </motion.div>
+            </Grid>
+          );
+        })}
       </Grid>
 
       {/* Pagination */}
@@ -132,6 +158,7 @@ function LayoutGamesList({
           display: "flex",
           justifyContent: "center",
           marginTop: "2rem",
+          marginBottom: "4rem",
         }}
       >
         <PaginationMui
