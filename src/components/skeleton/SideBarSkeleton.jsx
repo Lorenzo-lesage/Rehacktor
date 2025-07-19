@@ -1,52 +1,58 @@
-import { Box, Skeleton } from "@mui/material";
+import { Box, Skeleton, Divider } from "@mui/material";
 
-function SideBarSkeleton({ navbarHidden }) {
+function SideBarSkeleton({ navbarHidden, open }) {
   const headerHeight = 64;
   const marginTop = navbarHidden ? 0 : headerHeight;
 
   return (
     <Box
-      component="aside"
       sx={{
-        width: 240,
-        display: { xs: "none", sm: "block" },
-        flexShrink: 0,
+        marginTop: { md: 0, lg: `${marginTop}px` },
+        height: { xs: "100vh", lg: `calc(100vh - ${marginTop}px)` },
+        overflowY: "auto",
+        scrollbarWidth: "none",
+        "&::-webkit-scrollbar": { display: "none" },
+        padding: "0 0.5rem 1rem 0.5rem",
+        backgroundColor: open ? "background.sidebar" : "transparent",
+        borderRadius: { xs: 0, xl: "0 0.3rem 0.3rem 0" },
       }}
     >
-      <Box
-        sx={{
-          position: "sticky",
-          top: 0,
-          height: "100vh",
-          overflow: "hidden",
-          backgroundColor: "transparent",
-          boxSizing: "border-box",
-        }}
-      >
-        <Box
-          sx={{
-            marginTop: `${marginTop}px`,
-            height: `calc(100vh - ${marginTop}px)`,
-            transition: "margin-top 0.3s ease",
-            overflowY: "auto",
-            scrollbarWidth: "none",
-            "&::-webkit-scrollbar": {
-              display: "none",
-            },
-            padding: "0 0.5rem 1rem 0.5rem",
-          }}
-        >
-          {/* Simulazione delle voci di generi */}
-          {[...Array(10)].map((_, i) => (
+      {/* User + Avatar */}
+      <Box sx={{ mb: 2, px: 2, display: "flex", alignItems: "center", gap: 1 }}>
+        <Skeleton variant="circular" width={40} height={40} />
+        {open && <Skeleton variant="text" width="60%" height={30} />}
+      </Box>
+
+      {/* Profile + Whishlist + Logout */}
+      {[...Array(3)].map((_, i) => (
+        <Skeleton
+          key={`profile-${i}`}
+          variant="rounded"
+          height={36}
+          sx={{ mb: 1.2, mx: 1.2, borderRadius: 2 }}
+        />
+      ))}
+
+      <Divider sx={{ mb: 2 }} />
+
+      {/* Sections: New Releases, Top, Games, Browse */}
+      {[...Array(4)].map((_, sectionIndex) => (
+        <Box key={sectionIndex} sx={{ mb: 2 }}>
+          <Skeleton
+            variant="text"
+            width={open ? "40%" : "30%"}
+            sx={{ mb: 1.5, mx: 2 }}
+          />
+          {[...Array(3)].map((_, i) => (
             <Skeleton
-              key={i}
+              key={`item-${sectionIndex}-${i}`}
               variant="rounded"
-              height={32}
-              sx={{ mb: 1, borderRadius: 1 }}
+              height={36}
+              sx={{ mb: 1.2, mx: 1.2, borderRadius: 2 }}
             />
           ))}
         </Box>
-      </Box>
+      ))}
     </Box>
   );
 }
