@@ -7,6 +7,7 @@ import {
   Rating,
   CircularProgress,
   useMediaQuery,
+  IconButton,
 } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
 import LazyLoadGameImage from "../animationComponent/LazyLoadGameImage";
@@ -23,6 +24,11 @@ import ToggleFavorite from "../animationComponent/ToggleFavorite";
 import { useQuery } from "@tanstack/react-query";
 import { fetchGameDetails } from "../../api/games";
 
+//icon
+import AddIcon from "@mui/icons-material/Add";
+import RemoveRedEyeIcon from "@mui/icons-material/RemoveRedEye";
+import RemoveIcon from "@mui/icons-material/Remove";
+
 function CardGame({ game }) {
   /*
   |-----------------------------------------------------
@@ -35,7 +41,6 @@ function CardGame({ game }) {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("md"));
   const isExpanded = isMobile ? openFromXs : open;
-
 
   const { data, isLoading, isError } = useQuery({
     queryKey: ["gameDetails", game.id],
@@ -147,6 +152,7 @@ function CardGame({ game }) {
             <ToggleFavorite data={game} />
             <Box
               sx={{
+                display: { xs: "none", lg: "block" },
                 opacity: open ? 1 : 0,
                 transform: open ? "translateX(0)" : "translateX(50px)",
                 transition:
@@ -157,6 +163,7 @@ function CardGame({ game }) {
             </Box>
             <Box
               sx={{
+                display: { xs: "none", lg: "block" },
                 opacity: open ? 1 : 0,
                 transform: open ? "translateX(0)" : "translateX(60px)",
                 transition:
@@ -167,6 +174,7 @@ function CardGame({ game }) {
             </Box>
             <Box
               sx={{
+                display: { xs: "none", lg: "block" },
                 opacity: open ? 1 : 0,
                 transform: open ? "translateX(0)" : "translateX(70px)",
                 transition:
@@ -175,6 +183,47 @@ function CardGame({ game }) {
             >
               <Playtime hours={game.playtime} />
             </Box>
+
+            <Box
+              sx={{
+                display: { xs: "block", lg: "none" },
+                color: "yellow",
+                filter: "drop-shadow(100px 3px 3px rgba(0,0,0))",
+                textShadow: "2px 1px 1px rgba(0,0,0)",
+                boxShadow: "1px 1px 1px rgba(0,0,0)",
+                backgroundColor: "background.iconHover",
+                borderRadius: 50,
+              }}
+            >
+              <IconButton
+                onClick={() => setOpenFromXs((prev) => !prev)}
+                size="small"
+              >
+                {openFromXs ? <RemoveIcon fontSize="small" /> : <AddIcon  fontSize="small"/>}
+              </IconButton>
+            </Box>
+          </Box>
+
+          <Box
+            sx={{
+              position: "absolute",
+              right: "50%",
+              top: "0.5rem",
+              transform: "translateX(50%)",
+              zIndex: 1,
+              display: { xs: "block", lg: "none" },
+              color: "yellow",
+              textShadow: "2px 1px 1px rgba(0,0,0)",
+              boxShadow: "1px 1px 1px rgba(0,0,0)",
+              backgroundColor: "background.iconHover",
+              borderRadius: 50,
+            }}
+          >
+            <Link to={`/games/${slug}/${id}`}>
+              <IconButton size="small">
+                <RemoveRedEyeIcon fontSize="small" />
+              </IconButton>
+            </Link>
           </Box>
 
           <Box
@@ -245,6 +294,7 @@ function CardGame({ game }) {
                   variant="h6"
                   component="div"
                   sx={{
+                    textDecoration: { xs: "underline", md: "none" },
                     overflow: "hidden",
                     whiteSpace: open || openFromXs ? "normal" : "nowrap",
                     textOverflow: "ellipsis",

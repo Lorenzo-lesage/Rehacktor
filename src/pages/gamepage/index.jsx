@@ -388,7 +388,7 @@ function GamePage() {
                 }}
               >
                 <Grid container spacing={2} sx={{ mt: 2 }}>
-                  <Grid size={{ xs: 12, sm: 6, md: 12 }}>
+                  <Grid size={{ xs: 6, sm: 6, md: 12 }}>
                     {images.length > 0 ? (
                       <>
                         <Box sx={{ display: "flex", flexDirection: "column" }}>
@@ -408,7 +408,7 @@ function GamePage() {
                                   gap: 1,
                                   gridTemplateColumns: "2fr 1fr",
                                   gridTemplateRows: "1fr 1fr",
-                                  height: 200,
+                                  height: { xs: 150, md: 200 },
                                   width: "100%",
                                 }}
                               >
@@ -462,7 +462,12 @@ function GamePage() {
                             </Box>
 
                             {/* Altre immagini piccole */}
-                            <Box sx={{ display: "flex", gap: 1 }}>
+                            <Box
+                              sx={{
+                                display: { xs: "none", sm: "flex" },
+                                gap: 1,
+                              }}
+                            >
                               {images.slice(1, 3).map((img, index) => (
                                 <Box
                                   key={index + 1}
@@ -495,10 +500,7 @@ function GamePage() {
                       </Typography>
                     )}
                   </Grid>
-                  <Grid
-                    sx={{ mt: { xs: 1, sm: 0 } }}
-                    size={{ xs: 12, sm: 6, md: 12 }}
-                  >
+                  <Grid sx={{ mt: 0 }} size={{ xs: 6, sm: 6, md: 12 }}>
                     {movies.length > 0 ? (
                       <>
                         <Box
