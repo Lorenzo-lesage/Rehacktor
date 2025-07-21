@@ -61,6 +61,7 @@ function LayoutGamesList({
     <Box
       sx={{
         paddingTop: 4,
+        paddingLeft: { xs: 0, md: 4 },
         paddingBottom: 0,
         display: "flex",
         flexDirection: "column",
