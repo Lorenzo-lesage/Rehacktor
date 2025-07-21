@@ -6,7 +6,9 @@ import {
   Collapse,
   Rating,
   CircularProgress,
+  useMediaQuery,
 } from "@mui/material";
+import { useTheme } from "@mui/material/styles";
 import LazyLoadGameImage from "../animationComponent/LazyLoadGameImage";
 import { Link } from "react-router";
 import TiltCard from "../animationComponent/TiltCard";
@@ -29,6 +31,9 @@ function CardGame({ game }) {
   */
 
   const [open, setOpen] = useState(false);
+  const [openFromXs, setOpenFromXs] = useState(false);
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down("md"));
 
   const { data, isLoading, isError } = useQuery({
     queryKey: ["gameDetails", game.id],
@@ -39,6 +44,12 @@ function CardGame({ game }) {
   const slug = game.slug || game.game_slug || "default-slug";
   const name = game.name || game.game_name || "Unknown Game";
   const image = game.background_image || game.game_image || "";
+
+  /*
+  |-----------------------------------------------------
+  | Methods
+  |-----------------------------------------------------
+ */
 
   /*
   |-----------------------------------------------------
@@ -98,9 +109,15 @@ function CardGame({ game }) {
             borderRadius: open ? "0.2rem 0.2rem 0 0" : 1,
           }}
         >
-          <Link to={`/games/${slug}/${id}`}>
-            <LazyLoadGameImage image={image} />
-          </Link>
+          {isMobile ? (
+            <Box onClick={() => setOpenFromXs((prev) => !prev)}>
+              <LazyLoadGameImage image={image} />
+            </Box>
+          ) : (
+            <Link to={`/games/${slug}/${id}`}>
+              <LazyLoadGameImage image={image} />
+            </Link>
+          )}
 
           <Box
             sx={{
@@ -215,25 +232,28 @@ function CardGame({ game }) {
                   "linear-gradient(to bottom, rgba(0,0,0,0), rgb(0,0,0))",
               }}
             >
-              <Typography
-                gutterBottom
-                variant="h6"
-                component="div"
-                sx={{
-                  overflow: "hidden",
-                  whiteSpace: open ? "normal" : "nowrap",
-                  textOverflow: "ellipsis",
-                  display: "block",
-                  textAlign: "center",
-                  filter: "drop-shadow(1px 1px 1px rgba(0,0,0))",
-                  transition: "all 0.3s ease-in-out",
-                  mb: 0,
-                  fontWeight: 900,
-                  color: "rgba(88,166,255)",
-                }}
-              >
-                {name}
-              </Typography>
+              <Link to={`/games/${slug}/${id}`}>
+                <Typography
+                  gutterBottom
+                  variant="h6"
+                  component="div"
+                  sx={{
+                    overflow: "hidden",
+                    whiteSpace: open ? "normal" : "nowrap",
+                    textOverflow: "ellipsis",
+                    display: "block",
+                    textAlign: "center",
+                    filter: "drop-shadow(1px 1px 1px rgba(0,0,0))",
+                    transition: "all 0.3s ease-in-out",
+                    mb: 0,
+                    fontWeight: 900,
+                    color: "rgba(88,166,255)",
+                    fontSize: { xs: "0.8rem", md: "1rem" },
+                  }}
+                >
+                  {name}
+                </Typography>
+              </Link>
             </Box>
           </Box>
         </Box>

@@ -16,7 +16,7 @@ const SnackbarProviderWrapper = ({ children }) => (
   <SnackbarProvider
     maxSnack={3}
     anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
-    autoHideDuration={3000}
+    autoHideDuration={2000}
   >
     <SnackbarInitializer />
     {children}

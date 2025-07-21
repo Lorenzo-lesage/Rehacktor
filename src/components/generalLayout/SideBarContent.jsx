@@ -96,7 +96,7 @@ function SideBarContent({ navbarHidden, open }) {
         "&::-webkit-scrollbar": { display: "none" },
         padding: "0 0.5rem 1rem 0.5rem",
         backgroundColor: open ? "background.sidebar" : "transparent",
-        borderRadius: { xs: 0, xl: "0 0.3rem 0.3rem 0" },
+        borderRadius: { xs: 0, lg: "0 0.3rem 0.3rem 0" },
       }}
     >
       {userProfile && (

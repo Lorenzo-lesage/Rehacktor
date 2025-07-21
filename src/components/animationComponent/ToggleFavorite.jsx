@@ -4,7 +4,7 @@ import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import { Box, IconButton, Tooltip } from "@mui/material";
 import SessionContext from "../../context/SessionContext";
-import { useNavigate, useLocation } from "react-router";
+import { useLocation } from "react-router";
 import { showToast } from "../../utils/snackbarUtils";
 
 function ToggleFavorite({ data }) {
@@ -18,7 +18,6 @@ function ToggleFavorite({ data }) {
     useContext(FavoritesContext);
   const { userProfile } = useContext(SessionContext);
   const isFavorite = () => favorites.some((el) => +el.game_id === data?.id);
-  const navigate = useNavigate();
   const location = useLocation();
   const isGamePage = /^\/games\/[^/]+\/\d+$/.test(location.pathname);
   const iconColor = isGamePage ? "default" : "yellow";
@@ -42,7 +41,6 @@ function ToggleFavorite({ data }) {
 
   const handleClick = () => {
     if (!userProfile) {
-      navigate("/login");
       showToast("error", "You need to sign in to add to favorites");
     } else {
       if (isFavorite()) {
