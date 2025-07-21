@@ -225,7 +225,7 @@ function GamePage() {
   if (!data) return null;
 
   return (
-    <Box sx={{ paddingBottom: 8, mt: 2 }}>
+    <Box sx={{ mt: 2 }}>
       <Container>
         <Paper sx={{ p: 0, backgroundColor: "transparent" }} elevation={0}>
           <Stack spacing={3}>
@@ -401,7 +401,7 @@ function GamePage() {
                             }}
                           >
                             {/* Prima immagine grande */}
-                            <Box sx={{ position: "relative"}}>
+                            <Box sx={{ position: "relative" }}>
                               <Box
                                 sx={{
                                   display: "grid",
@@ -495,7 +495,10 @@ function GamePage() {
                       </Typography>
                     )}
                   </Grid>
-                  <Grid sx={{ mt: { xs: 1, sm: 0 } }} size={{ xs: 12, sm: 6, md: 12 }}>
+                  <Grid
+                    sx={{ mt: { xs: 1, sm: 0 } }}
+                    size={{ xs: 12, sm: 6, md: 12 }}
+                  >
                     {movies.length > 0 ? (
                       <>
                         <Box
@@ -964,7 +967,74 @@ function GamePage() {
           </Stack>
         </Paper>
       </Container>
-      <SimilarGamesList games={similarGames} />
+      <Box sx={{ mb: 10 }}>
+        <SimilarGamesList games={similarGames} />
+      </Box>
+
+      {/* EndPage */}
+      <Box sx={{ display: "flex", justifyContent: "center" }}>
+        <Box
+          sx={{
+            width: { xs: "100%", lg: "90%" },
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+            justifyContent: "center",
+            py: 4,
+            px: { xs: 2, lg: 0 },
+            backgroundColor: "background.paper",
+            color: "text.primary",
+            borderRadius: "0.5rem 0.5rem 0 0",
+            borderTop: { xs: "1px solid", lg: "3px solid" },
+            borderLeft: { xs: "1px solid", lg: "3px solid" },
+            borderRight: { xs: "1px solid", lg: "3px solid" },
+            borderBottom: "none",
+          }}
+        >
+          <Box
+            sx={{
+              backgroundColor: "background.icon",
+              p: 2,
+              borderRadius: 2,
+              mb: 2,
+              width: "fit-content",
+            }}
+          >
+            <Typography variant="body1" sx={{ textAlign: "center" }}>
+              Enjoy your gaming experience with our platform!
+            </Typography>
+          </Box>
+
+          <Box
+            sx={{
+              backgroundColor: "background.iconHover",
+              p: 2,
+              borderRadius: 2,
+              mb: 2,
+              width: "fit-content",
+            }}
+          >
+            <Typography variant="body1" sx={{ textAlign: "center" }}>
+              Discover the best games on our platform and have fun!
+            </Typography>
+          </Box>
+
+          <Box
+            sx={{
+              backgroundColor: "background.icon",
+              p: 2,
+              borderRadius: 2,
+              mb: 2,
+              width: "fit-content",
+              display: "flex",
+            }}
+          >
+            <Typography variant="body1" sx={{ textAlign: "center" }}>
+              Join our community and share your favorite games with others!
+            </Typography>
+          </Box>
+        </Box>
+      </Box>
     </Box>
   );
 }

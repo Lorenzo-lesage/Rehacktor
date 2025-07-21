@@ -60,14 +60,14 @@ function LayoutGamesList({
   return (
     <Box
       sx={{
-        padding: { xs: 1, md: 4 },
+        paddingTop: 4,
+        paddingBottom: 0,
         display: "flex",
         flexDirection: "column",
         alignItems: "center",
         overflow: "hidden",
         width: "100%",
         maxWidth: "100%",
-        pb: 10,
       }}
     >
       <Box
@@ -126,7 +126,10 @@ function LayoutGamesList({
           const fromLeft = index % 2 === 0;
 
           return (
-            <Grid key={game.id} size={{ xs: 2, sm: 3.3, md: 3.5, lg: 3, xl: 2.6 }}>
+            <Grid
+              key={game.id}
+              size={{ xs: 2, sm: 3.3, md: 3.5, lg: 3, xl: 2.6 }}
+            >
               <motion.div
                 initial={{
                   opacity: 0,
@@ -136,7 +139,10 @@ function LayoutGamesList({
                   opacity: 1,
                   x: 0,
                 }}
-                transition={{ duration: 0.5, delay: Math.min(index, 10) * 0.15 }}
+                transition={{
+                  duration: 0.5,
+                  delay: Math.min(index, 10) * 0.15,
+                }}
                 style={{
                   width: "100%",
                   display: "flex",
@@ -156,7 +162,7 @@ function LayoutGamesList({
           display: "flex",
           justifyContent: "center",
           marginTop: "2rem",
-          marginBottom: "4rem",
+          marginBottom: "5rem",
         }}
       >
         <PaginationMui
@@ -164,6 +170,71 @@ function LayoutGamesList({
           setPage={setCurrentPage}
           lastPage={lastPage}
         />
+      </Box>
+
+      {/* EndPage */}
+      <Box sx={{ display: "flex", justifyContent: "center", width: "100%" }}>
+        <Box
+          sx={{
+            width: { xs: "100%", lg: "90%" },
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+            justifyContent: "center",
+            py: 4,
+            px: { xs: 2, lg: 0 },
+            backgroundColor: "background.paper",
+            color: "text.primary",
+            borderRadius: "0.5rem 0.5rem 0 0",
+            borderTop: { xs: "1px solid", lg: "3px solid" },
+            borderLeft: { xs: "1px solid", lg: "3px solid" },
+            borderRight: { xs: "1px solid", lg: "3px solid" },
+            borderBottom: "none",
+          }}
+        >
+          <Box
+            sx={{
+              backgroundColor: "background.icon",
+              p: 2,
+              borderRadius: 2,
+              mb: 2,
+              width: "fit-content",
+            }}
+          >
+            <Typography variant="body1" sx={{ textAlign: "center" }}>
+              Enjoy your gaming experience with our platform!
+            </Typography>
+          </Box>
+
+          <Box
+            sx={{
+              backgroundColor: "background.iconHover",
+              p: 2,
+              borderRadius: 2,
+              mb: 2,
+              width: "fit-content",
+            }}
+          >
+            <Typography variant="body1" sx={{ textAlign: "center" }}>
+              Discover the best games on our platform and have fun!
+            </Typography>
+          </Box>
+
+          <Box
+            sx={{
+              backgroundColor: "background.icon",
+              p: 2,
+              borderRadius: 2,
+              mb: 2,
+              width: "fit-content",
+              display: "flex",
+            }}
+          >
+            <Typography variant="body1" sx={{ textAlign: "center" }}>
+              Join our community and share your favorite games with others!
+            </Typography>
+          </Box>
+        </Box>
       </Box>
     </Box>
   );

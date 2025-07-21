@@ -52,7 +52,8 @@ function Layout() {
             component="main"
             sx={{
               flexGrow: 1,
-              padding: 2,
+              paddingX: 2,
+              paddindTop: 2, 
               mt: 8,
               minHeight: '100vh',
               ml: { xs: 0, lg: 10, xl: 10 },

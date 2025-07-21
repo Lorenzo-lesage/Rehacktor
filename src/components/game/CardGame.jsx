@@ -34,6 +34,8 @@ function CardGame({ game }) {
   const [openFromXs, setOpenFromXs] = useState(false);
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("md"));
+  const isExpanded = isMobile ? openFromXs : open;
+
 
   const { data, isLoading, isError } = useQuery({
     queryKey: ["gameDetails", game.id],
@@ -96,6 +98,7 @@ function CardGame({ game }) {
       }}
       key={game.id}
       elevation={16}
+      onClose={() => setOpenFromXs(false)}
     >
       <Box
         onMouseEnter={() => setOpen(true)}
@@ -110,7 +113,11 @@ function CardGame({ game }) {
           }}
         >
           {isMobile ? (
-            <Box onClick={() => setOpenFromXs((prev) => !prev)}>
+            <Box
+              onClick={() => {
+                setOpenFromXs((prev) => !prev);
+              }}
+            >
               <LazyLoadGameImage image={image} />
             </Box>
           ) : (
@@ -239,7 +246,7 @@ function CardGame({ game }) {
                   component="div"
                   sx={{
                     overflow: "hidden",
-                    whiteSpace: open ? "normal" : "nowrap",
+                    whiteSpace: open || openFromXs ? "normal" : "nowrap",
                     textOverflow: "ellipsis",
                     display: "block",
                     textAlign: "center",
@@ -258,7 +265,7 @@ function CardGame({ game }) {
           </Box>
         </Box>
 
-        <Collapse in={open}>
+        <Collapse in={isExpanded}>
           <Box
             sx={{
               position: "absolute",
@@ -337,7 +344,8 @@ function CardGame({ game }) {
             <Box
               sx={{
                 display: "flex",
-                justifyContent: "space-between",
+                justifyContent: { xs: "center", lg: "space-between" },
+                flexDirection: { xs: "column", lg: "row" },
                 alignItems: "center",
                 mt: 1,
               }}
@@ -351,6 +359,7 @@ function CardGame({ game }) {
                 gutterBottom
                 sx={{
                   textAlign: "center",
+                  mt: { xs: 1, lg: 0 },
                 }}
               >
                 <strong style={{ color: "rgba(88,166,255)" }}>
