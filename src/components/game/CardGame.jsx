@@ -25,9 +25,9 @@ import { useQuery } from "@tanstack/react-query";
 import { fetchGameDetails } from "../../api/games";
 
 //icon
-import AddIcon from "@mui/icons-material/Add";
+import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 import RemoveRedEyeIcon from "@mui/icons-material/RemoveRedEye";
-import RemoveIcon from "@mui/icons-material/Remove";
+import RemoveCircleOutlineIcon from '@mui/icons-material/RemoveCircleOutline';
 
 function CardGame({ game }) {
   /*
@@ -140,7 +140,7 @@ function CardGame({ game }) {
               display: "flex",
               flexDirection: "column",
               justifyContent: "space-between",
-              alignItems: "center",
+              alignItems: { xs: "flex-end", lg: "center" },
               gap: 0.5,
               backdropFilter: open ? "blur(1px)" : "blur(0px)",
               transition: "backdrop-filter 0.2s ease",
@@ -148,8 +148,27 @@ function CardGame({ game }) {
               borderRadius: 2,
             }}
           >
-            {/* FavoriteButton */}
-            <ToggleFavorite data={game} />
+            <Box sx={{ display: "flex", gap: 0.5 }}>
+              <Box
+                sx={{
+                  zIndex: 1,
+                  display: { xs: "block", lg: "none" },
+                  filter: "drop-shadow(3px 3px 3px rgba(0,0,0))",
+                  textShadow: "2px 1px 1px rgba(0,0,0)",
+                }}
+              >
+                <Link to={`/games/${slug}/${id}`}>
+                  <IconButton size="small" sx={{ color: "yellow" }}>
+                    <RemoveRedEyeIcon size={15} />
+                  </IconButton>
+                </Link>
+              </Box>
+
+              {/* FavoriteButton */}
+              <Box>
+                <ToggleFavorite data={game} />
+              </Box>
+            </Box>
             <Box
               sx={{
                 display: { xs: "none", lg: "block" },
@@ -186,44 +205,25 @@ function CardGame({ game }) {
 
             <Box
               sx={{
+                zIndex: 1,
                 display: { xs: "block", lg: "none" },
-                color: "yellow",
-                filter: "drop-shadow(100px 3px 3px rgba(0,0,0))",
-                textShadow: "2px 1px 1px rgba(0,0,0)",
-                boxShadow: "1px 1px 1px rgba(0,0,0)",
-                backgroundColor: "background.iconHover",
-                borderRadius: 50,
+                filter: "drop-shadow(3px 3px 3px rgba(0,0,0))",
+                textShadow: "2px 2px 10px rgba(0,0,0)",
+                backdropFilter: "blur(100px)",
               }}
             >
               <IconButton
                 onClick={() => setOpenFromXs((prev) => !prev)}
                 size="small"
+                sx={{ color: "yellow", backdropFilter: "blur(100px)", transition: "all 2s ease" }}
               >
-                {openFromXs ? <RemoveIcon fontSize="small" /> : <AddIcon  fontSize="small"/>}
+                {openFromXs ? (
+                  <RemoveCircleOutlineIcon size={15} sx={{ transition: "all 2s ease"  }} />
+                ) : (
+                  <AddCircleOutlineIcon size={15} sx={{ transition: "all 2s ease"  }} />
+                )}
               </IconButton>
             </Box>
-          </Box>
-
-          <Box
-            sx={{
-              position: "absolute",
-              right: "50%",
-              top: "0.5rem",
-              transform: "translateX(50%)",
-              zIndex: 1,
-              display: { xs: "block", lg: "none" },
-              color: "yellow",
-              textShadow: "2px 1px 1px rgba(0,0,0)",
-              boxShadow: "1px 1px 1px rgba(0,0,0)",
-              backgroundColor: "background.iconHover",
-              borderRadius: 50,
-            }}
-          >
-            <Link to={`/games/${slug}/${id}`}>
-              <IconButton size="small">
-                <RemoveRedEyeIcon fontSize="small" />
-              </IconButton>
-            </Link>
           </Box>
 
           <Box

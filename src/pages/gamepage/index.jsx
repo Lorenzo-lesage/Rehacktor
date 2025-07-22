@@ -61,6 +61,7 @@ function GamePage() {
     enabled: !!id,
     staleTime: 5 * 60 * 1000,
   });
+  console.log(data);
   const { setBackgroundImage } = useBackground();
   const { data: screenshots } = useGameScreenshots(id);
   const [isOpen, setIsOpen] = useState(false);
@@ -248,8 +249,7 @@ function GamePage() {
                 variant="outlined"
                 sx={{ p: 1 }}
               />
-
-              {/* Rating */}
+              Rating
               <Box
                 sx={{
                   display: "flex",
@@ -279,7 +279,6 @@ function GamePage() {
                   {data.rating?.toFixed(1) ?? "N/A"}
                 </Typography>
               </Box>
-
               {/* Metacritic */}
               <Box
                 sx={{
@@ -305,7 +304,6 @@ function GamePage() {
                   </MuiLink>
                 )}
               </Box>
-
               {/* Favorite Toggle */}
               <ToggleFavorite data={data} />
             </Box>
@@ -387,8 +385,8 @@ function GamePage() {
                   mb: { xs: 2, md: 0 },
                 }}
               >
-                <Grid container spacing={2} sx={{ mt: 2 }}>
-                  <Grid size={{ xs: 6, sm: 6, md: 12 }}>
+                <Grid container spacing={1} sx={{ mt: 2 }}>
+                  <Grid size={{ xs: 10, sm: 6, md: 12 }} sx={{ mx: "auto" }}>
                     {images.length > 0 ? (
                       <>
                         <Box sx={{ display: "flex", flexDirection: "column" }}>
@@ -500,7 +498,11 @@ function GamePage() {
                       </Typography>
                     )}
                   </Grid>
-                  <Grid sx={{ mt: 0 }} size={{ xs: 6, sm: 6, md: 12 }}>
+
+                  <Grid
+                    sx={{ mt: 0, mx: "auto" }}
+                    size={{ xs: 10, sm: 6, md: 12 }}
+                  >
                     {movies.length > 0 ? (
                       <>
                         <Box
@@ -957,6 +959,15 @@ function GamePage() {
                   variant="body1"
                   color="secondary"
                   underline="hover"
+                  sx={{
+                    whiteSpace: "normal",
+                    fontSize: { xs: "0.8rem", md: "1.2rem" },
+                    wordBreak: "break-word",
+                    overflowWrap: "break-word", 
+                    display: "inline-block", 
+                    maxWidth: "100%",
+                    textDecoration: { xs: "underline", lg: "none" },
+                  }}
                 >
                   {data.website}
                 </MuiLink>
