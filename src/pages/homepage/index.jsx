@@ -16,7 +16,8 @@ function HomePage() {
   const { data, isLoading, error } = useQuery({
     queryKey: ["newAndTrendingGames", page, ordering],
     queryFn: () => fetchNewAndTrendingGames(page, ordering),
-    staleTime: 5 * 60 * 1000,
+    staleTime: 60 * 60 * 1000,
+    cacheTime: 2 * 60 * 60 * 1000,
     keepPreviousData: true,
   });
 

@@ -142,7 +142,7 @@ function LayoutGamesList({
                 }}
                 transition={{
                   duration: 0.5,
-                  delay: Math.min(index, 10) * 0.15,
+                  delay: Math.min(index, 10) * 0.1,
                 }}
                 style={{
                   width: "100%",

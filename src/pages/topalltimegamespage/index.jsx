@@ -18,6 +18,8 @@ function TopAllTimeGamesPage() {
     queryKey: ["topAllTimeGames"],
     queryFn: fetchTopAllTimeGames,
     staleTime: 60 * 60 * 1000,
+    cacheTime: 2 * 60 * 60 * 1000,
+    keepPreviousData: true,
   });
 
   const orderedData = useMemo(() => {

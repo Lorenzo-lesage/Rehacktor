@@ -17,7 +17,8 @@ function YearGamesPage() {
   const { data, isLoading, error } = useQuery({
     queryKey: ["yearGames", page, ordering],
     queryFn: () => fetchGamesFromYearStart(page, ordering),
-    staleTime: 5 * 60 * 1000,
+    staleTime: 60 * 60 * 1000,
+    cacheTime: 2 * 60 * 60 * 1000,
     keepPreviousData: true,
   });
 

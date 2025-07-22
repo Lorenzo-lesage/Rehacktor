@@ -17,7 +17,8 @@ function TopGamesLastYear() {
   const { data, isLoading, error } = useQuery({
     queryKey: ["gamesOf2022", page, ordering],
     queryFn: () => fetchGamesOfLastYear(page, ordering),
-    staleTime: 5 * 60 * 1000,
+    staleTime: 60 * 60 * 1000,
+    cacheTime: 2 * 60 * 60 * 1000,
     keepPreviousData: true,
   });
 

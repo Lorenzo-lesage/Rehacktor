@@ -23,7 +23,9 @@ function GenrePage() {
     queryKey: ["gamesByGenre", genre, page, ordering],
     queryFn: () => fetchGamesByGenre(genre, page, ordering),
     keepPreviousData: true,
-    staleTime: 5 * 60 * 1000,
+    staleTime: 60 * 60 * 1000,
+    cacheTime: 2 * 60 * 60 * 1000,
+    enabled: !!genre,
   });
 
   const {
@@ -34,6 +36,7 @@ function GenrePage() {
     queryKey: ["genres"],
     queryFn: fetchGenres,
     staleTime: Infinity,
+    cacheTime: Infinity,
   });
 
   // Paginazione calcolata

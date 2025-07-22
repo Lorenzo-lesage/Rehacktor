@@ -25,6 +25,7 @@ const TagPage = () => {
     getNextPageParam: (lastPage, allPages) =>
       lastPage?.next ? allPages.length + 1 : undefined,
     staleTime: Infinity,
+    cacheTime: 24 * 60 * 60 * 1000,
   });
   const observerRef = useRef();
 

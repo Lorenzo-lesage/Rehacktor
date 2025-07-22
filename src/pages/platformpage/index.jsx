@@ -68,6 +68,7 @@ const PlatformPage = () => {
     queryKey: ["platforms"],
     queryFn: fetchPlatforms,
     staleTime: Infinity,
+    cacheTime: 24 * 60 * 60 * 1000,
   });
 
   const renderPlatformCard = (platform) => {

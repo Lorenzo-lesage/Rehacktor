@@ -24,6 +24,7 @@ const CreatorPage = () => {
     getNextPageParam: (lastPage, allPages) =>
       lastPage?.next ? allPages.length + 1 : undefined,
     staleTime: Infinity,
+    cacheTime: 2 * 60 * 60 * 1000,
   });
 
   const allCreators = data?.pages.flatMap((page) => page.results) || [];

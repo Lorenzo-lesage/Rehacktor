@@ -59,7 +59,8 @@ function GamePage() {
     queryKey: ["gameDetails", id],
     queryFn: () => fetchGameDetails(id),
     enabled: !!id,
-    staleTime: 5 * 60 * 1000,
+    staleTime: 60 * 60 * 1000,
+    cacheTime: 6 * 60 * 60 * 1000,
   });
   console.log(data);
   const { setBackgroundImage } = useBackground();
@@ -79,9 +80,9 @@ function GamePage() {
     queryKey: ["gameMovies", id, data?.name],
     queryFn: () => fetchGameMovies(id, data?.name),
     enabled: !!id && !!data?.name,
-    staleTime: 15 * 60 * 1000,
+    staleTime: 6 * 60 * 60 * 1000,
+    cacheTime: 12 * 60 * 60 * 1000,
   });
-  console.log(data?.name);
 
   // slides per lightbox: immagini
   const imageSlides = images.map((src) => ({ type: "image", src }));

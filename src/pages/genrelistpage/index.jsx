@@ -69,6 +69,7 @@ const GenreListPage = () => {
     queryKey: ["genres"],
     queryFn: fetchGenres,
     staleTime: Infinity,
+    cacheTime: 24 * 60 * 60 * 1000,
   });
 
   const navigate = useNavigate();

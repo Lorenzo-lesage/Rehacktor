@@ -25,8 +25,9 @@ function SearchPage() {
     queryKey: ["searchGames", game, page, ordering],
     queryFn: () => searchGames(game, page, ordering),
     enabled: !!game,
-    staleTime: 5 * 60 * 1000,
-    cacheTime: 10 * 60 * 1000,
+    staleTime: 30 * 60 * 1000,
+    cacheTime: 60 * 60 * 1000,
+    keepPreviousData: true,
   });
 
   // Calcolate last page

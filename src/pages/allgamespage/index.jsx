@@ -16,7 +16,8 @@ function AllGamesPage() {
   const { data, isLoading, error } = useQuery({
     queryKey: ["topGamesOfWeek", page, ordering],
     queryFn: () => fetchAllGames(page, ordering),
-    staleTime: 5 * 60 * 1000,
+    staleTime: 60 * 60 * 1000,
+    cacheTime: 2 * 60 * 60 * 1000, 
     keepPreviousData: true,
   });
 

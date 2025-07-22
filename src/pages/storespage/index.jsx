@@ -47,6 +47,7 @@ const StorePage = () => {
     queryKey: ["stores"],
     queryFn: fetchStores,
     staleTime: Infinity,
+    cacheTime: 24 * 60 * 60 * 1000,
   });
 
   /*
