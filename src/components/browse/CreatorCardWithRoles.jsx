@@ -15,6 +15,7 @@ const CreatorCardWithRoles = ({ creator }) => {
     queryKey: ["creatorDetails", creator.id],
     queryFn: () => fetchCreatorDetails(creator.id),
     staleTime: Infinity,
+    cacheTime: Infinity,
     enabled: !!creator.id,
   });
 

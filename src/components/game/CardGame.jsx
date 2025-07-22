@@ -25,9 +25,9 @@ import { useQuery } from "@tanstack/react-query";
 import { fetchGameDetails } from "../../api/games";
 
 //icon
-import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
+import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
 import RemoveRedEyeIcon from "@mui/icons-material/RemoveRedEye";
-import RemoveCircleOutlineIcon from '@mui/icons-material/RemoveCircleOutline';
+import RemoveCircleOutlineIcon from "@mui/icons-material/RemoveCircleOutline";
 
 function CardGame({ game }) {
   /*
@@ -45,6 +45,12 @@ function CardGame({ game }) {
   const { data, isLoading, isError } = useQuery({
     queryKey: ["gameDetails", game.id],
     queryFn: () => fetchGameDetails(game.id),
+    staleTime: 1000 * 60 * 60 * 6, // 6 ore
+    cacheTime: 1000 * 60 * 60 * 24, // 24 ore
+    refetchOnWindowFocus: false,
+    refetchOnMount: false,
+    refetchOnReconnect: false,
+    enabled: open || openFromXs, // solo se apri la card
   });
 
   const id = game.id || game.game_id;
@@ -215,12 +221,22 @@ function CardGame({ game }) {
               <IconButton
                 onClick={() => setOpenFromXs((prev) => !prev)}
                 size="small"
-                sx={{ color: "yellow", backdropFilter: "blur(100px)", transition: "all 2s ease" }}
+                sx={{
+                  color: "yellow",
+                  backdropFilter: "blur(100px)",
+                  transition: "all 2s ease",
+                }}
               >
                 {openFromXs ? (
-                  <RemoveCircleOutlineIcon size={15} sx={{ transition: "all 2s ease"  }} />
+                  <RemoveCircleOutlineIcon
+                    size={15}
+                    sx={{ transition: "all 2s ease" }}
+                  />
                 ) : (
-                  <AddCircleOutlineIcon size={15} sx={{ transition: "all 2s ease"  }} />
+                  <AddCircleOutlineIcon
+                    size={15}
+                    sx={{ transition: "all 2s ease" }}
+                  />
                 )}
               </IconButton>
             </Box>

@@ -17,8 +17,11 @@ function HomePage() {
     queryKey: ["newAndTrendingGames", page, ordering],
     queryFn: () => fetchNewAndTrendingGames(page, ordering),
     staleTime: 60 * 60 * 1000,
-    cacheTime: 2 * 60 * 60 * 1000,
+    cacheTime: 1000 * 60 * 60 * 24,
     keepPreviousData: true,
+    refetchOnWindowFocus: false,
+    refetchOnMount: false,
+    refetchOnReconnect: false,
   });
 
   const itemsPerPage = 20;
