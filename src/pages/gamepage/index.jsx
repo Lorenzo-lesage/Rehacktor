@@ -76,10 +76,12 @@ function GamePage() {
 
   // Fetch game movies con id e name (dopo che data è disponibile)
   const { data: movies = [] } = useQuery({
-    queryKey: ["gameMovies", id],
+    queryKey: ["gameMovies", id, data?.name],
     queryFn: () => fetchGameMovies(id, data?.name),
-    enabled: !!id && !!data?.name, // attiva solo quando disponibile
+    enabled: !!id && !!data?.name,
+    staleTime: 15 * 60 * 1000,
   });
+  console.log(data?.name);
 
   // slides per lightbox: immagini
   const imageSlides = images.map((src) => ({ type: "image", src }));
@@ -963,8 +965,8 @@ function GamePage() {
                     whiteSpace: "normal",
                     fontSize: { xs: "0.8rem", md: "1.2rem" },
                     wordBreak: "break-word",
-                    overflowWrap: "break-word", 
-                    display: "inline-block", 
+                    overflowWrap: "break-word",
+                    display: "inline-block",
                     maxWidth: "100%",
                     textDecoration: { xs: "underline", lg: "none" },
                   }}
