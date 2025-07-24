@@ -10,8 +10,8 @@ import {
   CardContent,
   Typography,
   Box,
-  CircularProgress,
   Container,
+  Fade,
 } from "@mui/material";
 import {
   GiSwordClash,
@@ -34,6 +34,7 @@ import {
   GiUfo,
 } from "react-icons/gi";
 import { FaPuzzlePiece, FaCar, FaUsers, FaLightbulb } from "react-icons/fa";
+import SkeletonGenreCard from "../../components/skeleton/SkeletonGenreCard";
 
 const genreIconMap = {
   Action: GiSwordClash,
@@ -73,27 +74,13 @@ const GenreListPage = () => {
   });
 
   const navigate = useNavigate();
+  const skeletonCount = 20;
 
   /*
   |-----------------------------------------------------
   | Return
   |-----------------------------------------------------
   */
-
-  if (isLoading)
-    return (
-      <Box
-        sx={{
-          height: "100%",
-          width: "100%",
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
-        }}
-      >
-        <CircularProgress />
-      </Box>
-    );
 
   if (error)
     return (
@@ -123,6 +110,16 @@ const GenreListPage = () => {
         </Typography>
       </Box>
       <Grid container spacing={2} sx={{ mt: 2 }}>
+        {isLoading &&
+          Array.from({ length: skeletonCount }).map((_, index) => (
+            <Grid
+              size={{ xs: 6, md: 4 }}
+              key={index}
+              sx={{ overflow: "hidden", borderRadius: 3 }}
+            >
+              <SkeletonGenreCard />
+            </Grid>
+          ))}
         {data?.results.map((genre) => {
           const Icon = genreIconMap[genre.name];
           return (
@@ -131,6 +128,8 @@ const GenreListPage = () => {
               key={genre.id}
               sx={{ overflow: "hidden", borderRadius: 3 }}
             >
+                  <Fade in={true} timeout={500}>
+
               <Card
                 elevation={2}
                 sx={{
@@ -197,6 +196,7 @@ const GenreListPage = () => {
                   </CardContent>
                 </CardActionArea>
               </Card>
+                  </Fade>
             </Grid>
           );
         })}

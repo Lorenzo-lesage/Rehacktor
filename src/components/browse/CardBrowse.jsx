@@ -50,7 +50,7 @@ const CardBrowse = ({
               position: "absolute",
               inset: 0,
               background:
-                "linear-gradient(to top, rgba(0,0,0,0.6), rgba(0,0,0,0.2))",
+                "linear-gradient(to top, rgba(0,0,0,0.8), rgba(0,0,0,0.2))",
             }}
           />
         </Box>

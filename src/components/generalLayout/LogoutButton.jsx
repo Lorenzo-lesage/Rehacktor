@@ -18,7 +18,7 @@ const Transition = forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
 });
 
-function LogoutButton({ open }) {
+function LogoutButton({ open, setOpen }) {
   /*
   |--------------------------------------------------------
   | Data
@@ -39,6 +39,7 @@ function LogoutButton({ open }) {
  */
 
   const signOut = async () => {
+    setOpen(false);
     const { error } = await supabase.auth.signOut();
     if (error) {
       console.error(error);

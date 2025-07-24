@@ -6,7 +6,7 @@ import {
 import { useTheme } from "@mui/material/styles";
 import { useEffect } from "react";
 
-function PaginationMui({ currentPage, setPage, lastPage }) {
+function PaginationMui({ currentPage, setPage, lastPage, disabled }) {
   /*
   |-----------------------------------------------------
   | Data
@@ -63,7 +63,7 @@ function PaginationMui({ currentPage, setPage, lastPage }) {
     >
       <IconButton
         onClick={handleJumpBack}
-        disabled={currentPage <= 10}
+        disabled={currentPage <= 10 || disabled}
         size="small"
         sx={{
           border: "0.5px solid gray",
@@ -74,6 +74,7 @@ function PaginationMui({ currentPage, setPage, lastPage }) {
       </IconButton>
 
       <Pagination
+        disabled={disabled}
         count={lastPage}
         page={currentPage}
         onChange={handleChange}
@@ -92,7 +93,7 @@ function PaginationMui({ currentPage, setPage, lastPage }) {
 
       <IconButton
         onClick={handleJumpForward}
-        disabled={currentPage + 10 > lastPage}
+        disabled={currentPage + 10 > lastPage || disabled}
         size="small"
         sx={{
           border: "0.5px solid gray",

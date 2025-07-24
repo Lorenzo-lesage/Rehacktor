@@ -50,7 +50,7 @@ function CardGame({ game }) {
     refetchOnWindowFocus: false,
     refetchOnMount: false,
     refetchOnReconnect: false,
-    enabled: open || openFromXs, // solo se apri la card
+    enabled: open || openFromXs, 
   });
 
   const id = game.id || game.game_id;

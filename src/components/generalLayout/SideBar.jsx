@@ -49,7 +49,7 @@ function SideBar({ navbarHidden }) {
           boxSizing: "border-box",
         }}
       >
-        <SideBarContent navbarHidden={navbarHidden} open={open} />
+        <SideBarContent navbarHidden={navbarHidden} open={open} setOpen={setOpen} />
       </Box>
     </Box>
   );

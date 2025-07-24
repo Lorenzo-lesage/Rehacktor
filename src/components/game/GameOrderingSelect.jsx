@@ -136,11 +136,11 @@ const orderingOptions = [
   },
 ];
 
-function GameOrderingSelect({ ordering = "relevance", setOrdering }) {
+function GameOrderingSelect({ ordering = "relevance", setOrdering, disabled }) {
   const theme = useTheme();
 
   return (
-    <ElegantFormControl variant="standard" fullWidth size="small">
+    <ElegantFormControl variant="standard" fullWidth size="small" disabled={disabled}>
       <InputLabel id="elegant-order-label">Sort by:</InputLabel>
       <Select
         labelId="elegant-order-label"

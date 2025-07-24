@@ -23,7 +23,7 @@ import BusinessOutlinedIcon from "@mui/icons-material/BusinessOutlined";
 import CodeOutlinedIcon from "@mui/icons-material/CodeOutlined";
 import CreateOutlinedIcon from "@mui/icons-material/CreateOutlined";
 
-function SideBarContent({ navbarHidden, open }) {
+function SideBarContent({ navbarHidden, open, setOpen }) {
   /*
   |--------------------------------------------------------
   | Data
@@ -202,7 +202,7 @@ function SideBarContent({ navbarHidden, open }) {
           </Box>
 
           <Box sx={{ mb: 2 }}>
-            <LogoutButton open={open} />
+            <LogoutButton open={open} setOpen={setOpen} />
           </Box>
           <Divider />
         </Box>

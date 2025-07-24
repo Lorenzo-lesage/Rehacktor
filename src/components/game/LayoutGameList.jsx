@@ -1,8 +1,8 @@
-import { Box, Typography, Grid, CircularProgress, Fade } from "@mui/material";
-import { motion } from "framer-motion";
+import { Box, Typography, Grid, Fade } from "@mui/material";
 import CardGame from "./CardGame.jsx";
 import PaginationMui from "../generalLayout/Pagination";
 import GameOrderingSelect from "./GameOrderingSelect.jsx";
+import SkeletonGameCard from "../skeleton/SkeletonGameCard.jsx";
 
 function LayoutGamesList({
   data,
@@ -19,25 +19,17 @@ function LayoutGamesList({
 }) {
   /*
   |-----------------------------------------------------
-  | Return
+  | Data
   |-----------------------------------------------------
   */
 
-  if (loading) {
-    return (
-      <Box
-        sx={{
-          height: "100%",
-          width: "100%",
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
-        }}
-      >
-        <CircularProgress />
-      </Box>
-    );
-  }
+  const skeletonCount = 20;
+
+  /*
+  |-----------------------------------------------------
+  | Return
+  |-----------------------------------------------------
+  */
 
   if (error) {
     return (
@@ -111,6 +103,7 @@ function LayoutGamesList({
               ordering={ordering}
               setOrdering={setOrdering}
               options={availableOrderings}
+              disabled={loading}
             />
           </Box>
         )}
@@ -122,39 +115,33 @@ function LayoutGamesList({
         spacing={1}
         display={"flex"}
         justifyContent="center"
+        width={"100%"}
       >
-        {data?.results?.map((game, index) => {
-          const fromLeft = index % 2 === 0;
-
-          return (
-            <Grid
-              key={game.id}
-              size={{ xs: 2, sm: 3.3, md: 3.5, lg: 3, xl: 2.6 }}
-            >
-              <motion.div
-                initial={{
-                  opacity: 0,
-                  x: fromLeft ? -50 : 50,
-                }}
-                animate={{
-                  opacity: 1,
-                  x: 0,
-                }}
-                transition={{
-                  duration: 0.5,
-                  delay: Math.min(index, 10) * 0.1,
-                }}
-                style={{
-                  width: "100%",
-                  display: "flex",
-                  justifyContent: "center",
-                }}
+        {loading
+          ? Array.from({ length: skeletonCount }).map((_, index) => (
+              <Grid
+                key={`skeleton-${index}`}
+                size={{ xs: 2, sm: 3.3, md: 3.5, lg: 3, xl: 2.6 }}
               >
-                <CardGame game={game} />
-              </motion.div>
-            </Grid>
-          );
-        })}
+                <Box sx={{ width: "100%" }}>
+                  <SkeletonGameCard />
+                </Box>
+              </Grid>
+            ))
+          : data?.results?.map((game) => {
+              return (
+                <Grid
+                  key={game.id}
+                  size={{ xs: 2, sm: 3.3, md: 3.5, lg: 3, xl: 2.6 }}
+                >
+                  <Fade in={true} timeout={500}>
+                    <div>
+                      <CardGame game={game} />
+                    </div>
+                  </Fade>
+                </Grid>
+              );
+            })}
       </Grid>
 
       {/* Pagination */}
@@ -170,6 +157,7 @@ function LayoutGamesList({
           currentPage={currentPage}
           setPage={setCurrentPage}
           lastPage={lastPage}
+          disabled={loading}
         />
       </Box>
 
