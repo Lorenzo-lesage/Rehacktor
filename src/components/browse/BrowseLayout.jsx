@@ -14,20 +14,6 @@ const BrowseLayout = ({
   renderItem,
   bottomContent,
 }) => {
-  if (isLoading) {
-    return (
-      <Box
-        sx={{
-          height: "100%",
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
-        }}
-      >
-        <CircularProgress />
-      </Box>
-    );
-  }
 
   if (error) {
     return (
@@ -54,6 +40,26 @@ const BrowseLayout = ({
       >
         {title}
       </Typography>
+
+      {isLoading && (
+        <Box
+          sx={{
+            height: "100vh",
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            zIndex: 10000,
+            position: "fixed",
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            backgroundColor: "rgba(0,0,0,0.5)",
+          }}
+        >
+          <CircularProgress />
+        </Box>
+      )}
 
       <Grid container spacing={2} sx={{ mt: 2 }}>
         {data.map((item, index) => (
