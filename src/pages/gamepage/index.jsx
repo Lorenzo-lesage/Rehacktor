@@ -13,32 +13,17 @@ import {
   Grid,
   Button,
 } from "@mui/material";
-import PlayArrowIcon from "@mui/icons-material/PlayArrow";
-import PhotoLibraryIcon from "@mui/icons-material/PhotoLibrary";
 import { useEffect, useState } from "react";
-import ToggleFavorite from "../../components/animationComponent/ToggleFavorite.jsx";
-import StarIcon from "@mui/icons-material/Star";
 import { useBackground } from "../../hooks/useBackground.js";
-import PlatformIcons from "../../components/game/renderingCard-Detail/PlatformIcons.jsx";
-import StoreIcons from "../../components/game/renderingCard-Detail/StoreIcons.jsx";
-import DeveloperIcon from "../../components/game/renderingCard-Detail/DeveloperIcon.jsx";
-import GenreTags from "../../components/game/renderingCard-Detail/GenreTags.jsx";
-import GameUserEngagement from "../../components/game/renderingCard-Detail/GameUserEngagement.jsx";
-import FormatListNumberedIcon from "@mui/icons-material/FormatListNumbered";
-import MilitaryTechIcon from "@mui/icons-material/MilitaryTech";
-import AccessTimeIcon from "@mui/icons-material/AccessTime";
-import StarRateIcon from "@mui/icons-material/StarRate";
-import EmojiEventsIcon from "@mui/icons-material/EmojiEvents";
-import GroupAddIcon from "@mui/icons-material/GroupAdd";
 import useGameScreenshots from "../../hooks/useGameScreenshots.js";
-import Chatbox from "../../components/generalLayout/Chatbox.jsx";
 import { useQuery } from "@tanstack/react-query";
 import { fetchGameDetails } from "../../api/games.js";
+import ToggleFavorite from "../../components/animationComponent/ToggleFavorite.jsx";
+import Chatbox from "../../components/generalLayout/Chatbox.jsx";
 import Lightbox from "yet-another-react-lightbox";
 import "yet-another-react-lightbox/styles.css";
-import { Thumbnails } from "yet-another-react-lightbox/plugins";
+import { Thumbnails, Fullscreen } from "yet-another-react-lightbox/plugins";
 import "yet-another-react-lightbox/plugins/thumbnails.css";
-import { Fullscreen } from "yet-another-react-lightbox/plugins";
 import "yet-another-react-lightbox/plugins/counter.css";
 import Counter from "yet-another-react-lightbox/plugins/counter";
 import { fetchGameMovies, fetchSimilarGamesFallback } from "../../api/games.js";
@@ -46,6 +31,27 @@ import Video from "yet-another-react-lightbox/plugins/video";
 import "yet-another-react-lightbox/styles.css";
 import YoutubeModal from "../../components/game/YoutubeDialog.jsx";
 import SimilarGamesList from "../../components/game/SimilarGamesList.jsx";
+import GameDetailSkeleton from "../../components/skeleton/GameDetailSkeleton.jsx";
+
+// rendering card detail
+import PlatformIcons from "../../components/game/renderingCard-Detail/PlatformIcons.jsx";
+import StoreIcons from "../../components/game/renderingCard-Detail/StoreIcons.jsx";
+import DeveloperIcon from "../../components/game/renderingCard-Detail/DeveloperIcon.jsx";
+import GenreTags from "../../components/game/renderingCard-Detail/GenreTags.jsx";
+import GameUserEngagement from "../../components/game/renderingCard-Detail/GameUserEngagement.jsx";
+
+// Icon
+import PlayArrowIcon from "@mui/icons-material/PlayArrow";
+import PhotoLibraryIcon from "@mui/icons-material/PhotoLibrary";
+import StarIcon from "@mui/icons-material/Star";
+import FormatListNumberedIcon from "@mui/icons-material/FormatListNumbered";
+import MilitaryTechIcon from "@mui/icons-material/MilitaryTech";
+import AccessTimeIcon from "@mui/icons-material/AccessTime";
+import StarRateIcon from "@mui/icons-material/StarRate";
+import EmojiEventsIcon from "@mui/icons-material/EmojiEvents";
+import GroupAddIcon from "@mui/icons-material/GroupAdd";
+
+
 
 function GamePage() {
   /*
@@ -194,17 +200,7 @@ function GamePage() {
 
   if (isLoading) {
     return (
-      <Box
-        sx={{
-          height: "100vh",
-          width: "100%",
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
-        }}
-      >
-        <CircularProgress />
-      </Box>
+      <GameDetailSkeleton />
     );
   }
 
